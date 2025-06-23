@@ -1,21 +1,20 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
+import { BrowserRouter, Routes, Route } from 'react-router-dom' 
 import './App.css'
-import ProudctCard from './components/proudctCard.jsx'
-import UserData from './components/userData.jsx'
-import Testing from './components/testing.jsx'
- 
-
+import LoginPage from '../pages/loginPage.jsx'
+import HomePage from '../pages/HomePage.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
 
   return (
     <>
-            <Testing></Testing>
-
-
+      <BrowserRouter>
+        <Routes  path="/*">
+          <Route path="/" element={<HomePage/>}/>
+          <Route path="/login" element={<loginPage/>}/>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
