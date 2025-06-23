@@ -1,8 +1,8 @@
 import { useState } from 'react'
 import { BrowserRouter, Routes, Route } from 'react-router-dom' 
 import './App.css'
-import LoginPage from '../pages/loginPage.jsx'
-import HomePage from '../pages/HomePage.jsx'
+import LoginPage from './pages/loginPage.jsx'
+import HomePage from './pages/HomePage.jsx'
 
 function App() {
   const [count, setCount] = useState(0)
@@ -11,12 +11,13 @@ function App() {
     <>
       <BrowserRouter>
         <Routes  path="/*">
-          <Route path="/" element={<HomePage/>}/>
-          <Route path="/login" element={<loginPage/>}/>
+          <Route path="/" element={<LoginPage/>}/>
+          <Route path="/home" element={<HomePage/>}/>
         </Routes>
       </BrowserRouter>
     </>
   )
+
 }
 
 export default App
