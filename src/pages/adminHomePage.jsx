@@ -1,9 +1,9 @@
 import { Link, Route, Routes, useNavigate } from "react-router-dom";
 import { BsGraphUp, BsBoxSeam, BsCart4, BsPeopleFill } from "react-icons/bs";
-import AdminProductsPage from "../admin/adminProductsPage";
-import AddProductForm from "../admin/addProductForm";
-//import EditProductForm from "../admin/editProductForm";
-//import AdminOrdersPage from "../admin/adminOrderPage";
+import AdminProductsPage from "./admin/adminProductsPage";
+import AddProductForm from "./admin/addProductForm";
+//import EditProductForm from "./admin/editProductForm";
+//import AdminOrdersPage from "./admin/adminOrderPage";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import axios from "axios";
@@ -18,7 +18,7 @@ export default function AdminHomePage() {
       return;
     }
     axios
-      .get("https://localhost:5000/api/users", {
+      .get("http://localhost:5000/api/users", {
         headers: {
           Authorization: `Bearer ${token}`,
         },
@@ -26,7 +26,7 @@ export default function AdminHomePage() {
         console.log(res.data)
         if(res.data.type!="admin"){
           toast.error("Unauthorized access")
-          navigate("/login")
+         // navigate("/login")
         }else{
           setUser(res.data)
         }
@@ -83,7 +83,6 @@ export default function AdminHomePage() {
         </Routes>}
         {
           user==null&&<div className="w-full h-full flex justify-center items-center">
-      
             <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-accent"></div>
 
           </div>
