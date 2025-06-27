@@ -1,4 +1,4 @@
-import { Route, Routes } from 'react-router-dom';
+import { Route, Routes ,useNavigate } from 'react-router-dom';
 import Header from '../components/header';
 import Footer from '../components/footer';
 import LoginPage from './loginPage';
@@ -17,6 +17,7 @@ import AboutPage from './home/aboutPage';
 import ContactPage from './home/contactUs';
 
 export default function HomePage() {
+   const navigate = useNavigate();
   return (
     <div className="flex flex-col min-h-screen">
       <Header />
@@ -82,6 +83,7 @@ export default function HomePage() {
                               }}
                               whileTap={{ scale: 0.95 }}
                               className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-10 rounded-full transition-all duration-300"
+                               onClick={() => navigate('/products')}
                             >
                               {slide.buttonText}
                             </motion.button>

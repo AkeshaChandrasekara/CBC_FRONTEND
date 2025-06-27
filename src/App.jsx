@@ -12,6 +12,7 @@ import SignInPage from './pages/signUpPage'
 
 
 
+
 function App() {
   const [count, setCount] = useState(0)
 
@@ -27,7 +28,8 @@ function App() {
         <Route path="/login" element={<LoginPage/>}/>
    <Route path="/signup" element={<SignInPage/>}/> 
         <Route path="/admin/*" element={<AdminHomePage/>}/>
-        <Route path="/response" element={<ResponseTest/>}/>             
+        <Route path="/response" element={<ResponseTest/>}/> 
+                   
       </Routes>
       </GoogleOAuthProvider>
      </BrowserRouter>

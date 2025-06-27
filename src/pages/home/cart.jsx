@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadCart } from "../../utils/cartFunction";
+import { loadCart, deleteItem } from "../../utils/cartFunction"; 
 import CartCard from "../../components/cartCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -10,11 +10,13 @@ export default function Cart() {
   const [labeledTotal, setLabeledTotal] = useState(0);
   const navigate = useNavigate();
 
-  useEffect(() => {
-    setCart(loadCart());
+  const refreshCart = () => {
+    const updatedCart = loadCart();
+    setCart(updatedCart);
+    
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
-        orderedItems: loadCart(),
+        orderedItems: updatedCart,
       })
       .then((res) => {
         if(res.data.total != null){
@@ -22,7 +24,16 @@ export default function Cart() {
           setLabeledTotal(res.data.total);
         }
       });
+  };
+
+  useEffect(() => {
+    refreshCart();
   }, []);
+
+  const handleRemoveItem = (productId) => {
+    deleteItem(productId);
+    refreshCart();
+  };
 
   function onOrderCheckOutClick() {
     navigate("/shipping", {
@@ -48,13 +59,14 @@ export default function Cart() {
                 key={item.productId}
                 productId={item.productId}
                 qty={item.qty}
+                onRemove={handleRemoveItem} 
               />
             ))}
           </div>
         )}
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 sticky bottom-0 max-w-md ml-auto">
+      <div className="bg-gray-50 rounded-lg p-4 bottom-0 max-w-md ml-auto">
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Subtotal:</span>

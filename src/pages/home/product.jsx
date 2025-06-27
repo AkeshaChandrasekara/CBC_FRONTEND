@@ -3,10 +3,13 @@ import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import ProductCard from "../../components/productCard";
 
+
 export default function ProductPage() {
   const [products, setProducts] = useState([]);
   const [loadingStatus, setLoadingStatus] = useState("loading");
   const [query, setQuery] = useState("");
+
+  
 
   useEffect(() => {
     if (loadingStatus === "loading") {

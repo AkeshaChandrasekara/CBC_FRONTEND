@@ -1,10 +1,12 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { deleteItem } from "../utils/cartFunction";
+import { FiTrash2 } from "react-icons/fi"; 
 
 export default function CartCard(props) {
   const productId = props.productId;
   const qty = props.qty;
+  const { onRemove } = props; 
 
   const [product, setProduct] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -27,6 +29,13 @@ export default function CartCard(props) {
     }
   }, []);
 
+  const handleRemove = () => {
+    deleteItem(productId);
+    if (onRemove) {
+      onRemove(productId); 
+    }
+  };
+
   return (
     <>
       {!loaded ? (
@@ -45,11 +54,20 @@ export default function CartCard(props) {
               <p className="text-sm text-gray-500">Qty: {qty}</p>
             </div>
           </div>
-          <div className="text-right">
-            <p className="font-medium text-gray-900">LKR. {product?.lastPrice.toFixed(2)}</p>
-            <p className="font-bold text-yellow-500">
-              LKR. {(product?.lastPrice * qty).toFixed(2)}
-            </p>
+          <div className="flex items-center">
+            <div className="text-right mr-4">
+              <p className="font-medium text-gray-900">LKR. {product?.lastPrice.toFixed(2)}</p>
+              <p className="font-bold text-yellow-500">
+                LKR. {(product?.lastPrice * qty).toFixed(2)}
+              </p>
+            </div>
+            <button 
+              onClick={handleRemove}
+              className="text-red-500 hover:text-red-700 transition-colors p-2"
+              aria-label="Remove item"
+            >
+              <FiTrash2 size={18} />
+            </button>
           </div>
         </div>
       )}

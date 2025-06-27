@@ -56,4 +56,3 @@ export function deleteItem(productId){
     saveCart(cart)
   }
 }
-//071 27 66 404
