@@ -1,4 +1,3 @@
-// navSlider.jsx
 import { IoMdClose } from "react-icons/io";
 import { Link } from "react-router-dom";
 

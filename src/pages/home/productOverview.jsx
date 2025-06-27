@@ -12,19 +12,14 @@ export default function ProductOverview() {
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
   const navigate = useNavigate();
+
   useEffect(() => {
-    console.log(productId);
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
       .then((res) => {
-        console.log(res.data);
-
-        //if null
         if (res.data == null) {
           setStatus("not-found");
-        }
-
-        if (res.data != null) {
+        } else {
           setProduct(res.data);
           setStatus("found");
         }
@@ -33,78 +28,107 @@ export default function ProductOverview() {
 
   function onAddtoCartClick() {
     addToCart(product.productId, 1);
-    toast.success(product.productId + " Added to cart");
+    toast.success(`${product.productName} added to cart`);
   }
 
-  function onBuyNowClick(){
-    navigate("/shipping",{
-      state:{
-        items: [
-          {
-            productId: product.productId,
-            qty: 1
-          }
-        ]
+  function onBuyNowClick() {
+    navigate("/shipping", {
+      state: {
+        items: [{ productId: product.productId, qty: 1 }]
       }
-    })
+    });
   }
 
   return (
-    <div className="w-full h-[calc(100vh-100px)] ">
+    <div className="min-h-screen bg-white flex items-center justify-center py-8">
       {status == "loading" && (
-        <div className="w-full h-full flex items-center justify-center">
-          <div className="animate-spin rounded-full h-32 w-32  border-2 border-gray-500 border-b-accent border-b-4"></div>
+        <div className="flex justify-center items-center h-[50vh]">
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
         </div>
       )}
+      
       {status == "not-found" && <ProductNotFound />}
+      
       {status == "found" && (
-        <div
-          className="w-full h-full flex flex-col lg:flex-row  items-center justify-center "
-        >
-          <h1 className="text-3xl font-bold text-gray-800 lg:hidden">
-            {product.productName}
-          </h1>
-          <p className="text-xl text-gray-600 lg:hidden">
-            {product.price > product.lastPrice && (
-              <span className="line-through text-red-500">
-                LKR.{product.price}
-              </span>
-            )}{" "}
-            <span>{"LKR." + product.lastPrice}</span>
-          </p>
-          <div className="w-[100%]  border-[3px] border-blue-900 lg:w-[35%] lg:h-full">
-            <ImageSlider images={product.images} />
-          </div>
-          <div className="w-[65%] h-full p-4">
-            <h1 className="text-3xl font-bold text-gray-800 hidden lg:block">
-              {product.productName}
-            </h1>
-            <h1 className="text-3xl font-bold text-gray-500">
-              {product.altNames.join(" | ")}
-            </h1>
-            <p className="text-xl text-gray-600 hidden lg:block">
-              {product.price > product.lastPrice && (
-                <span className="line-through text-red-500">
-                  LKR.{product.price}
-                </span>
-              )}{" "}
-              <span>{"LKR." + product.lastPrice}</span>
-            </p>
-            <p className="text-lg text-gray-600 line-clamp-3">
-              {product.description}
-            </p>
-            <button
-              onClick={onAddtoCartClick}
-              className="bg-accent text-white p-2 rounded-lg"
-            >
-              Add to cart
-            </button>
-            <button
-              onClick={onBuyNowClick}
-              className=" text-accent border mx-1 border-accent p-2 rounded-lg"
-            >
-              Buy Now
-            </button>
+        <div className="max-w-4xl w-full mx-4">
+          <div className="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-100">
+            <div className="flex flex-col lg:flex-row">
+    
+              <div className="lg:w-2/5 p-4 bg-gray-50 flex items-center justify-center">
+                <div className="w-full aspect-square max-w-xs">
+                  <ImageSlider images={product.images} />
+                </div>
+              </div>
+
+            
+              <div className="lg:w-3/5 p-6">
+        
+                <div className="mb-4 border-b border-gray-100 pb-4">
+                  <h1 className="text-2xl font-bold text-gray-900 mb-1">
+                    {product.productName}
+                  </h1>
+                  <p className="text-sm text-yellow-600 font-medium">
+                    {product.altNames.join(" • ")}
+                  </p>
+                </div>
+
+             
+                <div className="mb-4 p-3 bg-yellow-50 rounded-lg">
+                  {product.price > product.lastPrice ? (
+                    <div className="flex flex-col">
+                      <div className="flex items-baseline">
+                        <span className="text-2xl font-bold text-gray-900 mr-3">
+                          LKR {product.lastPrice.toFixed(2)}
+                        </span>
+                        <span className="text-sm text-gray-500 line-through">
+                          LKR {product.price.toFixed(2)}
+                        </span>
+                      </div>
+                      <p className="text-xs text-yellow-700 mt-1">
+                        Save LKR {(product.price - product.lastPrice).toFixed(2)} ({Math.round(((product.price - product.lastPrice)/product.price)*100)}% off)
+                      </p>
+                    </div>
+                  ) : (
+                    <span className="text-2xl font-bold text-gray-900">
+                      LKR {product.lastPrice.toFixed(2)}
+                    </span>
+                  )}
+                </div>
+
+               
+                <div className="mb-6">
+                  <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">
+                    Description
+                  </h3>
+                  <p className="text-sm text-gray-700 leading-relaxed">
+                    {product.description}
+                  </p>
+                </div>
+
+          
+                <div className="mb-6 text-center">
+                  <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
+                    Product ID: {product.productId}
+                  </span>
+                </div>
+
+           
+                <div className="flex flex-col sm:flex-row gap-3">
+                  <button
+                    onClick={onAddtoCartClick}
+                    className="flex-1 bg-black hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+                  >
+                    Add to Cart
+                  </button>
+                  <button
+                    onClick={onBuyNowClick}
+                    className="flex-1 bg-yellow-500 hover:bg-yellow-400 text-black font-medium py-2 px-4 rounded-lg transition-colors text-sm"
+                  >
+                    Buy Now
+                  </button>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       )}

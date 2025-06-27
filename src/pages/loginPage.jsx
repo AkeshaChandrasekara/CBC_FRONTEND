@@ -70,7 +70,7 @@ export default function LoginPage() {
     <div className="flex h-screen w-full bg-gradient-to-br from-gray-50 to-gray-100">
       
       <div className="hidden md:flex md:w-4/5 bg-slate-900 items-start justify-center pt-40 relative overflow-hidden">
-        {/* Static makeup items with subtle pulse animation */}
+  
       
 
         <motion.div 
@@ -119,7 +119,6 @@ export default function LoginPage() {
         </motion.div>
       </div>
 
-      {/* Right Side - Enhanced Login Container */}
       <div className="w-full md:w-4/5 bg-white flex items-center justify-center p-4">
         <motion.div 
           className="w-full max-w-sm bg-white p-8 rounded-lg shadow-lg border border-black"
@@ -174,7 +173,7 @@ export default function LoginPage() {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 className="w-full px-4 py-2.5 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                placeholder="your@email.com"
+                placeholder="email@example.com"
               />
             </motion.div>
             

@@ -8,6 +8,7 @@ export default function CartCard(props) {
 
   const [product, setProduct] = useState(null);
   const [loaded, setLoaded] = useState(false);
+
   useEffect(() => {
     if (!loaded) {
       axios
@@ -15,7 +16,6 @@ export default function CartCard(props) {
         .then((response) => {
           if (response.data != null) {
             setProduct(response.data);
-            console.log(response.data , "product");
             setLoaded(true);
           } else {
             deleteItem(productId);
@@ -30,23 +30,28 @@ export default function CartCard(props) {
   return (
     <>
       {!loaded ? (
-        <tr>loading</tr>
+        <div className="animate-pulse bg-gray-200 rounded-lg h-24 w-full"></div>
       ) : (
-        <tr className="hover:bg-accent hover:text-white cursor-pointer">
-          <td className="">
+        <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 mb-4 border border-gray-100">
+          <div className="flex items-center space-x-4">
             <img
               src={product?.images[0]}
-              className="w-[90px] h-[90px] object-cover mx-auto"
+              className="w-20 h-20 object-cover rounded-lg"
+              alt={product?.productName}
             />
-          </td>
-          <td className="text-center">{product?.productName}</td>
-          <td className="text-center">{productId}</td>
-          <td className="text-center">{qty}</td>
-          <td className="text-center">LKR. {product?.lastPrice.toFixed(2)}</td>
-          <td className="text-center">
-            {(product?.lastPrice * qty).toFixed(2)}
-          </td>
-        </tr>
+            <div>
+              <h3 className="font-bold text-gray-900">{product?.productName}</h3>
+              <p className="text-sm text-gray-500">ID: {productId}</p>
+              <p className="text-sm text-gray-500">Qty: {qty}</p>
+            </div>
+          </div>
+          <div className="text-right">
+            <p className="font-medium text-gray-900">LKR. {product?.lastPrice.toFixed(2)}</p>
+            <p className="font-bold text-yellow-500">
+              LKR. {(product?.lastPrice * qty).toFixed(2)}
+            </p>
+          </div>
+        </div>
       )}
     </>
   );

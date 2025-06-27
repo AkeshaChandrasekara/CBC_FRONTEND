@@ -13,6 +13,8 @@ import { Autoplay, EffectFade, Pagination } from 'swiper/modules';
 import 'swiper/css';
 import 'swiper/css/effect-fade';
 import 'swiper/css/pagination';
+import AboutPage from './home/aboutPage';
+import ContactPage from './home/contactUs';
 
 export default function HomePage() {
   return (
@@ -46,26 +48,15 @@ export default function HomePage() {
                         highlight: "Crystal Radiance",
                         description: "Discover our premium crystal-infused skincare collection",
                         buttonText: "Shop Now",
-                        image: "/himage1.png" // Add your image path
+                        image: "/w668.png" ,
+                       
+                        
                       },
-                      {
-                        title: "Pure Crystal Elegance",
-                        highlight: "Luxurious Formulas",
-                        description: "Experience the transformative power of nature's minerals",
-                        buttonText: "Explore Collection",
-                        image: "/hero-image-2.jpg" // Add your image path
-                      },
-                      {
-                        title: "Reveal Your Inner Glow",
-                        highlight: "Premium Skincare",
-                        description: "Harness the energy of crystals for radiant skin",
-                        buttonText: "Discover More",
-                        image: "/hero-image-3.jpg" // Add your image path
-                      }
+                      
                     ].map((slide, index) => (
                       <SwiperSlide key={index} className="h-full w-full">
                         <div className="container mx-auto h-full flex items-center px-6 relative z-10">
-                          {/* Text Content */}
+                    
                           <motion.div 
                             className="w-full md:w-1/2 pr-0 md:pr-12"
                             initial={{ opacity: 0, x: -50 }}
@@ -96,7 +87,6 @@ export default function HomePage() {
                             </motion.button>
                           </motion.div>
                           
-                          {/* Image Content */}
                           <motion.div 
                             className="hidden md:block w-1/2 h-full relative"
                             initial={{ opacity: 0, x: 50 }}
@@ -116,13 +106,11 @@ export default function HomePage() {
                     ))}
                   </Swiper>
                   
-                  {/* Custom Pagination */}
+               
                 
                 </div>
               </section>
 
-              {/* Updated Featured Collections */}
-            {/* Simplified Collection Design */}
 <section className="py-16 bg-slate-900">
   <div className="container mx-auto px-6">
     <motion.div
@@ -130,69 +118,93 @@ export default function HomePage() {
       whileInView={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.6 }}
       viewport={{ once: true }}
-      className="text-center mb-12"
+      className="text-center mb-16"
     >
-      <h2 className="text-3xl font-bold text-white mb-3">Our Signature Collections</h2>
-      <div className="w-20 h-1 bg-yellow-500 mx-auto mb-3"></div>
-      <p className="text-gray-400 max-w-2xl mx-auto text-sm">
-        Carefully crafted formulations infused with the power of crystals
+      <h2 className="text-3xl font-bold text-white mb-4">Crystal Beauty Clear Collections</h2>
+      <div className="w-20 h-1 bg-yellow-500 mx-auto mb-4"></div>
+      <p className="text-gray-400 max-w-2xl mx-auto">
+        Pure crystal-infused formulations for radiant, clarified skin
       </p>
     </motion.div>
     
-    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-5xl mx-auto">
       {[
         { 
-          title: "Rose Quartz", 
-          description: "Hydrating formulas that promote skin's  glow", 
-          image: "/r1.jpg",
-          features: ["Hydrating Serum", "Night Cream", "Facial Mist"]
+          name: "Clarifying Ritual Set", 
+          crystal: "Clear Quartz",
+          description: "Complete regimen to purify skin", 
+          image: "/p11.jpg",
+          benefits: [
+            "Gently removes impurities",
+            "Reduces appearance of pores",
+            "Enhances skin clarity"
+          ]
         },
         { 
-          title: "Amethyst", 
-          description: "Detoxifying solutions for clear complexion", 
-          image: "/amethyst-collection.jpg",
-          features: ["Cleansing Oil", "Toner", "Detox Mask"]
+          name: "Crystal Glow Serum", 
+          crystal: "Diamond Dust",
+          description: "Illuminating treatment for luminous skin", 
+          image: "/c52.jpg",
+          benefits: [
+            "Boosts radiance",
+            "Smooths texture",
+            "Protects from pollution"
+          ]
         },
         { 
-          title: "Clear Quartz", 
-          description: "Revitalizing treatments for vibrant skin", 
-          image: "/clear-quartz-collection.jpg",
-          features: ["Eye Cream", "Day Serum", "Moisturizer"]
+          name: "Overnight Renewal", 
+          crystal: "Moonstone",
+          description: "Nighttime repair with crystal energy", 
+          image: "/c4.jpg",
+          benefits: [
+            "Intensive hydration",
+            "Supports natural renewal",
+            "Calms skin overnight"
+          ]
         }
-      ].map((collection, index) => (
+      ].map((product, index) => (
         <motion.div 
           key={index}
           initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true }}
-          className="bg-gray-800 rounded-lg overflow-hidden"
+          className="group bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:translate-y-[-8px]"
         >
-          {/* Centered Product Image */}
-          <div className="h-48 flex items-center justify-center p-4">
+   
+          <div className="relative h-60 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center p-6">
             <img 
-              src={collection.image} 
-              alt={collection.title}
-              className="h-40 object-contain"
+              src={product.image} 
+              alt={product.name}
+              className="h-48 object-contain transition-transform duration-500 group-hover:scale-105"
             />
+            <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
+              {product.crystal}
+            </div>
           </div>
-          
-          {/* Content */}
-          <div className="p-5">
-            <h3 className="text-lg font-bold text-white mb-2">{collection.title}</h3>
-            <p className="text-gray-300 text-sm mb-4">{collection.description}</p>
+
+          <div className="p-6">
+            <div className="flex justify-between items-start mb-2">
+              <h3 className="text-xl font-bold text-white">{product.name}</h3>
+            </div>
+            <p className="text-gray-300 text-sm mb-4">{product.description}</p>
             
-            <div className="space-y-2 mb-5">
-              {collection.features.map((feature, i) => (
-                <div key={i} className="flex items-center text-gray-400 text-xs">
-                  <div className="w-1 h-1 bg-yellow-500 rounded-full mr-2"></div>
-                  {feature}
+            <div className="space-y-3 mb-6">
+              {product.benefits.map((benefit, i) => (
+                <div key={i} className="flex items-start">
+                  <svg className="w-4 h-4 text-yellow-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
+                  </svg>
+                  <span className="text-gray-400 text-sm">{benefit}</span>
                 </div>
               ))}
             </div>
             
-            <button className="w-full py-2 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-md transition-colors duration-300">
-              View Collection
+            <button className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center">
+              <span>Discover</span>
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
             </button>
           </div>
         </motion.div>
@@ -201,7 +213,7 @@ export default function HomePage() {
   </div>
 </section>
 
-              {/* Updated Benefits Section */}
+           
               <section className="py-16 bg-gray-50">
                 <div className="container mx-auto px-6">
                   <motion.div
@@ -268,7 +280,6 @@ export default function HomePage() {
               </section>
 
 
-              {/* Testimonials Section */}
               <section className="py-16 bg-gray-900 text-white">
                 <div className="container mx-auto px-6">
                   <motion.div
@@ -289,17 +300,17 @@ export default function HomePage() {
                     {[
                       {
                         quote: "The Rose Quartz serum transformed my skin in just two weeks! I've never received so many compliments.",
-                        author: "Sarah M.",
+                        author: "Senulya Perera",
                         rating: "★★★★★"
                       },
                       {
                         quote: "As someone with sensitive skin, I'm amazed at how gentle yet effective these products are. Worth every penny!",
-                        author: "Jessica T.",
+                        author: "Devni Vihara",
                         rating: "★★★★★"
                       },
                       {
                         quote: "The Clear Quartz collection gave me back my youthful glow. My skin has never looked better!",
-                        author: "Michael R.",
+                        author: "Adithya Perera",
                         rating: "★★★★★"
                       }
                     ].map((testimonial, index) => (
@@ -320,8 +331,8 @@ export default function HomePage() {
                 </div>
               </section>
 
-              {/* CTA Section */}
-              <section className="py-16 bg-gradient-to-r from-yellow-500 to-yellow-400">
+           
+              <section className="py-16 bg-white">
                 <div className="container mx-auto px-6 text-center">
                   <motion.div
                     initial={{ opacity: 0, y: 30 }}
@@ -347,7 +358,9 @@ export default function HomePage() {
           } />
           <Route path="/products" element={<ProductPage/>} />
           <Route path="/login" element={<LoginPage/>} />
+           <Route path="/about" element={<AboutPage/>} />
           <Route path="/cart" element={<Cart/>}/>
+           <Route path="/contact" element={<ContactPage/>}/>
           <Route path="/shipping" element={<ShippingPage/>}/>   
           <Route path='/orders' element={<MyOrdersPage/>}/>      
           <Route path="/productInfo/:id" element={<ProductOverview/>} />

@@ -28,7 +28,7 @@ export default function ShippingPage() {
       .then((res) => {
         if (res.data.total != null) {
           setTotal(res.data.total);
-          setLabeledTotal(res.data.labeledTotal);
+          setLabeledTotal(res.data.labeledTotal || res.data.total);
         }
       })
       .catch((err) => {
@@ -92,76 +92,87 @@ export default function ShippingPage() {
   }
 
   return (
-    <div className="w-full h-full bg-gray-100 p-4">
-      <div className="w-full max-w-4xl mx-auto bg-white rounded-lg shadow-md p-6">
-        <h1 className="text-2xl font-bold mb-4">Shipping Details</h1>
-        <div className="mb-4">
-          <label className="block font-medium text-gray-700 mb-1">Name</label>
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-            placeholder="Enter your name"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium text-gray-700 mb-1">Address</label>
-          <textarea
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            placeholder="Enter your address"
-          />
-        </div>
-        <div className="mb-4">
-          <label className="block font-medium text-gray-700 mb-1">Phone</label>
-          <input
-            type="text"
-            className="w-full p-2 border border-gray-300 rounded-md"
-            value={phone}
-            onChange={(e) => setPhone(e.target.value)}
-            placeholder="Enter your phone number"
-          />
+    <div className="container mx-auto px-4 py-8">
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Shipping Details</h1>
+      
+      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+
+        <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="space-y-4">
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+              <input
+                type="text"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                placeholder="Enter your full name"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+              <textarea
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                rows="4"
+                value={address}
+                onChange={(e) => setAddress(e.target.value)}
+                placeholder="Enter your complete address"
+              />
+            </div>
+            
+            <div>
+              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+              <input
+                type="text"
+                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Enter your 10-digit phone number"
+              />
+            </div>
+          </div>
         </div>
 
-        <h2 className="text-xl font-bold mt-6 mb-4">Order Summary</h2>
-        <table className="w-full border-collapse border border-gray-300 mb-4">
-          <thead>
-            <tr className="bg-gray-200">
-              <th className="border border-gray-300 p-2">Image</th>
-              <th className="border border-gray-300 p-2">Product Name</th>
-              <th className="border border-gray-300 p-2">Product ID</th>
-              <th className="border border-gray-300 p-2">Qty</th>
-              <th className="border border-gray-300 p-2">Price</th>
-              <th className="border border-gray-300 p-2">Total</th>
-            </tr>
-          </thead>
-          <tbody>
-            {cart.map((item) => (
-              <CartCard
-                key={item.productId}
-                productId={item.productId}
-                qty={item.qty}
-              />
-            ))}
-          </tbody>
-        </table>
-        <h1 className="text-lg font-bold text-gray-700 mb-2">
-          Total: LKR. {labeledTotal.toFixed(2)}
-        </h1>
-        <h1 className="text-lg font-bold text-gray-700 mb-2">
-          Discount: LKR. {(labeledTotal - total).toFixed(2)}
-        </h1>
-        <h1 className="text-lg font-bold text-gray-700 mb-4">
-          Grand Total: LKR. {total.toFixed(2)}
-        </h1>
-        <button
-          className="bg-blue-600 hover:bg-blue-500 text-white py-2 px-4 rounded-lg w-full"
-          onClick={createOrder}
-        >
-          Checkout
-        </button>
+      
+        <div className="space-y-6">
+          <div className="bg-white rounded-lg shadow-sm p-6">
+            <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+            <div className="space-y-4">
+              {cart.map((item) => (
+                <CartCard
+                  key={item.productId}
+                  productId={item.productId}
+                  qty={item.qty}
+                />
+              ))}
+            </div>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg p-4">
+            <div className="space-y-2 mb-4">
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Subtotal:</span>
+                <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+              </div>
+              <div className="flex justify-between text-sm">
+                <span className="text-gray-600">Discount:</span>
+                <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
+              </div>
+              <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
+                <span className="font-bold text-gray-900">Grand Total:</span>
+                <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+              </div>
+            </div>
+
+            <button
+              onClick={createOrder}
+              className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
+            >
+              Place Order
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   );

@@ -22,5 +22,3 @@ export default function ImageSlider(props) {
     </div>
   );
 }
-//testing
-//testing 2

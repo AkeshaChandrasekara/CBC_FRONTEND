@@ -129,7 +129,7 @@ export default function SignInPage() {
         </motion.div>
       </div>
 
-      {/* Right Side - Signup Container (now matching login size) */}
+     
       <div className="w-full md:w-4/5 bg-white flex items-center justify-center p-4">
         <motion.div 
           className="w-full max-w-sm bg-white p-8 rounded-lg shadow-lg border border-black"
@@ -167,7 +167,7 @@ export default function SignInPage() {
           </div>
 
           <div className="space-y-4">
-            {/* Combined First and Last Name */}
+       
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -186,7 +186,7 @@ export default function SignInPage() {
                   value={formData.firstName}
                   onChange={handleChange}
                   className="w-full px-4 py-2 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                  placeholder="John"
+                  placeholder=" First Name"
                 />
               </div>
               <div className="flex-1">
@@ -201,12 +201,12 @@ export default function SignInPage() {
                   value={formData.lastName}
                   onChange={handleChange}
                   className="w-full px-4 py-2 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                  placeholder="Doe"
+                  placeholder=" Last Name"
                 />
               </div>
             </motion.div>
 
-            {/* Mobile */}
+           
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -223,13 +223,12 @@ export default function SignInPage() {
                 value={formData.mobile}
                 onChange={handleChange}
                 className="w-full px-4 py-2 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                placeholder="1234567890"
+                placeholder="Mobile Number"
                 pattern="[0-9]{10}"
                 maxLength="10"
               />
             </motion.div>
 
-            {/* Email */}
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -246,11 +245,11 @@ export default function SignInPage() {
                 value={formData.email}
                 onChange={handleChange}
                 className="w-full px-4 py-2 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                placeholder="your@email.com"
+                placeholder="Email Address"
               />
             </motion.div>
 
-            {/* Password */}
+         
             <motion.div
               initial={{ x: -20, opacity: 0 }}
               animate={{ x: 0, opacity: 1 }}
@@ -267,13 +266,13 @@ export default function SignInPage() {
                 value={formData.password}
                 onChange={handleChange}
                 className="w-full px-4 py-2 text-sm border border-gray-200 rounded-md focus:ring-1 focus:ring-yellow-500 focus:outline-none transition duration-150 bg-white"
-                placeholder="••••••••"
+                placeholder="Password"
                 minLength="6"
               />
-              <p className="text-xs text-gray-500 mt-1">Password must be at least 6 characters</p>
+             
             </motion.div>
 
-            {/* Sign Up Button */}
+            
             <motion.button
               onClick={signup}
               className="w-full py-2 px-4 text-sm rounded-md focus:outline-none focus:ring-2 focus:ring-offset-2 transition duration-300 flex items-center justify-center mt-2"
@@ -291,7 +290,7 @@ export default function SignInPage() {
               <span className="font-medium">Sign Up</span>
             </motion.button>
 
-            {/* Divider */}
+        
             <motion.div 
               className="relative mt-4"
               initial={{ opacity: 0 }}
@@ -302,11 +301,11 @@ export default function SignInPage() {
                 <div className="w-full border-t border-gray-200"></div>
               </div>
               <div className="relative flex justify-center text-xs">
-                <span className="px-2 bg-white text-gray-400">Or sign up with</span>
+                <span className="px-2 bg-white text-gray-400">Or continue with</span>
               </div>
             </motion.div>
 
-            {/* Google Sign Up */}
+         
             <motion.button
               onClick={() => {googleLogin()}}
               className="w-full flex justify-center items-center py-2 px-4 border border-gray-200 text-sm rounded-md hover:bg-gray-50 focus:outline-none focus:ring-1 focus:ring-yellow-500 transition duration-150 mt-4"
@@ -324,7 +323,7 @@ export default function SignInPage() {
               Sign up with Google
             </motion.button>
 
-            {/* Login Link */}
+       
             <motion.div 
               className="text-center text-sm pt-2"
               initial={{ opacity: 0 }}
