@@ -26,92 +26,85 @@ export default function HomePage() {
         <Routes>
           <Route path="/" element={
             <>
-         <section className="relative h-[70vh] bg-white overflow-hidden">
-                <div className="absolute inset-0 flex items-center justify-center">
-                  <Swiper
-                    modules={[Autoplay, EffectFade, Pagination]}
-                    spaceBetween={0}
-                    slidesPerView={1}
-                    autoplay={{ delay: 5000 }}
-                    effect="fade"
-                    fadeEffect={{ crossFade: true }}
-                    pagination={{ 
-                      clickable: true,
-                      el: '.hero-pagination',
-                      type: 'bullets',
-                    }}
-                    loop
-                    className="h-full w-full"
-                  >
-                    {[
-                      {
-                        title: "Illuminate Your Natural Beauty",
-                        highlight: "Crystal Radiance",
-                        description: "Discover our premium crystal-infused skincare collection",
-                        buttonText: "Shop Now",
-                        image: "/w668.png" ,
-                       
-                        
-                      },
-                      
-                    ].map((slide, index) => (
-                      <SwiperSlide key={index} className="h-full w-full">
-                        <div className="container mx-auto h-full flex items-center px-6 relative z-10">
-                    
-                          <motion.div 
-                            className="w-full md:w-1/2 pr-0 md:pr-12"
-                            initial={{ opacity: 0, x: -50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8 }}
-                          >
-                            <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 leading-tight">
-                              {slide.title}
-                              <br />
-                              <span className="text-yellow-500">
-                                {slide.highlight}
-                              </span>
-                            </h1>
-                            
-                            <p className="text-xl text-gray-600 mb-8">
-                              {slide.description}
-                            </p>
-                            
-                            <motion.button 
-                              whileHover={{ 
-                                scale: 1.05,
-                                boxShadow: '0 0 20px rgba(255, 215, 0, 0.5)'
-                              }}
-                              whileTap={{ scale: 0.95 }}
-                              className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-4 px-10 rounded-full transition-all duration-300"
-                               onClick={() => navigate('/products')}
-                            >
-                              {slide.buttonText}
-                            </motion.button>
-                          </motion.div>
-                          
-                          <motion.div 
-                            className="hidden md:block w-1/2 h-full relative"
-                            initial={{ opacity: 0, x: 50 }}
-                            animate={{ opacity: 1, x: 0 }}
-                            transition={{ duration: 0.8, delay: 0.2 }}
-                          >
-                            <div className="absolute inset-0 flex items-center justify-center">
-                              <img 
-                                src={slide.image} 
-                                alt={slide.title}
-                                className="h-full w-full object-contain"
-                              />
-                            </div>
-                          </motion.div>
-                        </div>
-                      </SwiperSlide>
-                    ))}
-                  </Swiper>
-                  
-               
-                
-                </div>
-              </section>
+     <section className="relative h-[50vh] md:h-[70vh] bg-white overflow-hidden">
+  <div className="absolute inset-0 flex items-center justify-center">
+    <Swiper
+      modules={[Autoplay, EffectFade, Pagination]}
+      spaceBetween={0}
+      slidesPerView={1}
+      autoplay={{ delay: 5000 }}
+      effect="fade"
+      fadeEffect={{ crossFade: true }}
+      pagination={{ 
+        clickable: true,
+        el: '.hero-pagination',
+        type: 'bullets',
+      }}
+      loop
+      className="h-full w-full"
+    >
+      {[
+        {
+          title: "Illuminate Your Natural Beauty",
+          highlight: "Crystal Radiance",
+          description: "Discover our premium crystal-infused skincare collection",
+          buttonText: "Shop Now",
+          image: "/w668.png",
+        },
+      ].map((slide, index) => (
+        <SwiperSlide key={index} className="h-full w-full">
+          <div className="container mx-auto h-full flex items-center px-4 md:px-6 relative z-10">
+            <motion.div 
+              className="w-full md:w-1/2 pr-0 md:pr-12 text-center md:text-left"
+              initial={{ opacity: 0, x: -50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8 }}
+            >
+              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
+                {slide.title}
+                <br />
+                <span className="text-yellow-500">
+                  {slide.highlight}
+                </span>
+              </h1>
+              
+              <p className="text-base md:text-xl text-gray-600 mb-6 md:mb-8">
+                {slide.description}
+              </p>
+              
+              <motion.button 
+                whileHover={{ 
+                  scale: 1.05,
+                  boxShadow: '0 0 20px rgba(255, 215, 0, 0.5)'
+                }}
+                whileTap={{ scale: 0.95 }}
+                className="bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-8 md:py-4 md:px-10 rounded-full transition-all duration-300"
+                onClick={() => navigate('/products')}
+              >
+                {slide.buttonText}
+              </motion.button>
+            </motion.div>
+            
+            <motion.div 
+              className="hidden md:block w-1/2 h-full relative"
+              initial={{ opacity: 0, x: 50 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, delay: 0.2 }}
+            >
+              <div className="absolute inset-0 flex items-center justify-center">
+                <img 
+                  src={slide.image} 
+                  alt={slide.title}
+                  className="h-full w-full object-contain"
+                />
+              </div>
+            </motion.div>
+          </div>
+        </SwiperSlide>
+      ))}
+    </Swiper>
+  </div>
+</section>
 
 <section className="py-16 bg-slate-900">
   <div className="container mx-auto px-6">
