@@ -296,17 +296,17 @@ export default function HomePage() {
                       {
                         quote: "The Rose Quartz serum transformed my skin in just two weeks! I've never received so many compliments.",
                         author: "Senulya Perera",
-                        rating: "★★★★★"
+                       
                       },
                       {
                         quote: "As someone with sensitive skin, I'm amazed at how gentle yet effective these products are. Worth every penny!",
                         author: "Devni Vihara",
-                        rating: "★★★★★"
+                        
                       },
                       {
                         quote: "The Clear Quartz collection gave me back my youthful glow. My skin has never looked better!",
                         author: "Adithya Perera",
-                        rating: "★★★★★"
+                       
                       }
                     ].map((testimonial, index) => (
                       <motion.div
