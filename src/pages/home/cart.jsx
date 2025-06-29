@@ -17,7 +17,7 @@ export default function Cart() {
       return;
     }
     
-    const updatedCart = loadCart(currentUser.id); // Use user ID
+    const updatedCart = loadCart(currentUser.id); 
     setCart(updatedCart);
     
     axios
