@@ -81,6 +81,7 @@ export default function Cart() {
             <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
           </div>
         </div>
+        
 
         <button 
           onClick={onOrderCheckOutClick} 
