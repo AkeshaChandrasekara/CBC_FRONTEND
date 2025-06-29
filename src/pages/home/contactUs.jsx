@@ -5,9 +5,29 @@ import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 
 export default function ContactPage() {
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    const form = e.target;
+    const name = form.name.value;
+    const email = form.email.value;
+    const subject = form.subject.value;
+    const message = form.message.value;
+    
+    // Construct the mailto link
+    const mailtoLink = `mailto:akeshanawanjali23@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(
+      `Name: ${name}\nEmail: ${email}\n\nMessage: ${message}`
+    )}`;
+    
+    // Open the user's default email client
+    window.location.href = mailtoLink;
+    
+    // Optional: Reset the form after submission
+    form.reset();
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
-    
+      {/* Header Section */}
       <section className="relative h-[40vh] bg-gradient-to-r from-slate-900 to-slate-800 overflow-hidden flex items-center">
         <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
         <div className="container mx-auto px-6 relative z-10 text-center">
@@ -25,11 +45,11 @@ export default function ContactPage() {
         </div>
       </section>
 
-    
+      {/* Contact Form Section */}
       <section className="py-16 bg-white">
         <div className="container mx-auto px-6">
           <div className="flex flex-col md:flex-row gap-12 max-w-6xl mx-auto">
-        
+            {/* Contact Form */}
             <motion.div 
               className="md:w-1/2"
               initial={{ opacity: 0, x: -50 }}
@@ -40,14 +60,16 @@ export default function ContactPage() {
               <h2 className="text-3xl font-bold text-gray-900 mb-6">Send Us a Message</h2>
               <div className="w-20 h-1 bg-yellow-500 mb-6"></div>
               
-              <form className="space-y-6">
+              <form className="space-y-6" onSubmit={handleSubmit}>
                 <div>
                   <label htmlFor="name" className="block text-gray-700 mb-2">Your Name</label>
                   <input 
                     type="text" 
                     id="name" 
+                    name="name"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="Enter your name"
+                    required
                   />
                 </div>
                 
@@ -56,8 +78,10 @@ export default function ContactPage() {
                   <input 
                     type="email" 
                     id="email" 
+                    name="email"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="Enter your email"
+                    required
                   />
                 </div>
                 
@@ -66,8 +90,10 @@ export default function ContactPage() {
                   <input 
                     type="text" 
                     id="subject" 
+                    name="subject"
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="What's this about?"
+                    required
                   />
                 </div>
                 
@@ -75,9 +101,11 @@ export default function ContactPage() {
                   <label htmlFor="message" className="block text-gray-700 mb-2">Your Message</label>
                   <textarea 
                     id="message" 
+                    name="message"
                     rows="5" 
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-yellow-400"
                     placeholder="Type your message here..."
+                    required
                   ></textarea>
                 </div>
                 
@@ -90,7 +118,7 @@ export default function ContactPage() {
               </form>
             </motion.div>
             
-         
+            {/* Contact Info */}
             <motion.div 
               className="md:w-1/2 bg-gray-50 p-8 rounded-xl"
               initial={{ opacity: 0, x: 50 }}
@@ -154,7 +182,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-      
+      {/* Map Section */}
       <section className="py-16 bg-gray-100">
         <div className="container mx-auto px-6">
           <motion.div
@@ -169,7 +197,6 @@ export default function ContactPage() {
           </motion.div>
           
           <div className="bg-white rounded-xl overflow-hidden shadow-lg">
-           
             <div className="h-96 w-full bg-gray-300 flex items-center justify-center">
               <p className="text-gray-500">UpdateSoon !</p>
             </div>
@@ -177,7 +204,7 @@ export default function ContactPage() {
         </div>
       </section>
 
-  
+      {/* CTA Section */}
       <section className="py-16 bg-gradient-to-r from-slate-900 to-slate-800 text-white">
         <div className="container mx-auto px-6 text-center">
           <motion.div
