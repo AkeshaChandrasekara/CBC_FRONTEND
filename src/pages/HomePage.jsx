@@ -342,13 +342,14 @@ export default function HomePage() {
                     <p className="text-xl text-gray-800 mb-8 max-w-2xl mx-auto">
                       Join the Crystal Beauty revolution and experience the difference today
                     </p>
-                    <motion.button
-                      whileHover={{ scale: 1.05 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition-all duration-300"  onClick={() => navigate('/products')}
-                    >
-                      Shop All Products
-                    </motion.button>
+                 <motion.button
+                  whileHover={{ scale: 1.05 }}
+                  whileTap={{ scale: 0.95 }}
+                  className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition-all duration-300"
+                  onClick={() => navigate('/products')}
+       >
+         Shop All Products
+</motion.button>
                   </motion.div>
                 </div>
               </section>
