@@ -348,7 +348,7 @@ export default function HomePage() {
                   className="bg-gray-900 hover:bg-gray-800 text-white font-bold py-3 px-8 rounded-full transition-all duration-300"
                   onClick={() => navigate('/products')}
        >
-         Shop All Products
+  Shop All Products
 </motion.button>
                   </motion.div>
                 </div>
