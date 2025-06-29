@@ -50,9 +50,18 @@ export default function HomePage() {
           description: "Discover our premium crystal-infused skincare collection",
           buttonText: "Shop Now",
           image: "/w668.png",
+           mobileImage: "/w668.png",
         },
       ].map((slide, index) => (
         <SwiperSlide key={index} className="h-full w-full">
+
+            <div className="absolute inset-0 z-0">
+            <img 
+              src={slide.image} 
+              alt={slide.title}
+              className="w-full h-full object-cover md:object-contain"
+            />
+          </div>
           <div className="container mx-auto h-full flex items-center px-4 md:px-6 relative z-10">
             <motion.div 
               className="w-full md:w-1/2 pr-0 md:pr-12 text-center md:text-left"
