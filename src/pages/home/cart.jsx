@@ -9,15 +9,9 @@ export default function Cart() {
   const [total, setTotal] = useState(0);
   const [labeledTotal, setLabeledTotal] = useState(0);
   const navigate = useNavigate();
-  const { currentUser } = useAuth();
 
   const refreshCart = () => {
-    if (!currentUser) {
-      setCart([]);
-      return;
-    }
-    
-    const updatedCart = loadCart(currentUser.id); 
+    const updatedCart = loadCart();
     setCart(updatedCart);
     
     axios
@@ -34,21 +28,20 @@ export default function Cart() {
 
   useEffect(() => {
     refreshCart();
-  }, [currentUser]);
+  }, []);
 
-   const handleRemoveItem = (productId) => {
-    deleteItem(currentUser.id, productId); 
+  const handleRemoveItem = (productId) => {
+    deleteItem(productId);
     refreshCart();
   };
 
   function onOrderCheckOutClick() {
     navigate("/shipping", {
       state: {
-        items: loadCart(currentUser.id) 
+        items: loadCart()
       }
     });    
   }
-
 
   return (
     <div className="container mx-auto px-4 py-8">
