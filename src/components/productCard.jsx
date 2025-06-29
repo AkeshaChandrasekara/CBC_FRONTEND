@@ -78,7 +78,7 @@ export default function ProductCard(props) {
             View Details
           </Link>
           <button 
-            onClick={addToCart}
+        onClick={() => addToCart(product)}
             className="text-sm font-medium bg-yellow-500 text-white px-3 py-1 rounded hover:bg-primary-dark transition-colors"
           >
             Add to Cart
