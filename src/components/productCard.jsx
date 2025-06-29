@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { addToCart } from "../utils/cartFunction";
 
 
 export default function ProductCard(props) {
@@ -7,10 +8,7 @@ export default function ProductCard(props) {
   const discountPercentage = isDiscounted 
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
-    const handleAddToCart = () => {
-    addToCart(product.productId, 1); 
-    toast.success(`${product.productName} added to cart!`);
-  };
+   
 
   return (
     <div className="group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-200">
@@ -80,7 +78,7 @@ export default function ProductCard(props) {
             View Details
           </Link>
           <button 
-            onClick={handleAddToCart}
+            onClick={addToCart}
             className="text-sm font-medium bg-yellow-500 text-white px-3 py-1 rounded hover:bg-primary-dark transition-colors"
           >
             Add to Cart
