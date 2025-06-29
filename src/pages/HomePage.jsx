@@ -195,13 +195,15 @@ export default function HomePage() {
               ))}
             </div>
             
-            <button className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center" 
-            onClick={() => navigate('/products')} >
-              <span>Discover</span>
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
+             <button 
+      className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
+      onClick={() => navigate('/products')}
+    >
+      <span>Discover</span>
+      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+      </svg>
+    </button>
           </div>
         </motion.div>
       ))}
