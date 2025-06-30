@@ -318,7 +318,7 @@ export default function HomePage() {
                         whileInView={{ opacity: 1, y: 0 }}
                         transition={{ duration: 0.6, delay: index * 0.1 }}
                         viewport={{ once: true }}
-                        className="bg-gray-800 p-8 rounded-xl"
+                        className="bg-gray-800 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center border border-slate-600/30 hover:border-yellow-400/30"
                       >
                         <div className="text-yellow-400 text-2xl mb-4">{testimonial.rating}</div>
                         <p className="text-lg text-gray-300 italic mb-6">"{testimonial.quote}"</p>
