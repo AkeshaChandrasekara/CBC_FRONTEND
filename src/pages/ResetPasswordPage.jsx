@@ -1,8 +1,10 @@
+import { Link } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import axios from 'axios';
 import toast from 'react-hot-toast';
+
 
 export default function ResetPasswordPage() {
   const { token } = useParams();
