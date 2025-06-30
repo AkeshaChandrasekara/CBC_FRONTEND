@@ -172,7 +172,7 @@ export default function ForgotPasswordPage() {
             transition={{ delay: 1.4, duration: 0.5 }}
           >
             <Link to="/login" className="font-medium text-yellow-600 hover:text-yellow-500">
-              ← Back to login
+              Back to login
             </Link>
           </motion.div>
         </motion.div>
