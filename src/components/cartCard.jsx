@@ -6,7 +6,7 @@ import { FiTrash2 } from "react-icons/fi";
 export default function CartCard(props) {
   const productId = props.productId;
   const qty = props.qty;
-  const { onRemove } = props; 
+  const { onRemove, isSelected, onSelect } = props;
 
   const [product, setProduct] = useState(null);
   const [loaded, setLoaded] = useState(false);
@@ -32,7 +32,7 @@ export default function CartCard(props) {
   const handleRemove = () => {
     deleteItem(productId);
     if (onRemove) {
-      onRemove(productId); 
+      onRemove(productId);
     }
   };
 
@@ -41,8 +41,14 @@ export default function CartCard(props) {
       {!loaded ? (
         <div className="animate-pulse bg-gray-200 rounded-lg h-24 w-full"></div>
       ) : (
-        <div className="flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 mb-4 border border-gray-100">
+        <div className={`flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 mb-4 border ${isSelected ? 'border-yellow-500' : 'border-gray-100'}`}>
           <div className="flex items-center space-x-4">
+            <input
+              type="checkbox"
+              checked={isSelected}
+              onChange={onSelect}
+              className="h-5 w-5 text-yellow-600 rounded focus:ring-yellow-500"
+            />
             <img
               src={product?.images[0]}
               className="w-20 h-20 object-cover rounded-lg"

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { loadCart, deleteItem } from "../../utils/cartFunction"; 
+import { loadCart, deleteItem, clearCart } from "../../utils/cartFunction"; 
 import CartCard from "../../components/cartCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
@@ -8,15 +8,28 @@ export default function Cart() {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
   const [labeledTotal, setLabeledTotal] = useState(0);
+  const [selectedItems, setSelectedItems] = useState([]);
   const navigate = useNavigate();
+
+  const toggleItemSelection = (productId) => {
+    setSelectedItems(prev => 
+      prev.includes(productId) 
+        ? prev.filter(id => id !== productId)
+        : [...prev, productId]
+    );
+  };
 
   const refreshCart = () => {
     const updatedCart = loadCart();
     setCart(updatedCart);
     
+    const itemsToCalculate = selectedItems.length > 0
+      ? updatedCart.filter(item => selectedItems.includes(item.productId))
+      : updatedCart;
+    
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
-        orderedItems: updatedCart,
+        orderedItems: itemsToCalculate,
       })
       .then((res) => {
         if(res.data.total != null){
@@ -28,19 +41,36 @@ export default function Cart() {
 
   useEffect(() => {
     refreshCart();
-  }, []);
+  }, [selectedItems]);
 
   const handleRemoveItem = (productId) => {
     deleteItem(productId);
+    setSelectedItems(prev => prev.filter(id => id !== productId));
     refreshCart();
   };
 
   function onOrderCheckOutClick() {
+    const cartItems = loadCart();
+    const itemsToCheckout = selectedItems.length > 0
+      ? cartItems.filter(item => selectedItems.includes(item.productId))
+      : cartItems;
+    
     navigate("/shipping", {
       state: {
-        items: loadCart()
+        items: itemsToCheckout
       }
-    });    
+    });
+
+    if (selectedItems.length > 0) {
+      selectedItems.forEach(productId => deleteItem(productId));
+    } else {
+      clearCart();
+    }
+    
+    setTimeout(() => {
+      refreshCart();
+      setSelectedItems([]);
+    }, 500);
   }
 
   return (
@@ -59,7 +89,9 @@ export default function Cart() {
                 key={item.productId}
                 productId={item.productId}
                 qty={item.qty}
-                onRemove={handleRemoveItem} 
+                onRemove={handleRemoveItem}
+                isSelected={selectedItems.includes(item.productId)}
+                onSelect={() => toggleItemSelection(item.productId)}
               />
             ))}
           </div>
@@ -67,6 +99,12 @@ export default function Cart() {
       </div>
 
       <div className="bg-gray-50 rounded-lg p-4 bottom-0 max-w-md ml-auto">
+        {selectedItems.length > 0 && (
+          <div className="mb-2 text-sm text-gray-600">
+            {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
+          </div>
+        )}
+        
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
             <span className="text-gray-600">Subtotal:</span>
@@ -82,13 +120,12 @@ export default function Cart() {
           </div>
         </div>
         
-
         <button 
           onClick={onOrderCheckOutClick} 
           className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
           disabled={cart.length === 0}
         >
-          Proceed to Checkout
+          {selectedItems.length > 0 ? 'Checkout Selected' : 'Proceed to Checkout'}
         </button>
       </div>
     </div>

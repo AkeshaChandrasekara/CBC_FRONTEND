@@ -1,14 +1,11 @@
 import { Link } from "react-router-dom";
 
-
-
 export default function ProductCard(props) {
   const product = props.product;
   const isDiscounted = product.lastPrice < product.price;
   const discountPercentage = isDiscounted 
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
-   
 
   return (
     <div className="group relative bg-white rounded-lg shadow-md hover:shadow-lg transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-200">
@@ -20,7 +17,6 @@ export default function ProductCard(props) {
           alt={product.productName}
         />
         
- 
         {isDiscounted && (
           <div className="absolute top-3 right-3 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-md">
             {discountPercentage}% OFF
@@ -28,15 +24,12 @@ export default function ProductCard(props) {
         )}
       </div>
 
-
       <div className="p-4 flex flex-col flex-grow">
-  
         <h2 className="text-lg font-semibold text-gray-800 mb-1">
           {product.productName}
         </h2>
         <p className="text-xs text-gray-500 mb-2">ID: {product.productId}</p>
         
-      
         <div className="flex items-center mb-3">
           <div className="flex text-yellow-400 mr-1">
             {[...Array(5)].map((_, i) => (
@@ -70,19 +63,13 @@ export default function ProductCard(props) {
           )}
         </div>
 
-        <div className="flex justify-between mt-4 pt-3 border-t border-gray-100">
+        <div className="flex justify-center mt-4 pt-3 border-t border-gray-100">
           <Link 
             to={`/productInfo/${product.productId}`}
-            className="text-sm font-medium text-gray-900 hover:text-primary-dark"
+            className="w-full text-center bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded transition-colors duration-300 text-sm"
           >
             View Details
           </Link>
-          <button 
-       
-            className="text-sm font-medium bg-yellow-500 text-white px-3 py-1 rounded hover:bg-primary-dark transition-colors"
-          >
-            Add to Cart
-          </button>
         </div>
       </div>
     </div>

@@ -3,8 +3,9 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductNotFound from "./productNotFound";
 import ImageSlider from "../../components/imgeSlider";
-import { addToCart } from "../../utils/cartFunction";
+import { addToCart, getCurrentUserEmail } from "../../utils/cartFunction";
 import toast from "react-hot-toast";
+
 
 export default function ProductOverview() {
   const params = useParams();
@@ -26,10 +27,16 @@ export default function ProductOverview() {
       });
   }, []);
 
-  function onAddtoCartClick() {
-    addToCart(product.productId, 1);
-    toast.success(`${product.productName} added to cart`);
+ function onAddtoCartClick() {
+  const email = getCurrentUserEmail();
+  if (!email) {
+    toast.error("Please login to add items to cart");
+    navigate('/login');
+    return;
   }
+  addToCart(product.productId, 1);
+  toast.success(`${product.productName} added to cart`);
+}
 
   function onBuyNowClick() {
     navigate("/shipping", {
