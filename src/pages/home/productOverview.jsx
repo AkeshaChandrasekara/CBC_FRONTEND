@@ -6,7 +6,6 @@ import ImageSlider from "../../components/imgeSlider";
 import { addToCart, getCurrentUserEmail } from "../../utils/cartFunction";
 import toast from "react-hot-toast";
 
-
 export default function ProductOverview() {
   const params = useParams();
   const productId = params.id;
@@ -27,16 +26,16 @@ export default function ProductOverview() {
       });
   }, []);
 
- function onAddtoCartClick() {
-  const email = getCurrentUserEmail();
-  if (!email) {
-    toast.error("Please login to add items to cart");
-    navigate('/login');
-    return;
+  function onAddtoCartClick() {
+    const email = getCurrentUserEmail();
+    if (!email) {
+      toast.error("Please login to add items to cart");
+      navigate('/login');
+      return;
+    }
+    addToCart(product.productId, 1);
+    toast.success(`${product.productName} added to cart`);
   }
-  addToCart(product.productId, 1);
-  toast.success(`${product.productName} added to cart`);
-}
 
   function onBuyNowClick() {
     navigate("/shipping", {
@@ -67,19 +66,23 @@ export default function ProductOverview() {
                 </div>
               </div>
 
-            
               <div className="lg:w-3/5 p-6">
-        
                 <div className="mb-4 border-b border-gray-100 pb-4">
                   <h1 className="text-2xl font-bold text-gray-900 mb-1">
                     {product.productName}
                   </h1>
-                  <p className="text-sm text-yellow-600 font-medium">
-                    {product.altNames.join(" • ")}
-                  </p>
+                  <div className="mt-2 space-y-1">
+                    {product.altNames.slice(0, 3).map((name, index) => (
+                      <p 
+                        key={index}
+                        className="text-sm text-yellow-500 font-medium italic"
+                      >
+                        {name}
+                      </p>
+                    ))}
+                  </div>
                 </div>
 
-             
                 <div className="mb-4 p-3 bg-yellow-50 rounded-lg">
                   {product.price > product.lastPrice ? (
                     <div className="flex flex-col">
@@ -102,7 +105,6 @@ export default function ProductOverview() {
                   )}
                 </div>
 
-               
                 <div className="mb-6">
                   <h3 className="text-sm font-semibold text-gray-900 mb-1 uppercase tracking-wider">
                     Description
@@ -112,14 +114,12 @@ export default function ProductOverview() {
                   </p>
                 </div>
 
-          
                 <div className="mb-6 text-center">
                   <span className="inline-block px-3 py-1 bg-gray-100 text-gray-600 text-xs rounded-full">
                     Product ID: {product.productId}
                   </span>
                 </div>
 
-           
                 <div className="flex flex-col sm:flex-row gap-3">
                   <button
                     onClick={onAddtoCartClick}

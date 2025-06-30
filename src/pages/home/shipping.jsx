@@ -92,12 +92,12 @@ export default function ShippingPage() {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
+    <div className="container mx-auto px-4 py-8 bg-white">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Shipping Details</h1>
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
 
-        <div className="bg-white rounded-lg shadow-sm p-6">
+        <div className="bg-gray-50 rounded-lg shadow-sm p-6">
           <div className="space-y-4">
             <div>
               <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
@@ -136,7 +136,7 @@ export default function ShippingPage() {
 
       
         <div className="space-y-6">
-          <div className="bg-white rounded-lg shadow-sm p-6">
+          <div className="bg-gray-50 rounded-lg shadow-sm p-6">
             <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
             <div className="space-y-4">
               {cart.map((item) => (
