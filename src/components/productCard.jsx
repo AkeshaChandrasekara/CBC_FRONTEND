@@ -1,4 +1,6 @@
 import { Link } from "react-router-dom";
+import { addToCart } from "../utils/cartFunction";
+import toast from "react-hot-toast";
 
 export default function ProductCard(props) {
   const product = props.product;
@@ -6,6 +8,14 @@ export default function ProductCard(props) {
   const discountPercentage = isDiscounted 
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
+
+  const handleAddToCart = () => {
+    addToCart(product.productId, 1);
+    toast.success(`${product.productName} added to cart!`);
+    if (props.onCartUpdate) {
+      props.onCartUpdate();
+    }
+  };
 
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 hover:border-gray-200">
@@ -32,7 +42,6 @@ export default function ProductCard(props) {
           <p className="text-[10px] text-gray-400 mt-0.5">ID: {product.productId}</p>
         </div>
         
-   
         <div className="flex items-center mb-3">
           <div className="flex text-yellow-400 mr-1">
             {[...Array(5)].map((_, i) => (
@@ -48,7 +57,6 @@ export default function ProductCard(props) {
           <span className="text-[10px] text-gray-400">({product.reviews || 0})</span>
         </div>
 
-      
         <div className="mt-auto">
           <div className="flex items-baseline space-x-1.5">
             <span className="text-base font-semibold text-gray-900">
@@ -67,7 +75,6 @@ export default function ProductCard(props) {
           )}
         </div>
 
-       
         <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
           <Link 
             to={`/productInfo/${product.productId}`}
@@ -80,6 +87,7 @@ export default function ProductCard(props) {
             Details
           </Link>
           <button
+            onClick={handleAddToCart}
             className="text-center bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-2 rounded-lg transition-all duration-300 text-xs hover:shadow-sm active:scale-95 flex items-center justify-center"
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
