@@ -6,30 +6,23 @@ import toast from 'react-hot-toast';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-// Test mode configuration
+// Enhanced test mode configuration
 const TEST_MODE = true; // Set to false to enable real payments
-const TEST_CARD_OPTIONS = {
-  style: {
-    base: {
-      fontSize: '16px',
-      color: '#424770',
-      '::placeholder': {
-        color: '#aab7c4',
-      },
-    },
-    invalid: {
-      color: '#9e2146',
-    },
-  },
-  value: {
-    postalCode: '12345'
-  }
+const TEST_CARD_DETAILS = {
+  number: '4242424242424242',
+  expiry: '12/34',
+  cvc: '123',
+  postalCode: '12345'
 };
 
 const CheckoutForm = ({ orderData, onSuccess }) => {
   const stripe = useStripe();
   const elements = useElements();
   const [processing, setProcessing] = useState(false);
+  const [testCardNumber, setTestCardNumber] = useState(TEST_CARD_DETAILS.number);
+  const [testExpiry, setTestExpiry] = useState(TEST_CARD_DETAILS.expiry);
+  const [testCvc, setTestCvc] = useState(TEST_CARD_DETAILS.cvc);
+  const [testPostalCode, setTestPostalCode] = useState(TEST_CARD_DETAILS.postalCode);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -41,10 +34,10 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
     setProcessing(true);
 
     try {
-      // Always use test mode if enabled, regardless of environment
       if (TEST_MODE) {
-        console.log("ACADEMIC TEST MODE: Simulating payment");
+        console.log("ACADEMIC TEST MODE: Simulating payment with test data");
         
+        // Enhanced test payment simulation
         const testPayment = {
           paymentIntent: {
             id: 'pi_test_' + Math.random().toString(36).substring(2),
@@ -54,17 +47,22 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
             created: Math.floor(Date.now() / 1000),
             metadata: {
               test_mode: "true",
-              academic_project: "true"
+              academic_project: "true",
+              test_card_last4: testCardNumber.slice(-4),
+              test_expiry: testExpiry,
+              test_cvc: testCvc
             }
           }
         };
         
-        toast.success("Academic Project: Test payment successful");
-        onSuccess(testPayment.paymentIntent);
+        toast.success("Academic Project: Test payment processed successfully");
+        setTimeout(() => {
+          onSuccess(testPayment.paymentIntent);
+        }, 1500); // Simulate processing delay
         return;
       }
 
-      // This part will only execute if TEST_MODE is false
+      // Real payment processing would go here
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-payment-intent`,
         orderData,
@@ -76,7 +74,6 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
       );
 
       const { clientSecret } = response.data;
-
       const result = await stripe.confirmCardPayment(clientSecret, {
         payment_method: {
           card: elements.getElement(CardElement),
@@ -103,32 +100,92 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
       <div className="border border-gray-300 p-3 rounded-lg">
-        <CardElement options={TEST_CARD_OPTIONS} />
+        <CardElement options={{
+          style: {
+            base: {
+              fontSize: '16px',
+              color: '#424770',
+              '::placeholder': {
+                color: '#aab7c4',
+              },
+            },
+            invalid: {
+              color: '#9e2146',
+            },
+          },
+          value: {
+            postalCode: testPostalCode
+          }
+        }} />
       </div>
       
       {TEST_MODE && (
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 className="font-bold text-blue-800 mb-2">Academic Project Notice</h3>
-          <p className="text-sm text-blue-700">
-            This is running in test mode. No real payments will be processed.
-            <br />
-            <strong>Test Card:</strong> 4242 4242 4242 4242
-            <br />
-            <strong>Expiry:</strong> Any future date
-            <br />
-            <strong>CVC:</strong> Any 3 digits
+          <h3 className="font-bold text-blue-800 mb-2">Academic Project - Test Mode</h3>
+          <div className="grid grid-cols-2 gap-3 mb-3">
+            <div>
+              <label className="block text-sm font-medium text-blue-700 mb-1">Card Number</label>
+              <input
+                type="text"
+                value={testCardNumber}
+                onChange={(e) => setTestCardNumber(e.target.value)}
+                className="w-full p-2 border border-blue-200 rounded"
+                placeholder="4242 4242 4242 4242"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-700 mb-1">Expiry</label>
+              <input
+                type="text"
+                value={testExpiry}
+                onChange={(e) => setTestExpiry(e.target.value)}
+                className="w-full p-2 border border-blue-200 rounded"
+                placeholder="MM/YY"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-700 mb-1">CVC</label>
+              <input
+                type="text"
+                value={testCvc}
+                onChange={(e) => setTestCvc(e.target.value)}
+                className="w-full p-2 border border-blue-200 rounded"
+                placeholder="123"
+              />
+            </div>
+            <div>
+              <label className="block text-sm font-medium text-blue-700 mb-1">Postal Code</label>
+              <input
+                type="text"
+                value={testPostalCode}
+                onChange={(e) => setTestPostalCode(e.target.value)}
+                className="w-full p-2 border border-blue-200 rounded"
+                placeholder="12345"
+              />
+            </div>
+          </div>
+          <p className="text-xs text-blue-600">
+            Note: This is a test environment. No real payments will be processed.
           </p>
         </div>
       )}
       
       <button 
         type="submit" 
-        disabled={!stripe || processing}
-        className={`w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm ${
-          (!stripe || processing) ? 'opacity-50 cursor-not-allowed' : ''
-        }`}
+        className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm"
+        disabled={processing}
       >
-        {processing ? 'Processing...' : TEST_MODE ? 'Test Payment' : 'Pay Now'}
+        {processing ? (
+          <span className="flex items-center justify-center">
+            <svg className="animate-spin -ml-1 mr-2 h-4 w-4 text-black" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+              <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+              <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+            </svg>
+            Processing...
+          </span>
+        ) : (
+          TEST_MODE ? 'Process Test Payment' : 'Pay Now'
+        )}
       </button>
     </form>
   );
