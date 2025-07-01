@@ -6,7 +6,6 @@ import toast from 'react-hot-toast';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-// Force test mode for academic project
 const TEST_MODE = true;
 
 const CheckoutForm = ({ orderData, onSuccess }) => {
@@ -17,7 +16,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
     setProcessing(true);
 
     try {
-      // Always simulate payment in test mode
+
       console.log("ACADEMIC TEST MODE: Simulating payment");
       
       const testPayment = {
