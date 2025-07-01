@@ -64,7 +64,7 @@ export default function ShippingPage() {
       name,
       address,
       phone,
-      amount: total * 100, // Convert to cents for Stripe
+      amount: total * 100, 
     };
 
     setOrderData(order);
@@ -72,7 +72,7 @@ export default function ShippingPage() {
   }
 
   function handlePaymentSuccess(paymentIntent) {
-    // Now create the order in your database
+ 
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in to place an order.");
