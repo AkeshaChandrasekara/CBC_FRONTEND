@@ -9,7 +9,7 @@ export default function ProductCard(props) {
 
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 hover:border-gray-200">
-      {/* Image container with subtle frame */}
+      
       <div className="relative aspect-square overflow-hidden m-2 rounded-lg bg-gray-50">
         <img
           src={product.images[0]}
@@ -24,7 +24,6 @@ export default function ProductCard(props) {
         )}
       </div>
 
-      {/* Content container */}
       <div className="p-3 pt-1 flex flex-col flex-grow">
         <div className="mb-2">
           <h2 className="text-m font-bold text-gray-800 line-clamp-2 leading-tight">
@@ -33,7 +32,7 @@ export default function ProductCard(props) {
           <p className="text-[10px] text-gray-400 mt-0.5">ID: {product.productId}</p>
         </div>
         
-        {/* Rating */}
+   
         <div className="flex items-center mb-3">
           <div className="flex text-yellow-400 mr-1">
             {[...Array(5)].map((_, i) => (
@@ -49,7 +48,7 @@ export default function ProductCard(props) {
           <span className="text-[10px] text-gray-400">({product.reviews || 0})</span>
         </div>
 
-        {/* Price section */}
+      
         <div className="mt-auto">
           <div className="flex items-baseline space-x-1.5">
             <span className="text-base font-semibold text-gray-900">
@@ -68,7 +67,7 @@ export default function ProductCard(props) {
           )}
         </div>
 
-        {/* Button Group */}
+       
         <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
           <Link 
             to={`/productInfo/${product.productId}`}
