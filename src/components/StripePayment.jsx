@@ -6,7 +6,8 @@ import toast from 'react-hot-toast';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-// Test card details for development
+// Test mode configuration
+const TEST_MODE = true; // Set to false to enable real payments
 const TEST_CARD_OPTIONS = {
   style: {
     base: {
@@ -21,7 +22,7 @@ const TEST_CARD_OPTIONS = {
     },
   },
   value: {
-    postalCode: '12345' // Test postal code
+    postalCode: '12345'
   }
 };
 
@@ -40,27 +41,30 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
     setProcessing(true);
 
     try {
-     
-      if (import.meta.env.MODE === 'development') {
-        console.log("TEST MODE: Bypassing actual payment processing");
+      // Always use test mode if enabled, regardless of environment
+      if (TEST_MODE) {
+        console.log("ACADEMIC TEST MODE: Simulating payment");
         
-      
         const testPayment = {
           paymentIntent: {
             id: 'pi_test_' + Math.random().toString(36).substring(2),
             status: 'succeeded',
             amount: orderData.amount,
             currency: 'lkr',
-            created: Math.floor(Date.now() / 1000)
+            created: Math.floor(Date.now() / 1000),
+            metadata: {
+              test_mode: "true",
+              academic_project: "true"
+            }
           }
         };
         
-        toast.success("TEST MODE: Payment succeeded (simulated)");
+        toast.success("Academic Project: Test payment successful");
         onSuccess(testPayment.paymentIntent);
         return;
       }
 
-   
+      // This part will only execute if TEST_MODE is false
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-payment-intent`,
         orderData,
@@ -89,22 +93,8 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
         onSuccess(result.paymentIntent);
       }
     } catch (error) {
-      console.error("Payment error details:", error);
-      if (error.response) {
-      
-        console.error("Error data:", error.response.data);
-        console.error("Error status:", error.response.status);
-        console.error("Error headers:", error.response.headers);
-        toast.error(`Payment failed: ${error.response.data.message || error.response.statusText}`);
-      } else if (error.request) {
-       
-        console.error("No response received:", error.request);
-        toast.error("No response from server. Please check your connection.");
-      } else {
-   
-        console.error("Request setup error:", error.message);
-        toast.error("Payment setup failed. Please try again.");
-      }
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
     } finally {
       setProcessing(false);
     }
@@ -116,9 +106,20 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
         <CardElement options={TEST_CARD_OPTIONS} />
       </div>
       
-      <div className="text-sm text-gray-500 mb-2">
-        <strong>TEST MODE:</strong> Use card number 4242 4242 4242 4242, any future expiry, and any CVC
-      </div>
+      {TEST_MODE && (
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <h3 className="font-bold text-blue-800 mb-2">Academic Project Notice</h3>
+          <p className="text-sm text-blue-700">
+            This is running in test mode. No real payments will be processed.
+            <br />
+            <strong>Test Card:</strong> 4242 4242 4242 4242
+            <br />
+            <strong>Expiry:</strong> Any future date
+            <br />
+            <strong>CVC:</strong> Any 3 digits
+          </p>
+        </div>
+      )}
       
       <button 
         type="submit" 
@@ -127,7 +128,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
           (!stripe || processing) ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >
-        {processing ? 'Processing...' : 'Pay Now'}
+        {processing ? 'Processing...' : TEST_MODE ? 'Test Payment' : 'Pay Now'}
       </button>
     </form>
   );
