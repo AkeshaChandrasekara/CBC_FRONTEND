@@ -1,8 +1,9 @@
+import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import CartCard from "../../components/cartCard";
 import toast from "react-hot-toast";
-import { useEffect, useState } from "react";
 import axios from "axios";
+import StripePayment from "../../components/StripePayment";
 
 export default function ShippingPage() {
   const location = useLocation();
@@ -13,6 +14,8 @@ export default function ShippingPage() {
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
+  const [orderData, setOrderData] = useState(null);
+  const [showPayment, setShowPayment] = useState(false);
 
   useEffect(() => {
     if (!cart) {
@@ -53,9 +56,23 @@ export default function ShippingPage() {
     return true;
   }
 
-  function createOrder() {
+  function prepareOrder() {
     if (!validateInputs()) return;
 
+    const order = {
+      orderedItems: cart,
+      name,
+      address,
+      phone,
+      amount: total * 100, // Convert to cents for Stripe
+    };
+
+    setOrderData(order);
+    setShowPayment(true);
+  }
+
+  function handlePaymentSuccess(paymentIntent) {
+    // Now create the order in your database
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in to place an order.");
@@ -65,12 +82,7 @@ export default function ShippingPage() {
     axios
       .post(
         import.meta.env.VITE_BACKEND_URL + "/api/orders",
-        {
-          orderedItems: cart,
-          name,
-          address,
-          phone,
-        },
+        orderData,
         {
           headers: {
             Authorization: "Bearer " + token,
@@ -93,87 +105,130 @@ export default function ShippingPage() {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Shipping Details</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">
+        {showPayment ? "Payment" : "Shipping Details"}
+      </h1>
       
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-
-        <div className="bg-gray-50 rounded-lg shadow-sm p-6">
-          <div className="space-y-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
-              <input
-                type="text"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
-                placeholder="Enter your full name"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
-              <textarea
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                rows="4"
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter your complete address"
-              />
-            </div>
-            
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
-              <input
-                type="text"
-                className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Enter your 10-digit phone number"
-              />
-            </div>
-          </div>
-        </div>
-
-      
-        <div className="space-y-6">
+      {showPayment ? (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
           <div className="bg-gray-50 rounded-lg shadow-sm p-6">
-            <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-            <div className="space-y-4">
-              {cart.map((item) => (
-                <CartCard
-                  key={item.productId}
-                  productId={item.productId}
-                  qty={item.qty}
-                />
-              ))}
-            </div>
+            <StripePayment 
+              orderData={orderData} 
+              onSuccess={handlePaymentSuccess} 
+            />
           </div>
-
-          <div className="bg-gray-50 rounded-lg p-4">
-            <div className="space-y-2 mb-4">
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Subtotal:</span>
-                <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
-              </div>
-              <div className="flex justify-between text-sm">
-                <span className="text-gray-600">Discount:</span>
-                <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
-              </div>
-              <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-                <span className="font-bold text-gray-900">Grand Total:</span>
-                <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+          
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-lg shadow-sm p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <CartCard
+                    key={item.productId}
+                    productId={item.productId}
+                    qty={item.qty}
+                  />
+                ))}
               </div>
             </div>
 
-            <button
-              onClick={createOrder}
-              className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
-            >
-              Place Order
-            </button>
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Subtotal:</span>
+                  <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Discount:</span>
+                  <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
+                </div>
+                <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
+                  <span className="font-bold text-gray-900">Grand Total:</span>
+                  <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      ) : (
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+          <div className="bg-gray-50 rounded-lg shadow-sm p-6">
+            <div className="space-y-4">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Name</label>
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Enter your full name"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Address</label>
+                <textarea
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  rows="4"
+                  value={address}
+                  onChange={(e) => setAddress(e.target.value)}
+                  placeholder="Enter your complete address"
+                />
+              </div>
+              
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Phone Number</label>
+                <input
+                  type="text"
+                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
+                  value={phone}
+                  onChange={(e) => setPhone(e.target.value)}
+                  placeholder="Enter your 10-digit phone number"
+                />
+              </div>
+            </div>
+          </div>
+
+          <div className="space-y-6">
+            <div className="bg-gray-50 rounded-lg shadow-sm p-6">
+              <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
+              <div className="space-y-4">
+                {cart.map((item) => (
+                  <CartCard
+                    key={item.productId}
+                    productId={item.productId}
+                    qty={item.qty}
+                  />
+                ))}
+              </div>
+            </div>
+
+            <div className="bg-gray-50 rounded-lg p-4">
+              <div className="space-y-2 mb-4">
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Subtotal:</span>
+                  <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Discount:</span>
+                  <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
+                </div>
+                <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
+                  <span className="font-bold text-gray-900">Grand Total:</span>
+                  <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+                </div>
+              </div>
+
+              <button
+                onClick={prepareOrder}
+                className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
+              >
+                Proceed to Payment
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
