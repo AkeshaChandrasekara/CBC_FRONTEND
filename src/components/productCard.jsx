@@ -8,6 +8,7 @@ export default function ProductCard(props) {
   const discountPercentage = isDiscounted 
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
+  const isInStock = product.stock > 0;
 
   const handleAddToCart = () => {
     addToCart(product.productId, 1);
@@ -32,6 +33,9 @@ export default function ProductCard(props) {
             {discountPercentage}% OFF
           </div>
         )}
+        <div className={`absolute bottom-2 left-2 text-xs font-bold px-2 py-1 rounded-full shadow-sm ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+          {isInStock ? 'In Stock' : 'Out of Stock'}
+        </div>
       </div>
 
       <div className="p-3 pt-1 flex flex-col flex-grow">
@@ -58,19 +62,22 @@ export default function ProductCard(props) {
         </div>
 
         <div className="mt-auto">
-          <div className="flex items-baseline space-x-1.5">
-            <span className="text-base font-semibold text-gray-900">
+          <div className="flex items-baseline gap-2">
+          
+            <span className="text-lg font-bold text-gray-900">
               LKR {product.lastPrice.toFixed(2)}
             </span>
+           
             {isDiscounted && (
-              <span className="text-xs text-gray-400 line-through">
+              <span className="text-sm text-gray-500 line-through">
                 LKR {product.price.toFixed(2)}
               </span>
             )}
           </div>
+          
           {isDiscounted && (
-            <p className="text-[10px] text-green-600 mt-0.5 font-medium">
-              Save LKR {(product.price - product.lastPrice).toFixed(2)}
+            <p className="text-xs text-green-700 mt-1 font-medium">
+              You save LKR {(product.price - product.lastPrice).toFixed(2)}
             </p>
           )}
         </div>
@@ -88,12 +95,13 @@ export default function ProductCard(props) {
           </Link>
           <button
             onClick={handleAddToCart}
-            className="text-center bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-2 rounded-lg transition-all duration-300 text-xs hover:shadow-sm active:scale-95 flex items-center justify-center"
+            disabled={!isInStock}
+            className={`text-center ${isInStock ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-gray-300 cursor-not-allowed'} text-gray-900 font-medium py-2 px-2 rounded-lg transition-all duration-300 text-xs hover:shadow-sm active:scale-95 flex items-center justify-center`}
           >
             <svg xmlns="http://www.w3.org/2000/svg" className="h-3 w-3 mr-1" fill="none" viewBox="0 0 24 24" stroke="currentColor">
               <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
             </svg>
-            Add to Cart
+            {isInStock ? 'Add to Cart' : 'Out of Stock'}
           </button>
         </div>
       </div>
