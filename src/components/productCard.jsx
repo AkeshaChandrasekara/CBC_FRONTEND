@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { addToCart } from "../utils/cartFunction";
+import { addToCart , getCurrentUserEmail} from "../utils/cartFunction";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
 
@@ -13,14 +13,19 @@ export default function ProductCard(props) {
   const navigate = useNavigate();
 
  const handleAddToCart = () => {
-  const success = addToCart(product.productId, 1);
-  if (!success) {
+  const email = getCurrentUserEmail(); 
+  if (!email) {
+    toast.error("Please login first to add products to your cart");
     navigate('/login');
     return;
   }
-  toast.success(`${product.productName} added to cart!`);
-  if (props.onCartUpdate) {
-    props.onCartUpdate();
+  
+  const success = addToCart(product.productId, 1);
+  if (success) {
+    toast.success(`${product.productName} added to cart!`);
+    if (props.onCartUpdate) {
+      props.onCartUpdate();
+    }
   }
 };
 
