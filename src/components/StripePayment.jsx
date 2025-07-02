@@ -107,7 +107,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
       
       {TEST_MODE && (
         <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-          <h3 className="font-bold text-blue-800 mb-2">Academic Project Notice</h3>
+          <h3 className="font-bold text-blue-800 mb-2">Important Notice</h3>
           <p className="text-sm text-blue-700">
             This is running in test mode. No real payments will be processed.
             <br />
