@@ -6,41 +6,79 @@ import toast from 'react-hot-toast';
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PUBLIC_KEY);
 
-const TEST_MODE = true;
+
+const TEST_MODE = true; 
 
 const CheckoutForm = ({ orderData, onSuccess }) => {
+  const stripe = useStripe();
+  const elements = useElements();
   const [processing, setProcessing] = useState(false);
 
   const handleSubmit = async (event) => {
     event.preventDefault();
+    
+    if (!stripe || !elements) {
+      return;
+    }
+
     setProcessing(true);
 
     try {
+      if (TEST_MODE) {
+        console.log("ACADEMIC TEST MODE: Simulating payment");
+        
 
-      console.log("ACADEMIC TEST MODE: Simulating payment");
-      
-      const testPayment = {
-        paymentIntent: {
-          id: 'pi_test_' + Math.random().toString(36).substring(2),
-          status: 'succeeded',
-          amount: orderData.amount,
-          currency: 'lkr',
-          created: Math.floor(Date.now() / 1000),
-          metadata: {
-            test_mode: "true",
-            academic_project: "true"
+        const testPayment = {
+          paymentIntent: {
+            id: 'pi_test_' + Math.random().toString(36).substring(2),
+            status: 'succeeded',
+            amount: orderData.amount,
+            currency: 'lkr',
+            created: Math.floor(Date.now() / 1000),
+            metadata: {
+              test_mode: "true",
+              academic_project: "true"
+            }
           }
+        };
+        
+        toast.success("Test payment processed successfully");
+        setTimeout(() => {
+          onSuccess(testPayment.paymentIntent);
+        }, 1500);
+        return;
+      }
+
+     
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-payment-intent`,
+        orderData,
+        {
+          headers: {
+            Authorization: "Bearer " + localStorage.getItem("token"),
+          },
         }
-      };
-      
-      toast.success("Test payment processed successfully");
-      setTimeout(() => {
-        onSuccess(testPayment.paymentIntent);
-      }, 1500);
-      
+      );
+
+      const { clientSecret } = response.data;
+      const result = await stripe.confirmCardPayment(clientSecret, {
+        payment_method: {
+          card: elements.getElement(CardElement),
+          billing_details: {
+            name: orderData.name,
+          },
+        },
+      });
+
+      if (result.error) {
+        toast.error(result.error.message);
+      } else if (result.paymentIntent.status === 'succeeded') {
+        toast.success("Payment succeeded!");
+        onSuccess(result.paymentIntent);
+      }
     } catch (error) {
-      console.error("Payment simulation error:", error);
-      toast.error("Payment simulation failed. Please try again.");
+      console.error("Payment error:", error);
+      toast.error("Payment failed. Please try again.");
     } finally {
       setProcessing(false);
     }
@@ -67,23 +105,27 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
         />
       </div>
       
-      <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
-        <h3 className="font-bold text-blue-800 mb-2">Academic Project - Test Mode</h3>
-        <p className="text-sm text-blue-700">
-          This is running in test mode. No real payments will be processed.
-          <br />
-          <strong>Test Card:</strong> 4242 4242 4242 4242
-          <br />
-          <strong>Expiry:</strong> Any future date (e.g., 12/34)
-          <br />
-          <strong>CVC:</strong> Any 3 digits (e.g., 123)
-        </p>
-      </div>
+      {TEST_MODE && (
+        <div className="bg-blue-50 p-4 rounded-lg border border-blue-200">
+          <h3 className="font-bold text-blue-800 mb-2">Academic Project Notice</h3>
+          <p className="text-sm text-blue-700">
+            This is running in test mode. No real payments will be processed.
+            <br />
+            <strong>Test Card:</strong> 4242 4242 4242 4242
+            <br />
+            <strong>Expiry:</strong> Any future date (e.g., 12/34)
+            <br />
+            <strong>CVC:</strong> Any 3 digits (e.g., 123)
+          </p>
+        </div>
+      )}
       
       <button 
         type="submit" 
-        className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm"
-        disabled={processing}
+        disabled={!stripe || processing}
+        className={`w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm ${
+          (!stripe || processing) ? 'opacity-50 cursor-not-allowed' : ''
+        }`}
       >
         {processing ? (
           <span className="flex items-center justify-center">
@@ -94,7 +136,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
             Processing...
           </span>
         ) : (
-          'Process Test Payment'
+          TEST_MODE ? 'Process Test Payment' : 'Pay Now'
         )}
       </button>
     </form>
