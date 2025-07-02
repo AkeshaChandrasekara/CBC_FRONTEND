@@ -42,7 +42,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
           }
         };
         
-        toast.success("Test payment processed successfully");
+        toast.success("Payment processed successfully");
         setTimeout(() => {
           onSuccess(testPayment.paymentIntent);
         }, 1500);
