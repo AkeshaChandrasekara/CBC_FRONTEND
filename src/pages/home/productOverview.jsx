@@ -12,6 +12,11 @@ export default function ProductOverview() {
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
   const navigate = useNavigate();
+  const isInStock = product?.stock > 0;
+  const isDiscounted = product?.lastPrice < product?.price;
+  const discountPercentage = isDiscounted 
+    ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
+    : 0;
 
   useEffect(() => {
     axios
@@ -27,6 +32,11 @@ export default function ProductOverview() {
   }, []);
 
   function onAddtoCartClick() {
+    if (!isInStock) {
+      toast.error("This product is out of stock");
+      return;
+    }
+    
     const email = getCurrentUserEmail();
     if (!email) {
       toast.error("Please login to add items to cart");
@@ -38,6 +48,11 @@ export default function ProductOverview() {
   }
 
   function onBuyNowClick() {
+    if (!isInStock) {
+      toast.error("This product is out of stock");
+      return;
+    }
+    
     navigate("/shipping", {
       state: {
         items: [{ productId: product.productId, qty: 1 }]
@@ -92,6 +107,9 @@ export default function ProductOverview() {
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
                   <ImageSlider images={product.images} />
+                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                    {isInStock ? 'In Stock' : 'Out of Stock'}
+                  </div>
                 </div>
               </div>
               <div className="lg:w-1/2 p-6">
@@ -100,7 +118,7 @@ export default function ProductOverview() {
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {product.productName}
                   </h1>
-                  <div className="flex flex-wrap gap-2 mb-3">
+                  <div className="flex items-center gap-2 mb-3">
                     {product.altNames.slice(0, 3).map((name, index) => (
                       <span 
                         key={index}
@@ -126,8 +144,8 @@ export default function ProductOverview() {
                     <span className="text-sm text-gray-500">({product.reviews || 0} reviews)</span>
                   </div>
                 </div>
-                <div className="mb-6  bg-white">
-                  {product.price > product.lastPrice ? (
+                <div className="mb-6 bg-white">
+                  {isDiscounted ? (
                     <div>
                       <div className="flex items-baseline mb-1">
                         <span className="text-3xl font-bold text-gray-900 mr-3">
@@ -139,7 +157,7 @@ export default function ProductOverview() {
                       </div>
                       <div className="flex items-center">
                         <span className="px-2 py-1 text-yellow-800 text-xs font-bold rounded mr-2">
-                          {Math.round(((product.price - product.lastPrice)/product.price)*100)}% OFF
+                          {discountPercentage}% OFF
                         </span>
                         <span className="text-sm text-yellow-700">
                           Save LKR {(product.price - product.lastPrice).toFixed(2)}
@@ -176,21 +194,23 @@ export default function ProductOverview() {
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={onAddtoCartClick}
-                    className="flex-1 flex items-center justify-center gap-2 bg-gray-900 hover:bg-gray-800 text-white font-medium py-3 px-6 rounded-lg transition-all text-sm"
+                    disabled={!isInStock}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-400 cursor-not-allowed'} text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    Add to Cart
+                    {isInStock ? 'Add to Cart' : 'Out of Stock'}
                   </button>
                   <button
                     onClick={onBuyNowClick}
-                    className="flex-1 flex items-center justify-center gap-2 bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-3 px-6 rounded-lg transition-all text-sm"
+                    disabled={!isInStock}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-yellow-300 cursor-not-allowed'} text-gray-900 font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
-                    Buy Now
+                    {isInStock ? 'Buy Now' : 'Out of Stock'}
                   </button>
                 </div>
               </div>
