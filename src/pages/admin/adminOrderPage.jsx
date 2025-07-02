@@ -78,12 +78,12 @@ export default function AdminOrdersPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
       <div className="max-w-7xl mx-auto">
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">Order Management</h1>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4 md:mb-6 gap-3">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-800">Order Management</h1>
           <div className="flex space-x-2">
-            <button className="px-4 py-2 bg-white border border-gray-300 rounded-lg text-sm font-medium hover:bg-gray-50">
+            <button className="px-3 py-1 md:px-4 md:py-2 bg-white border border-gray-300 rounded-lg text-xs md:text-sm font-medium hover:bg-gray-50">
               Export
             </button>
           </div>
@@ -91,37 +91,37 @@ export default function AdminOrdersPage() {
 
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {loading ? (
-            <div className="p-8 text-center">
-              <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-2 text-gray-600">Loading orders...</p>
+            <div className="p-6 md:p-8 text-center">
+              <div className="animate-spin rounded-full h-6 w-6 md:h-8 md:w-8 border-b-2 border-blue-500 mx-auto"></div>
+              <p className="mt-2 text-sm md:text-base text-gray-600">Loading orders...</p>
             </div>
           ) : orders.length === 0 ? (
-            <div className="p-8 text-center">
-              <FiAlertCircle className="mx-auto h-12 w-12 text-gray-400" />
-              <h3 className="mt-2 text-sm font-medium text-gray-900">No orders found</h3>
-              <p className="mt-1 text-sm text-gray-500">All new orders will appear here</p>
+            <div className="p-6 md:p-8 text-center">
+              <FiAlertCircle className="mx-auto h-8 w-8 md:h-12 md:w-12 text-gray-400" />
+              <h3 className="mt-2 text-sm md:text-base font-medium text-gray-900">No orders found</h3>
+              <p className="mt-1 text-xs md:text-sm text-gray-500">All new orders will appear here</p>
             </div>
           ) : (
             <div className="overflow-x-auto">
               <table className="min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-50">
                   <tr>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Order ID
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                       Customer
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">
                       Date
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Status
                     </th>
-                    <th scope="col" className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Total
                     </th>
-                    <th scope="col" className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
+                    <th scope="col" className="px-3 py-2 md:px-6 md:py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
                       Actions
                     </th>
                   </tr>
@@ -129,30 +129,30 @@ export default function AdminOrdersPage() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {orders.map((order) => (
                     <tr key={order.orderId} className="hover:bg-gray-50">
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm font-medium text-gray-900">
                         #{order.orderId.slice(0, 8)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-500 hidden sm:table-cell">
                         {order.name}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-500 hidden md:table-cell">
                         {new Date(order.date).toLocaleDateString()}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap">
                         {getStatusBadge(order.status)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-900">
                         LKR {calculateTotal(order.orderedItems).toFixed(2)}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-right text-xs md:text-sm font-medium">
                         <button
                           onClick={() => {
                             setSelectedOrder(order);
                             setDetailModalVisible(true);
                           }}
-                          className="text-blue-600 hover:text-blue-900 mr-4"
+                          className="text-blue-600 hover:text-blue-900 mr-2 md:mr-4"
                         >
-                          <FiEye className="inline mr-1" /> View
+                          <FiEye className="inline mr-1" /> <span className="hidden sm:inline">View</span>
                         </button>
                         <button
                           onClick={() => {
@@ -162,7 +162,7 @@ export default function AdminOrdersPage() {
                           }}
                           className="text-green-600 hover:text-green-900"
                         >
-                          <FiEdit className="inline mr-1" /> Update
+                          <FiEdit className="inline mr-1" /> <span className="hidden sm:inline">Update</span>
                         </button>
                       </td>
                     </tr>
@@ -174,80 +174,79 @@ export default function AdminOrdersPage() {
         </div>
       </div>
 
-
       {detailModalVisible && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="p-4 md:p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-800">Order Details</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-800">Order Details</h2>
                 <button onClick={closeModals} className="text-gray-400 hover:text-gray-500">
-                  <FiX className="h-6 w-6" />
+                  <FiX className="h-5 w-5 md:h-6 md:w-6" />
                 </button>
               </div>
-              <p className="text-sm text-gray-500 mt-1">#{selectedOrder.orderId}</p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">#{selectedOrder.orderId}</p>
             </div>
 
-            <div className="p-6 space-y-6">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">CUSTOMER INFORMATION</h3>
-                  <div className="space-y-2">
-                    <p className="text-sm"><span className="font-medium">Name:</span> {selectedOrder.name}</p>
-                    <p className="text-sm"><span className="font-medium">Phone:</span> {selectedOrder.phone}</p>
-                    <p className="text-sm"><span className="font-medium">Address:</span> {selectedOrder.address}</p>
+                  <h3 className="text-xs md:text-sm font-medium text-gray-500 mb-1 md:mb-2">CUSTOMER INFORMATION</h3>
+                  <div className="space-y-1 md:space-y-2">
+                    <p className="text-xs md:text-sm"><span className="font-medium">Name:</span> {selectedOrder.name}</p>
+                    <p className="text-xs md:text-sm"><span className="font-medium">Phone:</span> {selectedOrder.phone}</p>
+                    <p className="text-xs md:text-sm"><span className="font-medium">Address:</span> {selectedOrder.address}</p>
                   </div>
                 </div>
 
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 mb-2">ORDER INFORMATION</h3>
-                  <div className="space-y-2">
-                    <p className="text-sm"><span className="font-medium">Date:</span> {new Date(selectedOrder.date).toLocaleString()}</p>
-                    <p className="text-sm"><span className="font-medium">Status:</span> {getStatusBadge(selectedOrder.status)}</p>
-                    <p className="text-sm"><span className="font-medium">Notes:</span> {selectedOrder.notes || "None"}</p>
+                  <h3 className="text-xs md:text-sm font-medium text-gray-500 mb-1 md:mb-2">ORDER INFORMATION</h3>
+                  <div className="space-y-1 md:space-y-2">
+                    <p className="text-xs md:text-sm"><span className="font-medium">Date:</span> {new Date(selectedOrder.date).toLocaleString()}</p>
+                    <p className="text-xs md:text-sm"><span className="font-medium">Status:</span> {getStatusBadge(selectedOrder.status)}</p>
+                    <p className="text-xs md:text-sm"><span className="font-medium">Notes:</span> {selectedOrder.notes || "None"}</p>
                   </div>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 mb-4">ORDER ITEMS</h3>
-                <div className="space-y-4">
+                <h3 className="text-xs md:text-sm font-medium text-gray-500 mb-2 md:mb-4">ORDER ITEMS</h3>
+                <div className="space-y-3 md:space-y-4">
                   {selectedOrder.orderedItems.map((item, index) => (
-                    <div key={index} className="flex items-start border-b border-gray-100 pb-4">
-                      <img src={item.image} alt={item.name} className="w-16 h-16 rounded-md object-cover mr-4" />
+                    <div key={index} className="flex items-start border-b border-gray-100 pb-3 md:pb-4">
+                      <img src={item.image} alt={item.name} className="w-12 h-12 md:w-16 md:h-16 rounded-md object-cover mr-3 md:mr-4" />
                       <div className="flex-1">
-                        <p className="text-sm font-medium">{item.name}</p>
-                        <p className="text-sm text-gray-500">Qty: {item.quantity}</p>
+                        <p className="text-xs md:text-sm font-medium line-clamp-1">{item.name}</p>
+                        <p className="text-xs md:text-sm text-gray-500">Qty: {item.quantity}</p>
                       </div>
                       <div className="text-right">
-                        <p className="text-sm font-medium">LKR {(item.price * item.quantity).toFixed(2)}</p>
-                        <p className="text-xs text-gray-500">LKR {item.price.toFixed(2)} each</p>
+                        <p className="text-xs md:text-sm font-medium">LKR {(item.price * item.quantity).toFixed(2)}</p>
+                        <p className="text-2xs md:text-xs text-gray-500">LKR {item.price.toFixed(2)} each</p>
                       </div>
                     </div>
                   ))}
                 </div>
               </div>
 
-              <div className="border-t border-gray-200 pt-4">
+              <div className="border-t border-gray-200 pt-3 md:pt-4">
                 <div className="flex justify-between">
-                  <span className="text-sm font-medium">Subtotal</span>
-                  <span className="text-sm">LKR {calculateTotal(selectedOrder.orderedItems).toFixed(2)}</span>
+                  <span className="text-xs md:text-sm font-medium">Subtotal</span>
+                  <span className="text-xs md:text-sm">LKR {calculateTotal(selectedOrder.orderedItems).toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between mt-2">
-                  <span className="text-sm font-medium">Shipping</span>
-                  <span className="text-sm">LKR 0.00</span>
+                <div className="flex justify-between mt-1 md:mt-2">
+                  <span className="text-xs md:text-sm font-medium">Shipping</span>
+                  <span className="text-xs md:text-sm">LKR 0.00</span>
                 </div>
-                <div className="flex justify-between mt-2 text-base font-bold">
+                <div className="flex justify-between mt-1 md:mt-2 text-sm md:text-base font-bold">
                   <span>Total</span>
                   <span>LKR {calculateTotal(selectedOrder.orderedItems).toFixed(2)}</span>
                 </div>
               </div>
             </div>
 
-            <div className="p-4 border-t border-gray-200 flex justify-end">
+            <div className="p-3 md:p-4 border-t border-gray-200 flex justify-end">
               <button
                 onClick={closeModals}
-                className="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200"
+                className="px-3 py-1 md:px-4 md:py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 text-xs md:text-sm"
               >
                 Close
               </button>
@@ -256,27 +255,26 @@ export default function AdminOrdersPage() {
         </div>
       )}
 
-  
       {updateModalVisible && selectedOrder && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-xl shadow-xl max-w-md w-full">
-            <div className="p-6 border-b border-gray-200">
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-2 sm:p-4">
+          <div className="bg-white rounded-xl shadow-xl w-full max-w-md">
+            <div className="p-4 md:p-6 border-b border-gray-200">
               <div className="flex justify-between items-center">
-                <h2 className="text-xl font-bold text-gray-800">Update Order Status</h2>
+                <h2 className="text-lg md:text-xl font-bold text-gray-800">Update Order Status</h2>
                 <button onClick={closeModals} className="text-gray-400 hover:text-gray-500">
-                  <FiX className="h-6 w-6" />
+                  <FiX className="h-5 w-5 md:h-6 md:w-6" />
                 </button>
               </div>
-              <p className="text-sm text-gray-500 mt-1">#{selectedOrder.orderId}</p>
+              <p className="text-xs md:text-sm text-gray-500 mt-1">#{selectedOrder.orderId}</p>
             </div>
 
-            <div className="p-6 space-y-6">
+            <div className="p-4 md:p-6 space-y-4 md:space-y-6">
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Status</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Status</label>
                 <select
                   value={updateData.status}
                   onChange={(e) => setUpdateData({ ...updateData, status: e.target.value })}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm"
                 >
                   <option value="preparing">Preparing</option>
                   <option value="cancelled">Cancelled</option>
@@ -288,27 +286,27 @@ export default function AdminOrdersPage() {
               </div>
 
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">Admin Notes</label>
+                <label className="block text-xs md:text-sm font-medium text-gray-700 mb-1 md:mb-2">Admin Notes</label>
                 <textarea
                   value={updateData.notes}
                   onChange={(e) => setUpdateData({ ...updateData, notes: e.target.value })}
                   rows={3}
-                  className="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                  className="w-full p-2 md:p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-xs md:text-sm"
                   placeholder="Add any internal notes about this order..."
                 />
               </div>
             </div>
 
-            <div className="p-4 border-t border-gray-200 flex justify-end space-x-3">
+            <div className="p-3 md:p-4 border-t border-gray-200 flex justify-end space-x-2 md:space-x-3">
               <button
                 onClick={closeModals}
-                className="px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50"
+                className="px-3 py-1 md:px-4 md:py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-xs md:text-sm"
               >
                 Cancel
               </button>
               <button
                 onClick={handleUpdate}
-                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700"
+                className="px-3 py-1 md:px-4 md:py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 text-xs md:text-sm"
               >
                 Update Status
               </button>
