@@ -22,6 +22,7 @@ export default function AdminHomePage() {
     customers: 0,
     revenue: 0
   });
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,15 +90,37 @@ export default function AdminHomePage() {
 
   const handleNavClick = (tab) => {
     setActiveTab(tab);
+    setMobileMenuOpen(false);
   };
 
   return (
-    <div className="flex h-screen bg-gray-50">
-     
-      <div className="w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-xl flex flex-col">
-        <div className="p-6 flex items-center justify-center border-b border-slate-700">
-          <img src="/logo.png" alt="Crystal Beauty Clear" className="h-12 rounded-full" />
-          <h1 className="ml-3 text-xl font-bold">Admin Panel</h1>
+    <div className="flex flex-col md:flex-row h-screen bg-gray-50">
+   
+      <div className="md:hidden bg-slate-900 p-4 flex justify-between items-center text-white">
+        <div className="flex items-center">
+          <img src="/logo.png" alt="Crystal Beauty Clear" className="h-10 rounded-full" />
+          <h1 className="ml-3 text-lg font-bold">Admin Panel</h1>
+        </div>
+        <button 
+          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          className="p-2 rounded-md text-white focus:outline-none"
+        >
+          <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            {mobileMenuOpen ? (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+            ) : (
+              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M4 6h16M4 12h16M4 18h16" />
+            )}
+          </svg>
+        </button>
+      </div>
+    
+      <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-xl flex flex-col`}>
+        <div className="p-6 flex items-center justify-center border-b border-slate-700 md:block">
+          <div className="flex items-center">
+            <img src="/logo.png" alt="Crystal Beauty Clear" className="h-12 rounded-full" />
+            <h1 className="ml-3 text-xl font-bold hidden md:block">Admin Panel</h1>
+          </div>
         </div>
         
         <div className="p-4 space-y-1 mt-6 flex-1">
@@ -167,29 +190,28 @@ export default function AdminHomePage() {
         </div>
       </div>
 
-    
-      <div className="flex-1 flex flex-col overflow-hidden">
      
+      <div className="flex-1 flex flex-col overflow-hidden">
+      
         <div className="bg-white shadow-sm p-4 flex justify-between items-center">
-          <h2 className="text-xl font-semibold text-gray-800">
+          <h2 className="text-lg md:text-xl font-semibold text-gray-800">
             {user?.name ? `Welcome back, ${user.name.split(' ')[0]}` : 'Admin Dashboard'}
           </h2>
           <div className="flex items-center space-x-4">
-            <div className="h-10 w-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-bold shadow-md">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-bold shadow-md">
               {user?.name?.charAt(0).toUpperCase() || 'A'}
             </div>
           </div>
         </div>
 
-    
-        <div className="flex-1 overflow-auto p-6 bg-gray-100">
+        <div className="flex-1 overflow-auto p-4 md:p-6 bg-gray-100">
           {user != null ? (
             <Routes path="/*">
               <Route path="/" element={
                 <div className="space-y-6">
-                  <div className="bg-white rounded-xl shadow-sm p-6">
-                    <div className="flex justify-between items-center mb-6">
-                      <h3 className="text-2xl font-bold text-gray-800">Dashboard Overview</h3>
+                  <div className="bg-white rounded-xl shadow-sm p-4 md:p-6">
+                    <div className="flex flex-col md:flex-row md:justify-between md:items-center mb-6 gap-4">
+                      <h3 className="text-xl md:text-2xl font-bold text-gray-800">Dashboard Overview</h3>
                       <button 
                         onClick={() => fetchDashboardStats(localStorage.getItem("token"))}
                         className="px-4 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg text-sm font-medium transition-colors"
@@ -198,14 +220,14 @@ export default function AdminHomePage() {
                       </button>
                     </div>
         
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
-                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-6 rounded-lg text-white">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
+                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 md:p-6 rounded-lg text-white">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Total Products</p>
-                            <p className="text-3xl font-bold mt-1">{stats.products}</p>
+                            <p className="text-xs md:text-sm font-medium">Total Products</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">{stats.products}</p>
                           </div>
-                          <BsBoxSeam className="text-2xl opacity-80" />
+                          <BsBoxSeam className="text-xl md:text-2xl opacity-80" />
                         </div>
                         <div className="mt-4">
                           <div className="h-1 bg-blue-400 rounded-full">
@@ -214,13 +236,13 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-green-500 to-green-600 p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 md:p-6 rounded-lg text-white">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Total Orders</p>
-                            <p className="text-3xl font-bold mt-1">{stats.orders}</p>
+                            <p className="text-xs md:text-sm font-medium">Total Orders</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">{stats.orders}</p>
                           </div>
-                          <BsCart4 className="text-2xl opacity-80" />
+                          <BsCart4 className="text-xl md:text-2xl opacity-80" />
                         </div>
                         <div className="mt-4">
                           <div className="h-1 bg-green-400 rounded-full">
@@ -229,13 +251,13 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 md:p-6 rounded-lg text-white">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Total Customers</p>
-                            <p className="text-3xl font-bold mt-1">{stats.customers}</p>
+                            <p className="text-xs md:text-sm font-medium">Total Customers</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">{stats.customers}</p>
                           </div>
-                          <BsPeopleFill className="text-2xl opacity-80" />
+                          <BsPeopleFill className="text-xl md:text-2xl opacity-80" />
                         </div>
                         <div className="mt-4">
                           <div className="h-1 bg-purple-400 rounded-full">
@@ -244,13 +266,13 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-4 md:p-6 rounded-lg text-white">
                         <div className="flex items-center justify-between">
                           <div>
-                            <p className="text-sm font-medium">Total Revenue</p>
-                            <p className="text-3xl font-bold mt-1">Rs{stats.revenue.toFixed(2)}</p>
+                            <p className="text-xs md:text-sm font-medium">Total Revenue</p>
+                            <p className="text-2xl md:text-3xl font-bold mt-1">Rs{stats.revenue.toFixed(2)}</p>
                           </div>
-                          <BsGraphUp className="text-2xl opacity-80" />
+                          <BsGraphUp className="text-xl md:text-2xl opacity-80" />
                         </div>
                         <div className="mt-4">
                           <div className="h-1 bg-yellow-400 rounded-full">
@@ -260,37 +282,36 @@ export default function AdminHomePage() {
                       </div>
                     </div>
 
-                   
-                    <div className="bg-gray-50 rounded-lg p-6">
-                      <h4 className="text-lg font-semibold text-gray-800 mb-4">Recent Activity</h4>
+                    <div className="bg-gray-50 rounded-lg p-4 md:p-6">
+                      <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4">Recent Activity</h4>
                       <div className="space-y-4">
                         <div className="flex items-start">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
-                            <BsCart4 />
+                          <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
+                            <BsCart4 className="text-sm md:text-base" />
                           </div>
-                          <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">New order received</p>
-                            <p className="text-sm text-gray-500">Order #CBC1234 for Rs1,250.00</p>
+                          <div className="ml-3 md:ml-4">
+                            <p className="text-xs md:text-sm font-medium text-gray-900">New order received</p>
+                            <p className="text-xs md:text-sm text-gray-500">Order #CBC1234 for Rs1,250.00</p>
                             <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
                           </div>
                         </div>
                         <div className="flex items-start">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
-                            <BsPeopleFill />
+                          <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
+                            <BsPeopleFill className="text-sm md:text-base" />
                           </div>
-                          <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">New customer registered</p>
-                            <p className="text-sm text-gray-500">sachi@gmail.com</p>
+                          <div className="ml-3 md:ml-4">
+                            <p className="text-xs md:text-sm font-medium text-gray-900">New customer registered</p>
+                            <p className="text-xs md:text-sm text-gray-500">sachi@gmail.com</p>
                             <p className="text-xs text-gray-400 mt-1">5 hours ago</p>
                           </div>
                         </div>
                         <div className="flex items-start">
-                          <div className="flex-shrink-0 h-10 w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
-                            <BsBoxSeam />
+                          <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
+                            <BsBoxSeam className="text-sm md:text-base" />
                           </div>
-                          <div className="ml-4">
-                            <p className="text-sm font-medium text-gray-900">Product stock updated</p>
-                            <p className="text-sm text-gray-500">Vitamin C Serum stock increased to 50</p>
+                          <div className="ml-3 md:ml-4">
+                            <p className="text-xs md:text-sm font-medium text-gray-900">Product stock updated</p>
+                            <p className="text-xs md:text-sm text-gray-500">Vitamin C Serum stock increased to 50</p>
                             <p className="text-xs text-gray-400 mt-1">1 day ago</p>
                           </div>
                         </div>
