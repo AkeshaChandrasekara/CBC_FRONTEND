@@ -106,10 +106,11 @@ export default function ProductOverview() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
-                  <ImageSlider images={product.images} />
-                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                    <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
                     {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
+                  <ImageSlider images={product.images} />
+                
                 </div>
               </div>
               <div className="lg:w-1/2 p-6">

@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { addToCart } from "../utils/cartFunction";
 import toast from "react-hot-toast";
+import { useNavigate } from "react-router-dom";
 
 export default function ProductCard(props) {
   const product = props.product;
@@ -9,14 +10,19 @@ export default function ProductCard(props) {
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
   const isInStock = product.stock > 0;
+  const navigate = useNavigate();
 
-  const handleAddToCart = () => {
-    addToCart(product.productId, 1);
-    toast.success(`${product.productName} added to cart!`);
-    if (props.onCartUpdate) {
-      props.onCartUpdate();
-    }
-  };
+ const handleAddToCart = () => {
+  const success = addToCart(product.productId, 1);
+  if (!success) {
+    navigate('/login');
+    return;
+  }
+  toast.success(`${product.productName} added to cart!`);
+  if (props.onCartUpdate) {
+    props.onCartUpdate();
+  }
+};
 
   return (
     <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 hover:border-gray-200">

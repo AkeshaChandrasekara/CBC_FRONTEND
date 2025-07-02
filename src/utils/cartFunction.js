@@ -19,8 +19,7 @@ export function getCurrentUserEmail() {
 export function loadCart() {
   const email = getCurrentUserEmail();
   if (!email) {
-    console.warn("No user email found - loading empty cart");
-    return [];
+    return []; 
   }
   const cart = localStorage.getItem(`cart_${email}`);
   return cart ? JSON.parse(cart) : [];
@@ -29,8 +28,7 @@ export function loadCart() {
 export function saveCart(cart) {
   const email = getCurrentUserEmail();
   if (!email) {
-    console.error("Cannot save cart - no user email");
-    return;
+    return; 
   }
   localStorage.setItem(`cart_${email}`, JSON.stringify(cart));
 }
@@ -41,6 +39,12 @@ export function clearCart() {
   localStorage.removeItem(`cart_${email}`);
 }
 export function addToCart(productId, qty) {
+  const email = getCurrentUserEmail();
+  if (!email) {
+    toast.error("Please login first to add products to your cart");
+    return false;
+  }
+  
   console.log("Adding to cart - productId:", productId, "qty:", qty);
   const cart = loadCart();
   console.log("Current cart before update:", cart);
@@ -60,6 +64,7 @@ export function addToCart(productId, qty) {
   
   console.log("Cart after update:", cart);
   saveCart(cart);
+  return true;
 }
 
 export function deleteItem(productId) {

@@ -178,15 +178,7 @@ export default function AdminCustomersPage() {
                       </td>
                       <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
                         <div className="flex space-x-2">
-                          <button
-                            className="text-yellow-600 hover:text-yellow-900"
-                            onClick={() => {
-                           
-                              toast("Edit customer functionality coming soon");
-                            }}
-                          >
-                            <FiEdit2 size={18} />
-                          </button>
+                          
                           <button
                             className="text-red-600 hover:text-red-900"
                             onClick={() => handleDelete(customer._id)}
