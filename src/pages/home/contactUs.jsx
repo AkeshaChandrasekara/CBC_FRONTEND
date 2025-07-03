@@ -4,7 +4,6 @@ import { FiPhone } from 'react-icons/fi';
 import { FaFacebook, FaInstagram, FaTwitter } from 'react-icons/fa';
 import { Link } from 'react-router-dom';
 import { useState } from 'react';
- 
 
 export default function ContactPage() {
   const [formData, setFormData] = useState({
@@ -16,49 +15,66 @@ export default function ContactPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState(null);
 
- const handleSubmit = async (e) => {
-  e.preventDefault();
-  setIsSubmitting(true);
-  setSubmitStatus(null);
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
 
-  try {
-    const form = e.target;
-    form.action = `https://formsubmit.co/ajax/akeshanawanjali23@gmail.com`;
-    form.method = 'POST';
-    
-    if (!form.querySelector('[name="_replyto"]')) {
-      const replyTo = document.createElement('input');
-      replyTo.type = 'hidden';
-      replyTo.name = '_replyto';
-      replyTo.value = formData.email;
-      form.appendChild(replyTo);
-    }
-  
-    if (!form.querySelector('[name="_subject"]')) {
-      const subject = document.createElement('input');
-      subject.type = 'hidden';
-      subject.name = '_subject';
-      subject.value = `New Contact Form Submission: ${formData.subject}`;
-      form.appendChild(subject);
-    }
-    
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsSubmitting(true);
+    setSubmitStatus(null);
 
-    form.submit();
-    
-    setSubmitStatus('success');
-    setFormData({
-      name: '',
-      email: '',
-      subject: '',
-      message: ''
-    });
-  } catch (error) {
-    console.error('Error submitting form:', error);
-    setSubmitStatus('error');
-  } finally {
-    setIsSubmitting(false);
-  }
-};
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append('name', formData.name);
+      formDataToSend.append('email', formData.email);
+      formDataToSend.append('subject', formData.subject);
+      formDataToSend.append('message', formData.message);
+      formDataToSend.append('_replyto', formData.email);
+      formDataToSend.append('_subject', `New Contact Form Submission: ${formData.subject}`);
+
+      const response = await fetch('https://formsubmit.co/ajax/akeshanawanjali23@gmail.com', {
+        method: 'POST',
+        body: formDataToSend,
+      });
+
+
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+
+      // Try to parse as JSON, but fallback to text if needed
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+      
+        data = { success: "true" };
+      }
+
+      if (data.success === "true") {
+        setSubmitStatus('success');
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: ''
+        });
+      } else {
+        setSubmitStatus('error');
+      }
+    } catch (error) {
+      console.error('Error submitting form:', error);
+      setSubmitStatus('error');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
   return (
     <div className="flex flex-col min-h-screen">
   
