@@ -22,6 +22,8 @@ export default function AdminSettingsPage() {
     toast.success("Settings saved successfully");
   };
 
+
+  
   return (
     <div className="bg-white rounded-xl shadow-sm p-6">
       <div className="mb-6">

@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FiSearch, FiEdit2, FiTrash2, FiUserCheck, FiUserX } from "react-icons/fi";
+import { FiSearch,  FiTrash2,  FiUserX } from "react-icons/fi";
+
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState([]);

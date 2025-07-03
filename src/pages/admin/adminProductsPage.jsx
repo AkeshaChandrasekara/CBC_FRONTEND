@@ -55,6 +55,7 @@ export default function AdminProductsPage() {
           </Link>
         </div>
 
+
         <div className="bg-white rounded-xl shadow-sm overflow-hidden">
           <div className="p-3 md:p-4 border-b border-gray-200 flex flex-col sm:flex-row justify-between items-start sm:items-center gap-3">
             <div className="relative w-full sm:w-64">
