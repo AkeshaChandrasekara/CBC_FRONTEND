@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 import toast from "react-hot-toast";
-import { FiSearch,  FiTrash2,  FiUserX } from "react-icons/fi";
-
+import { FiSearch, FiTrash2, FiUserX } from "react-icons/fi";
 
 export default function AdminCustomersPage() {
   const [customers, setCustomers] = useState([]);
@@ -41,7 +40,6 @@ export default function AdminCustomersPage() {
       .toLowerCase()
       .includes(searchTerm.toLowerCase())
   );
-
 
   const indexOfLastCustomer = currentPage * customersPerPage;
   const indexOfFirstCustomer = indexOfLastCustomer - customersPerPage;
@@ -96,16 +94,16 @@ export default function AdminCustomersPage() {
   };
 
   return (
-    <div className="bg-white rounded-xl shadow-sm p-6">
-      <div className="flex justify-between items-center mb-6">
-        <h3 className="text-2xl font-bold text-gray-800">Manage Customers</h3>
-        <div className="relative w-64">
+    <div className="bg-white rounded-xl shadow-sm p-4 md:p-6">
+      <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4 md:mb-6 gap-4">
+        <h3 className="text-xl md:text-2xl font-bold text-gray-800">Manage Customers</h3>
+        <div className="relative w-full md:w-64">
           <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
             <FiSearch className="text-gray-400" />
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
+            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm md:text-base"
             placeholder="Search customers..."
             value={searchTerm}
             onChange={(e) => {
@@ -117,8 +115,8 @@ export default function AdminCustomersPage() {
       </div>
 
       {loading ? (
-        <div className="flex justify-center py-20">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+        <div className="flex justify-center py-12 md:py-20">
+          <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-yellow-500"></div>
         </div>
       ) : (
         <>
@@ -126,16 +124,16 @@ export default function AdminCustomersPage() {
             <table className="min-w-full divide-y divide-gray-200">
               <thead className="bg-gray-50">
                 <tr>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Customer
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">
                     Email
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Status
                   </th>
-                  <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                  <th className="px-3 py-2 md:px-6 md:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
                     Actions
                   </th>
                 </tr>
@@ -144,26 +142,26 @@ export default function AdminCustomersPage() {
                 {currentCustomers.length > 0 ? (
                   currentCustomers.map((customer) => (
                     <tr key={customer._id}>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap">
                         <div className="flex items-center">
-                          <div className="flex-shrink-0 h-10 w-10">
+                          <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10">
                             <img
-                              className="h-10 w-10 rounded-full"
-                              src={customer.profilePicture}
+                              className="h-8 w-8 md:h-10 md:w-10 rounded-full"
+                              src={customer.profilePicture || "/default-avatar.png"}
                               alt={`${customer.firstName} ${customer.lastName}`}
                             />
                           </div>
-                          <div className="ml-4">
-                            <div className="text-sm font-medium text-gray-900">
+                          <div className="ml-2 md:ml-4">
+                            <div className="text-xs md:text-sm font-medium text-gray-900 line-clamp-1">
                               {customer.firstName} {customer.lastName}
                             </div>
                           </div>
                         </div>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm text-gray-500 hidden sm:table-cell">
                         {customer.email}
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap">
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap">
                         <button
                           onClick={() =>
                             toggleBlockStatus(customer._id, customer.isBlocked)
@@ -177,14 +175,13 @@ export default function AdminCustomersPage() {
                           {customer.isBlocked ? "Blocked" : "Active"}
                         </button>
                       </td>
-                      <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                        <div className="flex space-x-2">
-                          
+                      <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm font-medium">
+                        <div className="flex space-x-1 md:space-x-2">
                           <button
                             className="text-red-600 hover:text-red-900"
                             onClick={() => handleDelete(customer._id)}
                           >
-                            <FiTrash2 size={18} />
+                            <FiTrash2 size={16} className="md:size-[18px]" />
                           </button>
                         </div>
                       </td>
@@ -194,7 +191,7 @@ export default function AdminCustomersPage() {
                   <tr>
                     <td
                       colSpan="4"
-                      className="px-6 py-4 text-center text-sm text-gray-500"
+                      className="px-6 py-4 text-center text-xs md:text-sm text-gray-500"
                     >
                       No customers found
                     </td>
@@ -204,10 +201,9 @@ export default function AdminCustomersPage() {
             </table>
           </div>
 
-      
           {filteredCustomers.length > customersPerPage && (
-            <div className="flex items-center justify-between mt-4">
-              <div className="text-sm text-gray-700">
+            <div className="flex flex-col sm:flex-row items-center justify-between mt-4 gap-3">
+              <div className="text-xs md:text-sm text-gray-700">
                 Showing <span className="font-medium">{indexOfFirstCustomer + 1}</span> to{" "}
                 <span className="font-medium">
                   {Math.min(indexOfLastCustomer, filteredCustomers.length)}
@@ -218,7 +214,7 @@ export default function AdminCustomersPage() {
                 <button
                   onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 1))}
                   disabled={currentPage === 1}
-                  className={`px-3 py-1 rounded-md ${
+                  className={`px-3 py-1 rounded-md text-xs md:text-sm ${
                     currentPage === 1
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-gray-200 text-gray-700 hover:bg-gray-300"
@@ -231,7 +227,7 @@ export default function AdminCustomersPage() {
                     setCurrentPage((prev) => Math.min(prev + 1, totalPages))
                   }
                   disabled={currentPage === totalPages}
-                  className={`px-3 py-1 rounded-md ${
+                  className={`px-3 py-1 rounded-md text-xs md:text-sm ${
                     currentPage === totalPages
                       ? "bg-gray-100 text-gray-400 cursor-not-allowed"
                       : "bg-gray-200 text-gray-700 hover:bg-gray-300"
