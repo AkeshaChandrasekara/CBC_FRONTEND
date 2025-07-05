@@ -145,6 +145,7 @@ export default function ProductOverview() {
                     <span className="text-sm text-gray-500">({product.reviews || 0} reviews)</span>
                   </div>
                 </div>
+               
                 <div className="mb-6 bg-white">
                   {isDiscounted ? (
                     <div>
@@ -191,6 +192,8 @@ export default function ProductOverview() {
                     </span>
                   </div>
                 </div>
+
+
 
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
