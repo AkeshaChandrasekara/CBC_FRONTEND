@@ -9,8 +9,6 @@ export default function ProductPage() {
   const [loadingStatus, setLoadingStatus] = useState("loading");
   const [query, setQuery] = useState("");
 
-  
-
   useEffect(() => {
     if (loadingStatus === "loading") {
       axios
@@ -76,7 +74,7 @@ export default function ProductPage() {
         </div>
       )}
 
-   
+  
       {loadingStatus === "loaded" && (
         <div className="max-w-7xl mx-auto">
           {products.length > 0 ? (
