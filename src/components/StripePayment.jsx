@@ -143,6 +143,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
   );
 };
 
+
 export default function StripePayment({ orderData, onSuccess }) {
   return (
     <Elements stripe={stripePromise}>

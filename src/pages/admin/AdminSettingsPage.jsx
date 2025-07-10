@@ -123,7 +123,7 @@ export default function AdminSettingsPage() {
             type="submit"
             className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm md:text-base"
           >
-            Save Settings
+              Save Settings
           </button>
         </div>
       </form>
