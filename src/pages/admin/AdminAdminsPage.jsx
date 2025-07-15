@@ -149,7 +149,8 @@ export default function AdminAdminsPage() {
                           <FiEdit2 size={16} className="md:size-[18px]" />
                         </button>
                         <button
-                          className="text-red-600 hover:text-red-900"
+                        
+                          className="text-red-500 hover:text-red-900"
                           onClick={() => handleDelete(admin._id)}
                         >
                           <FiTrash2 size={16} className="md:size-[18px]" />
