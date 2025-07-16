@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
 import axios from "axios";
+import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import ProductNotFound from "./productNotFound";
 import ImageSlider from "../../components/imgeSlider";
@@ -11,96 +11,25 @@ export default function ProductOverview() {
   const productId = params.id;
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
-  const [reviewText, setReviewText] = useState("");
-  const [reviewRating, setReviewRating] = useState(5);
-  const [hasPurchased, setHasPurchased] = useState(false);
-  const [isCheckingPurchase, setIsCheckingPurchase] = useState(true);
   const navigate = useNavigate();
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
   const discountPercentage = isDiscounted 
-    ? Math.round(((product?.price - product?.lastPrice) / product?.price) * 100)
+    ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productRes = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId);
-        
-        if (productRes.data == null) {
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
+      .then((res) => {
+        if (res.data == null) {
           setStatus("not-found");
         } else {
-          setProduct(productRes.data);
+          setProduct(res.data);
           setStatus("found");
-          
-          // Check if user has purchased this product
-          const email = getCurrentUserEmail();
-          if (email) {
-            try {
-              const ordersRes = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
-                headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-              });
-              
-              const hasBought = ordersRes.data.some(order => 
-                order.orderedItems.some(item => item.productId === productId)
-              );
-              setHasPurchased(hasBought);
-            } catch (error) {
-              console.error("Error checking purchase history:", error);
-              setHasPurchased(false);
-            }
-          }
-          setIsCheckingPurchase(false);
         }
-      } catch (error) {
-        console.error("Error fetching product:", error);
-        setStatus("error");
-      }
-    };
-    
-    fetchData();
-  }, [productId]);
-
-  const handleSubmitReview = async () => {
-    const email = getCurrentUserEmail();
-    if (!email) {
-      toast.error("Please login to submit a review");
-      navigate('/login');
-      return;
-    }
-    
-    if (!hasPurchased) {
-      toast.error("You must purchase this product before leaving a review");
-      return;
-    }
-    
-    if (!reviewText.trim()) {
-      toast.error("Please enter a review comment");
-      return;
-    }
-    
-    try {
-      const response = await axios.post(
-        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}/reviews`,
-        {
-          rating: reviewRating,
-          comment: reviewText,
-          userId: email
-        },
-        {
-          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` }
-        }
-      );
-      
-      toast.success("Review submitted successfully!");
-      setProduct(response.data.updatedProduct);
-      setReviewText("");
-      setReviewRating(5);
-    } catch (error) {
-      toast.error("Error submitting review");
-      console.error("Review submission error:", error);
-    }
-  };
+      });
+  }, []);
 
   function onAddtoCartClick() {
     if (!isInStock) {
@@ -177,13 +106,15 @@ export default function ProductOverview() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
-                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                    <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
                     {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
                   <ImageSlider images={product.images} />
+                
                 </div>
               </div>
               <div className="lg:w-1/2 p-6">
+              
                 <div className="mb-6">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {product.productName}
@@ -203,7 +134,7 @@ export default function ProductOverview() {
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`w-4 h-4 ${i < (product.rating || 0) ? 'text-yellow-400' : 'text-gray-300'}`}
+                          className={`w-4 h-4 ${i < (product.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -211,7 +142,7 @@ export default function ProductOverview() {
                         </svg>
                       ))}
                     </div>
-                    <span className="text-sm text-gray-500">({product.reviews?.length || 0} reviews)</span>
+                    <span className="text-sm text-gray-500">({product.reviews || 0} reviews)</span>
                   </div>
                 </div>
                
@@ -262,6 +193,8 @@ export default function ProductOverview() {
                   </div>
                 </div>
 
+
+
                 <div className="flex flex-col sm:flex-row gap-4">
                   <button
                     onClick={onAddtoCartClick}
@@ -285,93 +218,6 @@ export default function ProductOverview() {
                   </button>
                 </div>
               </div>
-            </div>
-          </div>
-
-          {/* Reviews Section */}
-          <div className="mt-12 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-6">
-            <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
-            
-            {/* Review form */}
-            {!isCheckingPurchase && (
-              <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-                {hasPurchased ? (
-                  <>
-                    <h3 className="text-lg font-semibold mb-4">Write a Review</h3>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Rating</label>
-                      <div className="flex">
-                        {[1, 2, 3, 4, 5].map((star) => (
-                          <button
-                            key={star}
-                            onClick={() => setReviewRating(star)}
-                            className={`text-2xl ${star <= reviewRating ? 'text-yellow-400' : 'text-gray-300'}`}
-                          >
-                            ★
-                          </button>
-                        ))}
-                      </div>
-                    </div>
-                    <div className="mb-4">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">Your Review</label>
-                      <textarea
-                        value={reviewText}
-                        onChange={(e) => setReviewText(e.target.value)}
-                        className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
-                        rows="4"
-                        placeholder="Share your experience with this product..."
-                      />
-                    </div>
-                    <button
-                      onClick={handleSubmitReview}
-                      className="bg-yellow-500 hover:bg-yellow-600 text-white font-medium py-2 px-6 rounded-lg transition-colors"
-                    >
-                      Submit Review
-                    </button>
-                  </>
-                ) : (
-                  <div className="text-center py-4">
-                    <p className="text-gray-600">
-                      {getCurrentUserEmail() 
-                        ? "You need to purchase this product to leave a review"
-                        : "Please login to leave a review"}
-                    </p>
-                  </div>
-                )}
-              </div>
-            )}
-            
-            {/* Reviews list */}
-            <div className="space-y-6">
-              {product.reviews && product.reviews.length > 0 ? (
-                product.reviews.map((review, index) => (
-                  <div key={index} className="border-b border-gray-200 pb-6 last:border-0">
-                    <div className="flex items-center mb-2">
-                      <div className="flex mr-2">
-                        {[...Array(5)].map((_, i) => (
-                          <svg
-                            key={i}
-                            className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                          >
-                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
-                          </svg>
-                        ))}
-                      </div>
-                      <span className="text-sm text-gray-500">
-                        {new Date(review.createdAt).toLocaleDateString()}
-                      </span>
-                    </div>
-                    <p className="text-gray-700 mb-2">{review.comment}</p>
-                    <p className="text-sm text-gray-500">By {review.userId}</p>
-                  </div>
-                ))
-              ) : (
-                <div className="text-center py-8">
-                  <p className="text-gray-500">No reviews yet. Be the first to review!</p>
-                </div>
-              )}
             </div>
           </div>
         </div>
