@@ -35,18 +35,19 @@ export default function Header() {
           >
             About Us
           </Link>
-          <Link
-            to="/products"
-            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
-          >
-            Products
-          </Link>
+     
           
           <Link
             to="/contact"
             className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
           >
             Contact Us
+          </Link>
+               <Link
+            to="/products"
+            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
+          >
+            Products
           </Link>
           <Link
             to="/cart"
