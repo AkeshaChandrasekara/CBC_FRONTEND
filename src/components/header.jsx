@@ -29,7 +29,14 @@ export default function Header() {
           >
             Home
           </Link>
-          <Link
+         
+               <Link
+            to="/products"
+            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
+          >
+            Products
+          </Link>
+           <Link
             to="/about"
             className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
           >
@@ -42,12 +49,6 @@ export default function Header() {
             className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
           >
             Contact Us
-          </Link>
-               <Link
-            to="/products"
-            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
-          >
-            Products
           </Link>
           <Link
             to="/cart"

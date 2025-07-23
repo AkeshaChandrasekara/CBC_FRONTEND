@@ -25,7 +25,16 @@ export default function NavSlider({ closeSlider }) {
           >
             Home
           </Link>
-           <Link
+         
+        
+                <Link
+            to="/products"
+            onClick={closeSlider}
+            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
+          >
+            Products
+          </Link>
+            <Link
             to="/about"
             onClick={closeSlider}
             className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
@@ -40,14 +49,6 @@ export default function NavSlider({ closeSlider }) {
             className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
           >
             Contact Us
-          </Link>
-        
-                <Link
-            to="/products"
-            onClick={closeSlider}
-            className="text-white font-medium text-lg hover:text-yellow-400 transition-colors duration-300"
-          >
-            Products
           </Link>
             <Link
             to="/cart"
