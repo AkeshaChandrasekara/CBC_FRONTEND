@@ -11,6 +11,10 @@ export default function ProductOverview() {
   const productId = params.id;
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [canReview, setCanReview] = useState(false);
+  const [reviewText, setReviewText] = useState("");
+  const [reviewRating, setReviewRating] = useState(5);
+  const [hasCheckedOrders, setHasCheckedOrders] = useState(false);
   const navigate = useNavigate();
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
@@ -19,8 +23,9 @@ export default function ProductOverview() {
     : 0;
 
   useEffect(() => {
+ 
     axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
+      .get(`${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`)
       .then((res) => {
         if (res.data == null) {
           setStatus("not-found");
@@ -28,8 +33,119 @@ export default function ProductOverview() {
           setProduct(res.data);
           setStatus("found");
         }
+      })
+      .catch((err) => {
+        console.error("Error fetching product:", err);
+        toast.error(`Failed to fetch product details: ${err.message}`);
+        setStatus("not-found");
       });
-  }, []);
+  }, [productId]);
+
+  useEffect(() => {
+
+    if (hasCheckedOrders || !product) return;
+
+    const email = getCurrentUserEmail();
+    const token = localStorage.getItem("token");
+    if (email && token) {
+      axios
+        .get(`${import.meta.env.VITE_BACKEND_URL}/api/orders`, {
+          headers: { Authorization: `Bearer ${token}` },
+        })
+        .then((res) => {
+          console.log("Orders response:", res.data);
+          const hasOrdered = res.data.some((order) =>
+            order.orderedItems.some((item) => {
+              console.log("Checking item:", item);
+              if (item.productId) {
+                return item.productId === productId;
+              } else if (item.name === product.productName) {
+                console.log("Matched by name:", item.name);
+                return true;
+              }
+              return false;
+            })
+          );
+          setCanReview(hasOrdered);
+          setHasCheckedOrders(true);
+          if (!hasOrdered) {
+            toast("No purchase found for this product", {
+              style: { background: '#fefcbf', color: '#744210' },
+              duration: 3000,
+            });
+          }
+        })
+        .catch((err) => {
+          console.error("Error fetching orders:", err);
+          toast.error(`Failed to verify purchase history: ${err.message}`);
+          setHasCheckedOrders(true);
+        });
+    } else {
+      console.log("No email or token found");
+      toast.error("Please login to check review eligibility");
+      setHasCheckedOrders(true);
+    }
+  }, [productId, product, hasCheckedOrders]);
+
+ const handleReviewSubmit = async () => {
+  const email = getCurrentUserEmail();
+  const token = localStorage.getItem("token");
+  
+  if (!email || !token) {
+    toast.error("Please login to submit a review");
+    navigate('/login');
+    return;
+  }
+
+  if (!reviewText.trim()) {
+    toast.error("Please enter a review");
+    return;
+  }
+
+  const reviewData = {
+    productId,
+    email,
+    rating: reviewRating,
+    comment: reviewText,
+  };
+  console.log('Submitting review with data:', reviewData);
+    console.log('Using token:', token); 
+
+  try {
+    const response = await axios.post(
+      `${import.meta.env.VITE_BACKEND_URL}/api/reviews`,
+      reviewData,
+      {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        },
+      }
+    );
+    console.log('Review submission response:', response.data);
+
+    if (response.status === 201) {
+      toast.success("Review submitted successfully");
+      setReviewText("");
+      setReviewRating(5);
+      
+      const productResponse = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/products/${productId}`
+      );
+      setProduct(productResponse.data);
+    }
+  } catch (err) {
+    console.error("Review submission error:", err);
+    const errorMessage = err.response?.data?.message || 
+                        err.message || 
+                        "Failed to submit review";
+    toast.error(errorMessage);
+    
+    if (err.response?.status === 401) {
+      navigate('/login');
+    }
+  }
+};
 
   function onAddtoCartClick() {
     if (!isInStock) {
@@ -106,15 +222,13 @@ export default function ProductOverview() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
-                    <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
                     {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
                   <ImageSlider images={product.images} />
-                
                 </div>
               </div>
               <div className="lg:w-1/2 p-6">
-              
                 <div className="mb-6">
                   <h1 className="text-3xl font-bold text-gray-900 mb-2">
                     {product.productName}
@@ -142,7 +256,7 @@ export default function ProductOverview() {
                         </svg>
                       ))}
                     </div>
-                    <span className="text-sm text-gray-500">({product.reviews || 0} reviews)</span>
+                    <span className="text-sm text-gray-500">({product.reviews?.length || 0} reviews)</span>
                   </div>
                 </div>
                
@@ -193,9 +307,7 @@ export default function ProductOverview() {
                   </div>
                 </div>
 
-
-
-                <div className="flex flex-col sm:flex-row gap-4">
+                <div className="flex flex-col sm:flex-row gap-4 mb-8">
                   <button
                     onClick={onAddtoCartClick}
                     disabled={!isInStock}
@@ -216,6 +328,69 @@ export default function ProductOverview() {
                     </svg>
                     {isInStock ? 'Buy Now' : 'Out of Stock'}
                   </button>
+                </div>
+
+                <div className="mb-8">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 border-b pb-2">
+                    Customer Reviews
+                  </h3>
+                  {canReview ? (
+                    <div className="mb-4">
+                      <div className="flex items-center mb-2">
+                        <span className="mr-2">Your Rating:</span>
+                        <select
+                          value={reviewRating}
+                          onChange={(e) => setReviewRating(parseInt(e.target.value))}
+                          className="border rounded px-2 py-1"
+                        >
+                          {[1, 2, 3, 4, 5].map((num) => (
+                            <option key={num} value={num}>
+                              {num} Star{num > 1 ? 's' : ''}
+                            </option>
+                          ))}
+                        </select>
+                      </div>
+                      <textarea
+                        value={reviewText}
+                        onChange={(e) => setReviewText(e.target.value)}
+                        placeholder="Write your review here..."
+                        className="w-full border rounded p-2 mb-2"
+                        rows="4"
+                      ></textarea>
+                      <button
+                        onClick={handleReviewSubmit}
+                        className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded-lg"
+                      >
+                        Submit Review
+                      </button>
+                    </div>
+                  ) : (
+                    <p className="text-gray-500 mb-4">
+                      Purchase this product to leave a review
+                    </p>
+                  )}
+                  <div className="space-y-4">
+                    {product.reviews?.map((review, index) => (
+                      <div key={index} className="border-t pt-2">
+                        <div className="flex items-center mb-1">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <p className="text-gray-700">{review.comment}</p>
+                        <p className="text-sm text-gray-500">
+                          By {review.email.split('@')[0]} on {new Date(review.date).toLocaleDateString()}
+                        </p>
+                      </div>
+                    ))}
+                  </div>
                 </div>
               </div>
             </div>
