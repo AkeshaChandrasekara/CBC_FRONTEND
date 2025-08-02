@@ -11,36 +11,76 @@ export default function ProductOverview() {
   const productId = params.id;
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
+  const [reviews, setReviews] = useState([]);
+  const [userReview, setUserReview] = useState(null);
+  const [rating, setRating] = useState(5);
+  const [comment, setComment] = useState("");
+  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const navigate = useNavigate();
+  const email = getCurrentUserEmail();
+
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
-  const discountPercentage = isDiscounted
+  const discountPercentage = isDiscounted 
     ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
     : 0;
 
   useEffect(() => {
-    axios
-      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
-      .then((res) => {
-        if (res.data == null) {
+    const fetchData = async () => {
+      try {
+        const productRes = await axios.get(
+          import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId
+        );
+        
+        if (productRes.data == null) {
           setStatus("not-found");
         } else {
-          setProduct(res.data);
+          setProduct(productRes.data);
           setStatus("found");
+          
+          // Fetch reviews
+          const reviewsRes = await axios.get(
+            import.meta.env.VITE_BACKEND_URL + `/api/reviews/product/${productId}`
+          );
+          setReviews(reviewsRes.data);
+          
+          // Fetch user's review if logged in
+          if (email) {
+            try {
+              const userReviewRes = await axios.get(
+                import.meta.env.VITE_BACKEND_URL + `/api/reviews/user/${productId}`,
+                {
+                  headers: {
+                    Authorization: `Bearer ${localStorage.getItem("token")}`
+                  }
+                }
+              );
+              setUserReview(userReviewRes.data);
+            } catch (error) {
+              // User hasn't reviewed yet or not logged in
+              setUserReview(null);
+            }
+          }
         }
-      });
-  }, []);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+        setStatus("error");
+      }
+    };
+
+    fetchData();
+  }, [productId, email]);
 
   function onAddtoCartClick() {
     if (!isInStock) {
       toast.error("This product is out of stock");
       return;
     }
-
+    
     const email = getCurrentUserEmail();
     if (!email) {
       toast.error("Please login to add items to cart");
-      navigate("/login");
+      navigate('/login');
       return;
     }
     addToCart(product.productId, 1);
@@ -52,69 +92,76 @@ export default function ProductOverview() {
       toast.error("This product is out of stock");
       return;
     }
-
+    
     navigate("/shipping", {
       state: {
-        items: [{ productId: product.productId, qty: 1 }],
-      },
+        items: [{ productId: product.productId, qty: 1 }]
+      }
     });
   }
 
+  const handleSubmitReview = async (e) => {
+    e.preventDefault();
+    
+    if (!email) {
+      toast.error("Please login to submit a review");
+      navigate('/login');
+      return;
+    }
+    
+    try {
+      const response = await axios.post(
+        import.meta.env.VITE_BACKEND_URL + "/api/reviews",
+        { productId, rating, comment },
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`
+          }
+        }
+      );
+      
+      toast.success("Review submitted successfully");
+      setUserReview(response.data.review);
+      setReviews([response.data.review, ...reviews]);
+      setIsReviewFormOpen(false);
+    } catch (error) {
+      toast.error(error.response?.data?.message || "Failed to submit review");
+    }
+  };
+
   return (
     <div className="min-h-screen bg-white py-8 px-2 sm:px-4 lg:px-6">
-      {status === "loading" && (
+      {status == "loading" && (
         <div className="flex justify-center items-center h-[50vh]">
           <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
         </div>
       )}
-
-      {status === "not-found" && <ProductNotFound />}
-
-      {status === "found" && (
+      
+      {status == "not-found" && <ProductNotFound />}
+      
+      {status == "found" && (
         <div className="max-w-6xl mx-auto">
           <nav className="flex mb-6" aria-label="Breadcrumb">
             <ol className="inline-flex items-center space-x-1 md:space-x-2">
               <li className="inline-flex items-center">
-                <a
-                  href="/"
-                  className="text-gray-700 hover:text-yellow-500 text-sm font-medium"
-                >
+                <a href="/" className="text-gray-700 hover:text-yellow-500 text-sm font-medium">
                   Home
                 </a>
               </li>
               <li>
                 <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    ></path>
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
                   </svg>
-                  <a
-                    href="#"
-                    className="ml-1 text-gray-700 hover:text-yellow-500 text-sm font-medium md:ml-2"
-                  >
+                  <a href="#" className="ml-1 text-gray-700 hover:text-yellow-500 text-sm font-medium md:ml-2">
                     Products
                   </a>
                 </div>
               </li>
               <li aria-current="page">
                 <div className="flex items-center">
-                  <svg
-                    className="w-4 h-4 text-gray-400"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z"
-                      clipRule="evenodd"
-                    ></path>
+                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
                   </svg>
                   <span className="ml-1 text-gray-500 text-sm font-medium md:ml-2">
                     {product.productName}
@@ -128,12 +175,8 @@ export default function ProductOverview() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
-                  <div
-                    className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${
-                      isInStock ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                    }`}
-                  >
-                    {isInStock ? "In Stock" : "Out of Stock"}
+                    <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                    {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
                   <ImageSlider images={product.images} />
                 </div>
@@ -145,7 +188,7 @@ export default function ProductOverview() {
                   </h1>
                   <div className="flex items-center gap-2 mb-3">
                     {product.altNames.slice(0, 3).map((name, index) => (
-                      <span
+                      <span 
                         key={index}
                         className="px-2 py-1 bg-gray-50 text-yellow-500 text-xs rounded-full font-medium"
                       >
@@ -158,9 +201,7 @@ export default function ProductOverview() {
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`w-4 h-4 ${
-                            i < (product.rating || 4) ? "text-yellow-400" : "text-gray-300"
-                          }`}
+                          className={`w-4 h-4 ${i < (product.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -168,13 +209,10 @@ export default function ProductOverview() {
                         </svg>
                       ))}
                     </div>
-                    
-                    <span className="text-sm text-gray-500">
-                      ({Array.isArray(product.reviews) ? product.reviews.length : product.reviews || 0} reviews)
-                    </span>
+                    <span className="text-sm text-gray-500">({reviews.length} reviews)</span>
                   </div>
                 </div>
-
+               
                 <div className="mb-6 bg-white">
                   {isDiscounted ? (
                     <div>
@@ -206,23 +244,15 @@ export default function ProductOverview() {
                   <h3 className="text-lg font-semibold text-gray-900 mb-3 border-b pb-2">
                     About This Product
                   </h3>
-                  <p className="text-gray-700 leading-relaxed">{product.description}</p>
+                  <p className="text-gray-700 leading-relaxed">
+                    {product.description}
+                  </p>
                 </div>
 
                 <div className="mb-8">
                   <div className="inline-flex items-center px-3 py-2 bg-gray-100 rounded-lg">
-                    <svg
-                      className="w-4 h-4 text-gray-500 mr-2"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"
-                      ></path>
+                    <svg className="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
                     </svg>
                     <span className="text-sm font-medium text-gray-600">
                       Product ID: {product.productId}
@@ -234,52 +264,118 @@ export default function ProductOverview() {
                   <button
                     onClick={onAddtoCartClick}
                     disabled={!isInStock}
-                    className={`flex-1 flex items-center justify-center gap-2 ${
-                      isInStock
-                        ? "bg-gray-900 hover:bg-gray-800"
-                        : "bg-gray-400 cursor-not-allowed"
-                    } text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-400 cursor-not-allowed'} text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                      ></path>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
                     </svg>
-                    {isInStock ? "Add to Cart" : "Out of Stock"}
+                    {isInStock ? 'Add to Cart' : 'Out of Stock'}
                   </button>
                   <button
                     onClick={onBuyNowClick}
                     disabled={!isInStock}
-                    className={`flex-1 flex items-center justify-center gap-2 ${
-                      isInStock
-                        ? "bg-yellow-500 hover:bg-yellow-400"
-                        : "bg-yellow-300 cursor-not-allowed"
-                    } text-gray-900 font-medium py-3 px-6 rounded-lg transition-all text-sm`}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-yellow-300 cursor-not-allowed'} text-gray-900 font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
-                    <svg
-                      className="w-5 h-5"
-                      fill="none"
-                      stroke="currentColor"
-                      viewBox="0 0 24 24"
-                    >
-                      <path
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"
-                      ></path>
+                    <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
                     </svg>
-                    {isInStock ? "Buy Now" : "Out of Stock"}
+                    {isInStock ? 'Buy Now' : 'Out of Stock'}
                   </button>
                 </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Reviews Section */}
+          <div className="max-w-6xl mx-auto mt-12">
+            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-6">
+              <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
+              
+              {/* Review Form */}
+              {!userReview && email && (
+                <div className="mb-8">
+                  <button 
+                    onClick={() => setIsReviewFormOpen(!isReviewFormOpen)}
+                    className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded-lg transition-all"
+                  >
+                    {isReviewFormOpen ? 'Cancel Review' : 'Write a Review'}
+                  </button>
+                  
+                  {isReviewFormOpen && (
+                    <form onSubmit={handleSubmitReview} className="mt-4 space-y-4">
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Rating
+                        </label>
+                        <div className="flex">
+                          {[1, 2, 3, 4, 5].map((star) => (
+                            <button
+                              key={star}
+                              type="button"
+                              onClick={() => setRating(star)}
+                              className="text-2xl focus:outline-none"
+                            >
+                              {star <= rating ? '★' : '☆'}
+                            </button>
+                          ))}
+                        </div>
+                      </div>
+                      
+                      <div>
+                        <label className="block text-sm font-medium text-gray-700 mb-1">
+                          Review
+                        </label>
+                        <textarea
+                          value={comment}
+                          onChange={(e) => setComment(e.target.value)}
+                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+                          rows="4"
+                          required
+                        />
+                      </div>
+                      
+                      <button
+                        type="submit"
+                        className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-all"
+                      >
+                        Submit Review
+                      </button>
+                    </form>
+                  )}
+                </div>
+              )}
+              
+              {/* Reviews List */}
+              <div className="space-y-6">
+                {reviews.length === 0 ? (
+                  <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+                ) : (
+                  reviews.map((review) => (
+                    <div key={review._id} className="border-b border-gray-200 pb-4">
+                      <div className="flex items-center mb-2">
+                        <div className="flex text-yellow-400 mr-2">
+                          {[...Array(5)].map((_, i) => (
+                            <svg
+                              key={i}
+                              className={`w-4 h-4 ${i < review.rating ? 'fill-current' : 'fill-gray-200'}`}
+                              viewBox="0 0 20 20"
+                            >
+                              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            </svg>
+                          ))}
+                        </div>
+                        <span className="text-sm text-gray-500 ml-1">
+                          by {review.email.split('@')[0]}
+                        </span>
+                        <span className="text-sm text-gray-500 mx-2">•</span>
+                        <span className="text-sm text-gray-500">
+                          {new Date(review.createdAt).toLocaleDateString()}
+                        </span>
+                      </div>
+                      <p className="text-gray-700">{review.comment}</p>
+                    </div>
+                  ))
+                )}
               </div>
             </div>
           </div>
