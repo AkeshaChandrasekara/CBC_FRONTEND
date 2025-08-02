@@ -5,6 +5,7 @@ import ProductNotFound from "./productNotFound";
 import ImageSlider from "../../components/imgeSlider";
 import { addToCart, getCurrentUserEmail } from "../../utils/cartFunction";
 import toast from "react-hot-toast";
+import ReviewForm from "../../components/ReviewForm";
 
 export default function ProductOverview() {
   const params = useParams();
@@ -12,6 +13,9 @@ export default function ProductOverview() {
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
   const [reviews, setReviews] = useState([]);
+  const [averageRating, setAverageRating] = useState(0);
+  const [reviewCount, setReviewCount] = useState(0);
+  const [showReviewForm, setShowReviewForm] = useState(false);
   const navigate = useNavigate();
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
@@ -20,7 +24,7 @@ export default function ProductOverview() {
     : 0;
 
   useEffect(() => {
- 
+    
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
       .then((res) => {
@@ -32,8 +36,16 @@ export default function ProductOverview() {
         }
       });
 
-    axios.get(import.meta.env.VITE_BACKEND_URL + `/api/reviews/${productId}`)
+
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${productId}`)
       .then(res => setReviews(res.data))
+      .catch(err => console.error(err));
+
+    axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/average/${productId}`)
+      .then(res => {
+        setAverageRating(res.data.averageRating || 0);
+        setReviewCount(res.data.count || 0);
+      })
       .catch(err => console.error(err));
   }, [productId]);
 
@@ -66,35 +78,33 @@ export default function ProductOverview() {
     });
   }
 
-  async function handleReviewSubmit(e) {
-    e.preventDefault();
-    const formData = new FormData(e.target);
-    const review = {
-      productId: product.productId,
-      rating: formData.get('rating'),
-      comment: formData.get('comment')
-    };
-    
-    try {
-      const response = await axios.post(
-        import.meta.env.VITE_BACKEND_URL + "/api/reviews",
-        review,
-        {
-          headers: {
-            'Authorization': `Bearer ${localStorage.getItem('token')}`
-          }
-        }
-      );
-      toast.success("Review added successfully");
-      const reviewsResponse = await axios.get(
-        import.meta.env.VITE_BACKEND_URL + `/api/reviews/${product.productId}`
-      );
-      setReviews(reviewsResponse.data);
-      e.target.reset();
-    } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to add review");
+  const handleReviewSubmit = (rating, comment) => {
+    const email = getCurrentUserEmail();
+    if (!email) {
+      toast.error("Please login to submit a review");
+      return;
     }
-  }
+
+    axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/reviews`, {
+      productId,
+      rating,
+      comment
+    }, {
+      headers: {
+        Authorization: `Bearer ${localStorage.getItem('token')}`
+      }
+    })
+    .then(res => {
+      setReviews([res.data.review, ...reviews]);
+      setAverageRating(((averageRating * reviewCount) + rating) / (reviewCount + 1));
+      setReviewCount(reviewCount + 1);
+      setShowReviewForm(false);
+      toast.success("Review submitted successfully!");
+    })
+    .catch(err => {
+      toast.error(err.response?.data?.message || "Failed to submit review");
+    });
+  };
 
   return (
     <div className="min-h-screen bg-white py-8 px-2 sm:px-4 lg:px-6">
@@ -142,7 +152,7 @@ export default function ProductOverview() {
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
                 <div className="w-full max-w-md">
-                    <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
                     {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
                   <ImageSlider images={product.images} />
@@ -168,7 +178,7 @@ export default function ProductOverview() {
                       {[...Array(5)].map((_, i) => (
                         <svg
                           key={i}
-                          className={`w-4 h-4 ${i < (product.rating || 4) ? 'text-yellow-400' : 'text-gray-300'}`}
+                          className={`w-4 h-4 ${i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
                           fill="currentColor"
                           viewBox="0 0 20 20"
                         >
@@ -176,7 +186,7 @@ export default function ProductOverview() {
                         </svg>
                       ))}
                     </div>
-                    <span className="text-sm text-gray-500">({reviews.length} reviews)</span>
+                    <span className="text-sm text-gray-500">({reviewCount} reviews)</span>
                   </div>
                 </div>
                
@@ -253,73 +263,77 @@ export default function ProductOverview() {
             </div>
           </div>
 
-          <div className="mt-12">
-            <h3 className="text-xl font-semibold mb-6 border-b pb-2">Customer Reviews</h3>
-      
-            {getCurrentUserEmail() && (
-              <div className="mb-8 p-4 bg-gray-50 rounded-lg">
-                <h4 className="font-medium mb-3">Write a Review</h4>
-                <form onSubmit={handleReviewSubmit}>
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium mb-1">Rating</label>
-                    <select 
-                      name="rating" 
-                      className="w-full p-2 border rounded"
-                      required
-                    >
-                      <option value="">Select rating</option>
-                      <option value="5">5 - Excellent</option>
-                      <option value="4">4 - Very Good</option>
-                      <option value="3">3 - Good</option>
-                      <option value="2">2 - Fair</option>
-                      <option value="1">1 - Poor</option>
-                    </select>
-                  </div>
-                  <div className="mb-3">
-                    <label className="block text-sm font-medium mb-1">Review</label>
-                    <textarea 
-                      name="comment" 
-                      rows="3" 
-                      className="w-full p-2 border rounded"
-                      required
-                    ></textarea>
-                  </div>
-                  <button 
-                    type="submit" 
-                    className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
-                  >
-                    Submit Review
-                  </button>
-                </form>
-              </div>
+          <div className="mt-12 bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-6">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
+              {getCurrentUserEmail() && (
+                <button 
+                  onClick={() => setShowReviewForm(!showReviewForm)}
+                  className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded-lg transition-all text-sm"
+                >
+                  {showReviewForm ? 'Cancel' : 'Write a Review'}
+                </button>
+              )}
+            </div>
+
+            {showReviewForm && (
+              <ReviewForm 
+                onSubmit={handleReviewSubmit}
+                onCancel={() => setShowReviewForm(false)}
+              />
             )}
 
-            {/* Reviews List */}
+            <div className="mb-6">
+              <div className="flex items-center">
+                <div className="flex items-center mr-2">
+                  {[...Array(5)].map((_, i) => (
+                    <svg
+                      key={i}
+                      className={`w-6 h-6 ${i < Math.round(averageRating) ? 'text-yellow-400' : 'text-gray-300'}`}
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
+                    </svg>
+                  ))}
+                </div>
+                <span className="text-lg font-medium text-gray-900">
+                  {averageRating.toFixed(1)} out of 5
+                </span>
+                <span className="mx-2 text-gray-400">•</span>
+                <span className="text-gray-600">{reviewCount} reviews</span>
+              </div>
+            </div>
+
             <div className="space-y-6">
-              {reviews.length > 0 ? (
-                reviews.map((review) => (
-                  <div key={review._id} className="border-b pb-4">
+              {reviews.length === 0 ? (
+                <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+              ) : (
+                reviews.map(review => (
+                  <div key={review._id} className="border-b border-gray-200 pb-6 last:border-0">
                     <div className="flex items-center mb-2">
-                      <div className="flex text-yellow-400 mr-2">
+                      <div className="flex items-center mr-2">
                         {[...Array(5)].map((_, i) => (
                           <svg
                             key={i}
-                            className={`w-4 h-4 ${i < review.rating ? 'fill-current' : 'fill-gray-200'}`}
+                            className={`w-4 h-4 ${i < review.rating ? 'text-yellow-400' : 'text-gray-300'}`}
+                            fill="currentColor"
                             viewBox="0 0 20 20"
                           >
-                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                            <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z" />
                           </svg>
                         ))}
                       </div>
-                      <span className="text-sm text-gray-500">
-                        by {review.email.split('@')[0]} on {new Date(review.date).toLocaleDateString()}
+                      <span className="text-sm font-medium text-gray-900">
+                        {review.email.split('@')[0]} 
                       </span>
                     </div>
-                    <p className="text-gray-700">{review.comment}</p>
+                    <p className="text-gray-700 mb-2">{review.comment}</p>
+                    <p className="text-xs text-gray-400">
+                      {new Date(review.date).toLocaleDateString()}
+                    </p>
                   </div>
                 ))
-              ) : (
-                <p className="text-gray-500">No reviews yet. Be the first to review!</p>
               )}
             </div>
           </div>
