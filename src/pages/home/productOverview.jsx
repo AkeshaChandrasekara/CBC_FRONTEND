@@ -12,13 +12,7 @@ export default function ProductOverview() {
   const [product, setProduct] = useState(null);
   const [status, setStatus] = useState("loading");
   const [reviews, setReviews] = useState([]);
-  const [userReview, setUserReview] = useState(null);
-  const [rating, setRating] = useState(5);
-  const [comment, setComment] = useState("");
-  const [isReviewFormOpen, setIsReviewFormOpen] = useState(false);
   const navigate = useNavigate();
-  const email = getCurrentUserEmail();
-
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
   const discountPercentage = isDiscounted 
@@ -26,50 +20,22 @@ export default function ProductOverview() {
     : 0;
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const productRes = await axios.get(
-          import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId
-        );
-        
-        if (productRes.data == null) {
+ 
+    axios
+      .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
+      .then((res) => {
+        if (res.data == null) {
           setStatus("not-found");
         } else {
-          setProduct(productRes.data);
+          setProduct(res.data);
           setStatus("found");
-          
-          // Fetch reviews
-          const reviewsRes = await axios.get(
-            import.meta.env.VITE_BACKEND_URL + `/api/reviews/product/${productId}`
-          );
-          setReviews(reviewsRes.data);
-          
-          // Fetch user's review if logged in
-          if (email) {
-            try {
-              const userReviewRes = await axios.get(
-                import.meta.env.VITE_BACKEND_URL + `/api/reviews/user/${productId}`,
-                {
-                  headers: {
-                    Authorization: `Bearer ${localStorage.getItem("token")}`
-                  }
-                }
-              );
-              setUserReview(userReviewRes.data);
-            } catch (error) {
-              // User hasn't reviewed yet or not logged in
-              setUserReview(null);
-            }
-          }
         }
-      } catch (error) {
-        console.error("Error fetching data:", error);
-        setStatus("error");
-      }
-    };
+      });
 
-    fetchData();
-  }, [productId, email]);
+    axios.get(import.meta.env.VITE_BACKEND_URL + `/api/reviews/${productId}`)
+      .then(res => setReviews(res.data))
+      .catch(err => console.error(err));
+  }, [productId]);
 
   function onAddtoCartClick() {
     if (!isInStock) {
@@ -100,34 +66,35 @@ export default function ProductOverview() {
     });
   }
 
-  const handleSubmitReview = async (e) => {
+  async function handleReviewSubmit(e) {
     e.preventDefault();
-    
-    if (!email) {
-      toast.error("Please login to submit a review");
-      navigate('/login');
-      return;
-    }
+    const formData = new FormData(e.target);
+    const review = {
+      productId: product.productId,
+      rating: formData.get('rating'),
+      comment: formData.get('comment')
+    };
     
     try {
       const response = await axios.post(
         import.meta.env.VITE_BACKEND_URL + "/api/reviews",
-        { productId, rating, comment },
+        review,
         {
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`
+            'Authorization': `Bearer ${localStorage.getItem('token')}`
           }
         }
       );
-      
-      toast.success("Review submitted successfully");
-      setUserReview(response.data.review);
-      setReviews([response.data.review, ...reviews]);
-      setIsReviewFormOpen(false);
+      toast.success("Review added successfully");
+      const reviewsResponse = await axios.get(
+        import.meta.env.VITE_BACKEND_URL + `/api/reviews/${product.productId}`
+      );
+      setReviews(reviewsResponse.data);
+      e.target.reset();
     } catch (error) {
-      toast.error(error.response?.data?.message || "Failed to submit review");
+      toast.error(error.response?.data?.message || "Failed to add review");
     }
-  };
+  }
 
   return (
     <div className="min-h-screen bg-white py-8 px-2 sm:px-4 lg:px-6">
@@ -286,97 +253,74 @@ export default function ProductOverview() {
             </div>
           </div>
 
-          {/* Reviews Section */}
-          <div className="max-w-6xl mx-auto mt-12">
-            <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200 p-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-6">Customer Reviews</h2>
-              
-              {/* Review Form */}
-              {!userReview && email && (
-                <div className="mb-8">
+          <div className="mt-12">
+            <h3 className="text-xl font-semibold mb-6 border-b pb-2">Customer Reviews</h3>
+      
+            {getCurrentUserEmail() && (
+              <div className="mb-8 p-4 bg-gray-50 rounded-lg">
+                <h4 className="font-medium mb-3">Write a Review</h4>
+                <form onSubmit={handleReviewSubmit}>
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium mb-1">Rating</label>
+                    <select 
+                      name="rating" 
+                      className="w-full p-2 border rounded"
+                      required
+                    >
+                      <option value="">Select rating</option>
+                      <option value="5">5 - Excellent</option>
+                      <option value="4">4 - Very Good</option>
+                      <option value="3">3 - Good</option>
+                      <option value="2">2 - Fair</option>
+                      <option value="1">1 - Poor</option>
+                    </select>
+                  </div>
+                  <div className="mb-3">
+                    <label className="block text-sm font-medium mb-1">Review</label>
+                    <textarea 
+                      name="comment" 
+                      rows="3" 
+                      className="w-full p-2 border rounded"
+                      required
+                    ></textarea>
+                  </div>
                   <button 
-                    onClick={() => setIsReviewFormOpen(!isReviewFormOpen)}
-                    className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded-lg transition-all"
+                    type="submit" 
+                    className="bg-yellow-500 text-white py-2 px-4 rounded hover:bg-yellow-600"
                   >
-                    {isReviewFormOpen ? 'Cancel Review' : 'Write a Review'}
+                    Submit Review
                   </button>
-                  
-                  {isReviewFormOpen && (
-                    <form onSubmit={handleSubmitReview} className="mt-4 space-y-4">
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Rating
-                        </label>
-                        <div className="flex">
-                          {[1, 2, 3, 4, 5].map((star) => (
-                            <button
-                              key={star}
-                              type="button"
-                              onClick={() => setRating(star)}
-                              className="text-2xl focus:outline-none"
-                            >
-                              {star <= rating ? '★' : '☆'}
-                            </button>
-                          ))}
-                        </div>
-                      </div>
-                      
-                      <div>
-                        <label className="block text-sm font-medium text-gray-700 mb-1">
-                          Review
-                        </label>
-                        <textarea
-                          value={comment}
-                          onChange={(e) => setComment(e.target.value)}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
-                          rows="4"
-                          required
-                        />
-                      </div>
-                      
-                      <button
-                        type="submit"
-                        className="bg-gray-900 hover:bg-gray-800 text-white font-medium py-2 px-4 rounded-lg transition-all"
-                      >
-                        Submit Review
-                      </button>
-                    </form>
-                  )}
-                </div>
-              )}
-              
-              {/* Reviews List */}
-              <div className="space-y-6">
-                {reviews.length === 0 ? (
-                  <p className="text-gray-500">No reviews yet. Be the first to review!</p>
-                ) : (
-                  reviews.map((review) => (
-                    <div key={review._id} className="border-b border-gray-200 pb-4">
-                      <div className="flex items-center mb-2">
-                        <div className="flex text-yellow-400 mr-2">
-                          {[...Array(5)].map((_, i) => (
-                            <svg
-                              key={i}
-                              className={`w-4 h-4 ${i < review.rating ? 'fill-current' : 'fill-gray-200'}`}
-                              viewBox="0 0 20 20"
-                            >
-                              <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
-                            </svg>
-                          ))}
-                        </div>
-                        <span className="text-sm text-gray-500 ml-1">
-                          by {review.email.split('@')[0]}
-                        </span>
-                        <span className="text-sm text-gray-500 mx-2">•</span>
-                        <span className="text-sm text-gray-500">
-                          {new Date(review.createdAt).toLocaleDateString()}
-                        </span>
-                      </div>
-                      <p className="text-gray-700">{review.comment}</p>
-                    </div>
-                  ))
-                )}
+                </form>
               </div>
+            )}
+
+            {/* Reviews List */}
+            <div className="space-y-6">
+              {reviews.length > 0 ? (
+                reviews.map((review) => (
+                  <div key={review._id} className="border-b pb-4">
+                    <div className="flex items-center mb-2">
+                      <div className="flex text-yellow-400 mr-2">
+                        {[...Array(5)].map((_, i) => (
+                          <svg
+                            key={i}
+                            className={`w-4 h-4 ${i < review.rating ? 'fill-current' : 'fill-gray-200'}`}
+                            viewBox="0 0 20 20"
+                          >
+                            <path d="M10 15l-5.878 3.09 1.123-6.545L.489 6.91l6.572-.955L10 0l2.939 5.955 6.572.955-4.756 4.635 1.123 6.545z" />
+                          </svg>
+                        ))}
+                      </div>
+                      <span className="text-sm text-gray-500">
+                        by {review.email.split('@')[0]} on {new Date(review.date).toLocaleDateString()}
+                      </span>
+                    </div>
+                    <p className="text-gray-700">{review.comment}</p>
+                  </div>
+                ))
+              ) : (
+                <p className="text-gray-500">No reviews yet. Be the first to review!</p>
+              )}
             </div>
           </div>
         </div>
