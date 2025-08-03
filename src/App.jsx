@@ -10,6 +10,7 @@ import { GoogleOAuthProvider } from '@react-oauth/google'
 import SignInPage from './pages/signUpPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
+import SuccessPage from './pages/SuccessPage'
 
 
 
@@ -34,6 +35,8 @@ function App() {
             <Route path="/reset-password/:token" element={<ResetPasswordPage/>}/>
         <Route path="/admin/*" element={<AdminHomePage/>}/>
         <Route path="/response" element={<ResponseTest/>}/> 
+        <Route path="/success" element={<SuccessPage/>}/> 
+ 
                    
       </Routes>
       </GoogleOAuthProvider>
