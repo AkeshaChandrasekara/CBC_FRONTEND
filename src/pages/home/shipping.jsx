@@ -91,8 +91,8 @@ export default function ShippingPage() {
       )
       .then((res) => {
         toast.success("Order placed successfully!");
-      //  navigate("/orders");
-       navigate('/success');
+      navigate("/orders");
+      // navigate('/success');
       })
       .catch((err) => {
         toast.error("Failed to place order. Please try again.");
