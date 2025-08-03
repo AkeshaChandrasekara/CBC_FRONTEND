@@ -26,7 +26,7 @@ export default function HomePage() {
         <Routes>
           <Route path="/" element={
             <>
-     <section className="relative h-[50vh] md:h-[70vh] bg-white overflow-hidden">
+     <section className="relative h-[45vh] md:h-[68vh] bg-white overflow-hidden">
   <div className="absolute inset-0 flex items-center justify-center">
     <Swiper
       modules={[Autoplay, EffectFade, Pagination]}
@@ -60,13 +60,12 @@ export default function HomePage() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.8 }}
             >
-              <h1 className="text-2xl sm:text-3xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-4 md:mb-6 leading-tight">
+              <h1 className="text-xl sm:text-3xl md:text-5xl lg:text-5xl font-bold text-gray-900 mb-4 md:mb-6 whitespace-nowrap">
                 {slide.title}
-                <br />
-                <span className="text-yellow-500">
-                  {slide.highlight}
-                </span>
               </h1>
+              <h2 className="text-yellow-500 text-xl sm:text-3xl md:text-5xl lg:text-5xl font-bold mb-4 md:mb-6">
+                {slide.highlight}
+              </h2>
               
               <p className="text-base md:text-xl text-gray-600 mb-6 md:mb-8">
                 {slide.description}
@@ -105,7 +104,6 @@ export default function HomePage() {
     </Swiper>
   </div>
 </section>
-
 <section className="py-16 bg-slate-900">
   <div className="container mx-auto px-6">
     <motion.div
@@ -128,7 +126,7 @@ export default function HomePage() {
           name: "Clarifying Ritual Set", 
           crystal: "Clear Quartz",
           description: "Complete regimen to purify skin", 
-          image: "/p11.jpg",
+          image: "/set3.jpg",
           benefits: [
             "Gently removes impurities",
             "Reduces appearance of pores",
@@ -139,7 +137,7 @@ export default function HomePage() {
           name: "Crystal Glow Serum", 
           crystal: "Diamond Dust",
           description: "Illuminating treatment for luminous skin", 
-          image: "/c52.jpg",
+          image: "/crset.jpg",
           benefits: [
             "Boosts radiance",
             "Smooths texture",
@@ -150,7 +148,7 @@ export default function HomePage() {
           name: "Overnight Renewal", 
           crystal: "Moonstone",
           description: "Nighttime repair with crystal energy", 
-          image: "/c4.jpg",
+          image: "/sus22.jpg",
           benefits: [
             "Intensive hydration",
             "Supports natural renewal",
@@ -166,12 +164,11 @@ export default function HomePage() {
           viewport={{ once: true }}
           className="group bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:translate-y-[-8px]"
         >
-   
-          <div className="relative h-60 bg-gradient-to-b from-gray-700 to-gray-900 flex items-center justify-center p-6">
+          <div className="relative h-60 bg-gradient-to-b from-gray-700 to-gray-900 overflow-hidden">
             <img 
               src={product.image} 
               alt={product.name}
-              className="h-48 object-contain transition-transform duration-500 group-hover:scale-105"
+              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
             />
             <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
               {product.crystal}
@@ -195,22 +192,21 @@ export default function HomePage() {
               ))}
             </div>
             
-             <button 
-      className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
-      onClick={() => navigate('/products')}
-    >
-      <span>Discover</span>
-      <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-      </svg>
-    </button>
+            <button 
+              className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
+              onClick={() => navigate('/products')}
+            >
+              <span>Discover</span>
+              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+              </svg>
+            </button>
           </div>
         </motion.div>
       ))}
     </div>
   </div>
 </section>
-
            
               <section className="py-16 bg-gray-50">
                 <div className="container mx-auto px-6">
