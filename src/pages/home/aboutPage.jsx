@@ -1,5 +1,6 @@
 import { motion } from 'framer-motion';
 import { Link } from 'react-router-dom';
+import { FaLeaf, FaFlask, FaGem } from 'react-icons/fa';
 
 export default function AboutPage() {
   return (
@@ -72,7 +73,7 @@ export default function AboutPage() {
   </div>
 </section>
 
-      <section className="py-16 bg-gradient-to-r from-slate-900 to-slate-800">
+  <section className="py-16 bg-gradient-to-r from-slate-900 to-slate-800">
   <div className="container mx-auto px-6">
     <motion.div
       initial={{ opacity: 0, y: 30 }}
@@ -91,17 +92,17 @@ export default function AboutPage() {
     <div className="grid grid-cols-1 md:grid-cols-3 gap-8 max-w-6xl mx-auto">
       {[
         { 
-          icon: "🌿",
+          icon: <FaLeaf className="w-12 h-12" />,
           title: "Natural Purity", 
           description: "We use only the cleanest, most effective natural ingredients combined with responsibly-sourced crystals." 
         },
         { 
-          icon: "✨",
+          icon: <FaFlask className="w-12 h-12" />,
           title: "Visible Results", 
           description: "Our products are clinically tested to deliver real, measurable improvements to your skin's health." 
         },
         { 
-          icon: "💎",
+          icon: <FaGem className="w-12 h-12" />,
           title: "Luxury Experience", 
           description: "From packaging to formulation, every detail is crafted to provide a sensorial, luxurious experience." 
         }
@@ -114,7 +115,7 @@ export default function AboutPage() {
           viewport={{ once: true }}
           className="bg-gradient-to-b from-slate-800 to-slate-700 p-8 rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 text-center border border-slate-600/30 hover:border-yellow-400/30"
         >
-          <div className="text-4xl mb-4">{value.icon}</div>
+          <div className="flex justify-center text-yellow-400 mb-4">{value.icon}</div>
           <h3 className="text-xl font-bold text-white mb-3">{value.title}</h3>
           <p className="text-gray-300">{value.description}</p>
         </motion.div>
