@@ -26,13 +26,13 @@ export default function HomePage() {
         <Routes>
           <Route path="/" element={
             <>
-     <section className="relative h-[45vh] md:h-[68vh] bg-white overflow-hidden">
+    <section className="relative h-[45vh] md:h-[68vh] bg-white overflow-hidden">
   <div className="absolute inset-0 flex items-center justify-center">
     <Swiper
       modules={[Autoplay, EffectFade, Pagination]}
       spaceBetween={0}
       slidesPerView={1}
-      autoplay={{ delay: 5000 }}
+      autoplay={{ delay: 3300 }}
       effect="fade"
       fadeEffect={{ crossFade: true }}
       pagination={{ 
@@ -45,12 +45,26 @@ export default function HomePage() {
     >
       {[
         {
-          title: "Illuminate Your Natural Beauty",
+          title: "Illuminate Your Glow",
           highlight: "Crystal Radiance",
           description: "Discover our premium crystal-infused skincare collection",
           buttonText: "Shop Now",
           image: "/w668.png",
         },
+        {
+          title: "Revitalize Your Skin",
+          highlight: "Diamond Elegance",
+          description: "Experience the transformative power of diamond particles",
+          buttonText: "Shop Now",
+          image: "/iw88.png",
+        },
+        {
+          title: "Enhance Your Luminosity",
+          highlight: "Gold Infusion",
+          description: "24k gold skincare for celestial radiance",
+          buttonText: "Shop Now",
+          image: "/wmn3.png",
+        }
       ].map((slide, index) => (
         <SwiperSlide key={index} className="h-full w-full">
           <div className="container mx-auto h-full flex items-center px-4 md:px-6 relative z-10">
@@ -102,6 +116,16 @@ export default function HomePage() {
         </SwiperSlide>
       ))}
     </Swiper>
+  </div>
+
+  <div className="hero-pagination absolute bottom-4 left-0 right-0 z-10 flex justify-center gap-2 
+    [&>.swiper-pagination-bullet]:bg-slate-900
+    [&>.swiper-pagination-bullet]:opacity-50 
+    [&>.swiper-pagination-bullet]:w-2 
+    [&>.swiper-pagination-bullet]:h-2 
+    [&>.swiper-pagination-bullet]:transition-opacity 
+    [&>.swiper-pagination-bullet]:duration-300
+    [&>.swiper-pagination-bullet-active]:!opacity-100">
   </div>
 </section>
 <section className="py-16 bg-slate-900">
