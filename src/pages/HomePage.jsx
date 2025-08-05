@@ -327,7 +327,7 @@ export default function HomePage() {
                         
                       },
                       {
-                        quote: "The Clear Quartz collection gave me back my youthful glow. My skin has never looked better!",
+                        quote: "The Clear Quartz collection gave me back my youthful skin, and I'm still amazed at how much it glow. My skin has never looked better!",
                         author: "Adithya Perera",
                        
                       }
