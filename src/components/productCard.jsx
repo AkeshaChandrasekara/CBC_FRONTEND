@@ -71,9 +71,9 @@ export default function ProductCard(props) {
               </svg>
             ))}
           </div>
-          {/* Use reviews.length if reviews is an array, fallback to 0 */}
           <span className="text-[10px] text-gray-400">
-            ({Array.isArray(product.reviews) ? product.reviews.length : product.reviews || 0})
+
+            ({Array. isArray(product. reviews) ? product.reviews.length : product.reviews || 0})
           </span>
         </div>
 
