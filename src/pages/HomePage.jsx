@@ -186,45 +186,49 @@ export default function HomePage() {
           whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.5, delay: index * 0.1 }}
           viewport={{ once: true }}
-          className="group bg-gray-800 rounded-xl overflow-hidden transition-all duration-300 hover:translate-y-[-8px]"
+          className="group"
         >
-          <div className="relative h-60 bg-gradient-to-b from-gray-700 to-gray-900 overflow-hidden">
-            <img 
-              src={product.image} 
-              alt={product.name}
-              className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
-            />
-            <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
-              {product.crystal}
+          <div className="relative h-full bg-gray-800 rounded-lg overflow-hidden border border-gray-700  transition-all duration-300">
+            <div className="relative h-60 overflow-hidden">
+              <img 
+                src={product.image} 
+                alt={product.name}
+                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+              />
+              <div className="absolute inset-0 bg-gradient-to-t from-gray-900/80 to-transparent"></div>
+              <div className="absolute top-4 right-4 bg-yellow-500 text-black text-xs font-bold px-3 py-1 rounded-full">
+                {product.crystal}
+              </div>
             </div>
-          </div>
 
-          <div className="p-6">
-            <div className="flex justify-between items-start mb-2">
-              <h3 className="text-xl font-bold text-white">{product.name}</h3>
+            <div className="p-6">
+              <div className="flex justify-between items-start mb-3">
+                <h3 className="text-xl font-bold text-white">{product.name}</h3>
+              </div>
+              <p className="text-gray-300 text-sm mb-5">{product.description}</p>
+              
+              <div className="mb-6">
+
+                <ul className="space-y-2">
+                  {product.benefits.map((benefit, i) => (
+                    <li key={i} className="flex items-center">
+                      <div className="w-1.5 h-1.5 bg-yellow-500 rounded-full mr-2"></div>
+                      <span className="text-gray-400 text-sm">{benefit}</span>
+                    </li>
+                  ))}
+                </ul>
+              </div>
+              
+              <button 
+                className="w-full py-3 bg-gray-700 hover:bg-yellow-500 text-white hover:text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
+                onClick={() => navigate('/products')}
+              >
+                <span>Discover</span>
+                <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
+                </svg>
+              </button>
             </div>
-            <p className="text-gray-300 text-sm mb-4">{product.description}</p>
-            
-            <div className="space-y-3 mb-6">
-              {product.benefits.map((benefit, i) => (
-                <div key={i} className="flex items-start">
-                  <svg className="w-4 h-4 text-yellow-400 mt-0.5 mr-2 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M5 13l4 4L19 7" />
-                  </svg>
-                  <span className="text-gray-400 text-sm">{benefit}</span>
-                </div>
-              ))}
-            </div>
-            
-            <button 
-              className="w-full py-3 bg-yellow-500 hover:bg-yellow-400 text-black font-medium rounded-lg transition-colors duration-300 flex items-center justify-center"
-              onClick={() => navigate('/products')}
-            >
-              <span>Discover</span>
-              <svg className="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M9 5l7 7-7 7" />
-              </svg>
-            </button>
           </div>
         </motion.div>
       ))}
