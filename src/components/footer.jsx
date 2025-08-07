@@ -41,16 +41,17 @@ export default function Footer() {
                   Home
                 </Link>
               </li>
+                <li>
+                <Link to="/products" className="text-gray-300 hover:text-yellow-400 transition-colors duration-300">
+                  Products
+                </Link>
+              </li>
                <li>
                 <Link to="/about" className="text-gray-300 hover:text-yellow-400 transition-colors duration-300">
                   About Us
                 </Link>
               </li>
-              <li>
-                <Link to="/products" className="text-gray-300 hover:text-yellow-400 transition-colors duration-300">
-                  Products
-                </Link>
-              </li>
+              
              
               <li>
                 <Link to="/contact" className="text-gray-300 hover:text-yellow-400 transition-colors duration-300">
@@ -104,7 +105,7 @@ export default function Footer() {
         </div>
 
         <div className="border-t border-gray-800 mt-8 pt-6 text-center text-gray-400">
-          <p>&copy; {new Date().getFullYear()} Crystal Beauty Clear| All rights reserved.</p>
+          <p>&copy; {new Date().getFullYear()} Crystal Beauty Clear | All rights reserved.</p>
         </div>
       </div>
     </footer>
