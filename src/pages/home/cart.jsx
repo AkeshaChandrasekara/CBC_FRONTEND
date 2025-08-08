@@ -7,7 +7,7 @@ import { useNavigate } from "react-router-dom";
 export default function Cart() {
   const [cart, setCart] = useState([]);
   const [total, setTotal] = useState(0);
-  const [labeledTotal, setLabeledTotal] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
   const navigate = useNavigate();
 
@@ -34,7 +34,7 @@ export default function Cart() {
       .then((res) => {
         if(res.data.total != null){
           setTotal(res.data.total);
-          setLabeledTotal(res.data.total);
+          setSubtotal(res.data.labeledTotal || res.data.total);
         }
       });
   };
@@ -73,6 +73,8 @@ export default function Cart() {
     }, 500);
   }
 
+  const discount = subtotal - total;
+
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h1>
@@ -107,16 +109,18 @@ export default function Cart() {
         
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Subtotal:</span>
-            <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+            <span className="text-gray-600">Subtotal (With Discount):</span>
+            <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Discount:</span>
-            <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
-          </div>
+          {discount > 0 && (
+            <div className="flex justify-between text-sm">
+              <span className="text-gray-600">Discount:</span>
+              <span className="text-yellow-500">- LKR. {discount.toFixed(2)}</span>
+            </div>
+          )}
           <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
             <span className="font-bold text-gray-900">Grand Total:</span>
-            <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+            <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
           </div>
         </div>
         
