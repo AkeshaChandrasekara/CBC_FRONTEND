@@ -10,7 +10,7 @@ export default function ShippingPage() {
   const navigate = useNavigate();
   const cart = location.state?.items;
   const [total, setTotal] = useState(0);
-  const [labeledTotal, setLabeledTotal] = useState(0);
+  const [subtotal, setSubtotal] = useState(0);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
@@ -31,7 +31,7 @@ export default function ShippingPage() {
       .then((res) => {
         if (res.data.total != null) {
           setTotal(res.data.total);
-          setLabeledTotal(res.data.labeledTotal || res.data.total);
+          setSubtotal(res.data.labeledTotal || res.data.total);
         }
       })
       .catch((err) => {
@@ -72,7 +72,6 @@ export default function ShippingPage() {
   }
 
   function handlePaymentSuccess(paymentIntent) {
- 
     const token = localStorage.getItem("token");
     if (!token) {
       toast.error("You must be logged in to place an order.");
@@ -91,8 +90,7 @@ export default function ShippingPage() {
       )
       .then((res) => {
         toast.success("Order placed successfully!");
-      navigate("/orders");
-      // navigate('/success');
+        navigate("/orders");
       })
       .catch((err) => {
         toast.error("Failed to place order. Please try again.");
@@ -103,6 +101,8 @@ export default function ShippingPage() {
   if (!cart) {
     return null;
   }
+
+  const discount = subtotal - total;
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -137,15 +137,17 @@ export default function ShippingPage() {
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+                  <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Discount:</span>
-                  <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
-                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Discount:</span>
+                    <span className="text-yellow-500">- LKR. {discount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
                   <span className="font-bold text-gray-900">Grand Total:</span>
-                  <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+                  <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
                 </div>
               </div>
             </div>
@@ -207,16 +209,18 @@ export default function ShippingPage() {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium">LKR. {labeledTotal.toFixed(2)}</span>
+                  <span className="text-gray-600">Subtotal (With Discount):</span>
+                  <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
                 </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Discount:</span>
-                  <span className="text-yellow-500">- LKR. {(labeledTotal - total).toFixed(2)}</span>
-                </div>
+                {discount > 0 && (
+                  <div className="flex justify-between text-sm">
+                    <span className="text-gray-600">Discount:</span>
+                    <span className="text-yellow-500">- LKR. {discount.toFixed(2)}</span>
+                  </div>
+                )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
                   <span className="font-bold text-gray-900">Grand Total:</span>
-                  <span className="font-bold text-gray-900">LKR. {total.toFixed(2)}</span>
+                  <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
                 </div>
               </div>
 
