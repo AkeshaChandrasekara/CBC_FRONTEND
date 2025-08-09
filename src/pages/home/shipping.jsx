@@ -64,45 +64,58 @@ export default function ShippingPage() {
       name,
       address,
       phone,
-      amount: total * 100, 
+      amount: subtotal * 100, 
     };
 
     setOrderData(order);
     setShowPayment(true);
   }
 
-  function handlePaymentSuccess(paymentIntent) {
-    const token = localStorage.getItem("token");
-    if (!token) {
-      toast.error("You must be logged in to place an order.");
-      return;
-    }
+  const handlePaymentSuccess = async (paymentIntent) => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        toast.error("You must be logged in to place an order.");
+        return;
+      }
 
-    axios
-      .post(
-        import.meta.env.VITE_BACKEND_URL + "/api/orders",
-        orderData,
+      const completeOrderData = {
+        ...orderData,
+        paymentIntentId: paymentIntent.id,
+        paymentStatus: paymentIntent.status,
+        email: paymentIntent.email,
+        total: subtotal,
+        discount: total - subtotal > 0 ? total - subtotal : 0 
+      };
+
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
+        completeOrderData,
         {
           headers: {
             Authorization: "Bearer " + token,
           },
         }
-      )
-      .then((res) => {
-        toast.success("Order placed successfully!");
-        navigate("/orders");
-      })
-      .catch((err) => {
-        toast.error("Failed to place order. Please try again.");
-        console.error(err);
+      );
+
+      toast.success("Order placed successfully!");
+      navigate("/orders", { 
+        state: { 
+          paymentSuccess: true,
+          orderId: response.data.order.orderId 
+        } 
       });
-  }
+    } catch (err) {
+      console.error("Order placement error:", err);
+      toast.error("Payment succeeded but order creation failed. Please contact support.");
+    }
+  };
 
   if (!cart) {
     return null;
   }
 
-  const discount = subtotal - total;
+  const discount = total - subtotal;
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -136,8 +149,8 @@ export default function ShippingPage() {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
+                  <span className="text-gray-600">Original Total:</span>
+                  <span className="font-medium">LKR. {total.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-sm">
@@ -146,7 +159,7 @@ export default function ShippingPage() {
                   </div>
                 )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-                  <span className="font-bold text-gray-900">Grand Total:</span>
+                  <span className="font-bold text-gray-900">Amount to Pay:</span>
                   <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
                 </div>
               </div>
@@ -209,8 +222,8 @@ export default function ShippingPage() {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Subtotal (With Discount):</span>
-                  <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
+                  <span className="text-gray-600">Original Total:</span>
+                  <span className="font-medium">LKR. {total.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
                   <div className="flex justify-between text-sm">
@@ -219,7 +232,7 @@ export default function ShippingPage() {
                   </div>
                 )}
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-                  <span className="font-bold text-gray-900">Grand Total:</span>
+                  <span className="font-bold text-gray-900">Amount to Pay:</span>
                   <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
                 </div>
               </div>
@@ -228,7 +241,7 @@ export default function ShippingPage() {
                 onClick={prepareOrder}
                 className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
               >
-                Proceed to Payment
+                Pay LKR. {subtotal.toFixed(2)}
               </button>
             </div>
           </div>
