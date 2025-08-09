@@ -34,13 +34,12 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
     }
 
     try {
-   
       const response = await axios.post(
         `${import.meta.env.VITE_BACKEND_URL}/api/orders/create-payment-intent`,
         {
           ...orderData,
           email,
-          testMode: true 
+          testMode: false 
         },
         {
           headers: {
@@ -58,21 +57,10 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
       const { error: stripeError, paymentIntent } = await stripe.confirmPayment({
         elements,
         clientSecret,
-        redirect: 'if_required', 
+        redirect: 'if_required',
         confirmParams: {
           return_url: `${window.location.origin}/orders`,
           receipt_email: email,
-          payment_method_data: {
-            billing_details: {
-              email: email,
-              name: orderData.name,
-              address: {
-                line1: orderData.address,
-                country: 'LK',
-              },
-              phone: orderData.phone,
-            }
-          }
         },
       });
 
@@ -84,7 +72,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
         toast.success('Payment successful! Processing your order...');
         await onSuccess({
           ...paymentIntent,
-          email 
+          email
         });
       } else {
         throw new Error(`Payment status: ${paymentIntent.status}`);
@@ -110,7 +98,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
           value={email}
           onChange={(e) => setEmail(e.target.value)}
           className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-          placeholder="test@example.com"
+          placeholder="your@email.com"
           required
         />
       </div>
@@ -156,7 +144,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
             Processing...
           </span>
         ) : (
-          'Pay Now'
+          `Pay LKR ${(orderData.amount / 100).toFixed(2)}`
         )}
       </button>
     </form>
@@ -167,7 +155,6 @@ export default function StripePayment({ orderData, onSuccess }) {
   const options = {
     mode: 'payment',
     amount: orderData.amount,
-    payment_method_types: ['card'],
     currency: 'lkr',
     appearance: {
       theme: 'stripe',
