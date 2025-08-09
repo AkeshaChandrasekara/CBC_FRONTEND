@@ -222,7 +222,7 @@ export default function ShippingPage() {
             <div className="bg-gray-50 rounded-lg p-4">
               <div className="space-y-2 mb-4">
                 <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Original Total:</span>
+                  <span className="text-gray-600">Price:</span>
                   <span className="font-medium">LKR. {total.toFixed(2)}</span>
                 </div>
                 {discount > 0 && (
