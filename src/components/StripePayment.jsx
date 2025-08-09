@@ -167,6 +167,7 @@ export default function StripePayment({ orderData, onSuccess }) {
   const options = {
     mode: 'payment',
     amount: orderData.amount,
+    payment_method_types: ['card'],
     currency: 'lkr',
     appearance: {
       theme: 'stripe',
