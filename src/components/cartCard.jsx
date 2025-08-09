@@ -62,8 +62,8 @@ export default function CartCard(props) {
           </div>
           <div className="flex items-center">
             <div className="text-right mr-4">
-              <p className="font-medium text-gray-900">LKR. {product?.lastPrice.toFixed(2)}</p>
-              <p className="font-bold text-yellow-500">
+             
+              <p className="font-bold text-black">
                 LKR. {(product?.lastPrice * qty).toFixed(2)}
               </p>
             </div>

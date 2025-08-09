@@ -73,7 +73,7 @@ export default function Cart() {
     }, 500);
   }
 
-  const discount = subtotal - total;
+  const discount = total - subtotal;
 
   return (
     <div className="container mx-auto px-4 py-8 bg-white">
@@ -109,8 +109,8 @@ export default function Cart() {
         
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Subtotal (With Discount):</span>
-            <span className="font-medium">LKR. {subtotal.toFixed(2)}</span>
+            <span className="text-gray-600">Original Price:</span>
+            <span className="font-medium">LKR. {total.toFixed(2)}</span>
           </div>
           {discount > 0 && (
             <div className="flex justify-between text-sm">
@@ -119,7 +119,7 @@ export default function Cart() {
             </div>
           )}
           <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-            <span className="font-bold text-gray-900">Grand Total:</span>
+            <span className="font-bold text-gray-900">Amount to Pay:</span>
             <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
           </div>
         </div>
