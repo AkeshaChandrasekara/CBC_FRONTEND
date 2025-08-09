@@ -28,8 +28,9 @@ export default function MyOrdersPage() {
       });
   }, []);
 
-  const calculateTotal = (orderedItems) => {
-    return orderedItems.reduce((total, item) => total + item.price * item.quantity, 0);
+  
+  const getOrderTotal = (order) => {
+    return order.total || order.orderedItems.reduce((total, item) => total + (item.price * item.quantity), 0);
   };
 
   const handleRowClick = (order) => {
@@ -76,7 +77,7 @@ export default function MyOrdersPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Total</p>
-                    <p className="font-medium">LKR {calculateTotal(order.orderedItems).toFixed(2)}</p>
+                    <p className="font-medium">LKR {getOrderTotal(order).toFixed(2)}</p>
                   </div>
                 </div>
               </div>
@@ -85,7 +86,6 @@ export default function MyOrdersPage() {
         </div>
       )}
 
-    
       {selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white w-full max-w-2xl rounded-lg shadow-lg overflow-hidden">
@@ -156,8 +156,13 @@ export default function MyOrdersPage() {
               <div className="border-t border-gray-200 pt-4 mt-6">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Grand Total:</span>
-                  <span>LKR {calculateTotal(selectedOrder.orderedItems).toFixed(2)}</span>
+                  <span>LKR {getOrderTotal(selectedOrder).toFixed(2)}</span>
                 </div>
+                {selectedOrder.discount > 0 && (
+                  <div className="text-sm text-gray-500 mt-1">
+                    (Including discount of LKR {selectedOrder.discount.toFixed(2)})
+                  </div>
+                )}
               </div>
             </div>
           </div>
