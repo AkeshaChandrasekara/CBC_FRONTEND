@@ -61,6 +61,17 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
         confirmParams: {
           return_url: `${window.location.origin}/orders`,
           receipt_email: email,
+          payment_method_data: {
+            billing_details: {
+              email: email,
+              name: orderData.name,
+              address: {
+                line1: orderData.address,
+                country: 'LK',
+              },
+              phone: orderData.phone,
+            }
+          }
         },
       });
 
@@ -109,8 +120,8 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
             layout: 'tabs',
             fields: {
               billingDetails: {
-                email: 'never',
-                phone: 'never',
+                email: 'never', 
+                phone: 'never',  
               },
             },
           }}
