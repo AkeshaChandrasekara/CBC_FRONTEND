@@ -78,7 +78,7 @@ export default function ContactPage() {
   return (
     <div className="flex flex-col min-h-screen">
   
-      <section className="relative h-[40vh] bg-gradient-to-r from-slate-900 to-slate-800 overflow-hidden flex items-center">
+      <section className="relative h-[50vh] bg-gradient-to-r from-slate-900 to-slate-800 overflow-hidden flex items-center">
         <div className="absolute inset-0 bg-opacity-50 bg-black"></div>
         <div className="container mx-auto px-6 relative z-10 text-center">
           <motion.div
