@@ -153,6 +153,7 @@ export default function MyOrdersPage() {
                 ))}
               </div>
 
+
               <div className="border-t border-gray-200 pt-4 mt-6">
                 <div className="flex justify-between font-bold text-lg">
                   <span>Grand Total:</span>
