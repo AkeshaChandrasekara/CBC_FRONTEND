@@ -99,21 +99,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
 
   return (
     <form onSubmit={handleSubmit} className="space-y-4">
-      <div className="mb-4">
-        <label htmlFor="email" className="block text-sm font-medium text-gray-700 mb-1">
-          Email
-        </label>
-        <input
-          type="email"
-          id="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          className="w-full p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-yellow-500"
-          placeholder="your@email.com"
-          required
-        />
-      </div>
-
+      
       <div className="border border-gray-300 p-3 rounded-lg">
         <PaymentElement
           options={{
@@ -129,6 +115,15 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
       </div>
 
       {error && <div className="text-red-500 text-sm">{error}</div>}
+
+      <div className="text-xs text-red-500 p-3 bg-gray-50 rounded border border-gray-200">
+        <p className="font-medium mb-1">Test Payment Information:no real charges will be made</p>
+        <div className="space-y-1">
+          <p>Card number: <span className="font-mono bg-gray-100 px-1 py-0.5 rounded">4242 4242 4242 4242</span></p>
+          <p>Expiry date: Any future date (e.g., 12/34)</p>
+          <p>CVC: Any 3 digits (e.g., 123)</p>
+        </div>
+      </div>
 
       <button
         type="submit"
