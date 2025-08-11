@@ -28,7 +28,7 @@ export default function MyOrdersPage() {
         setOrders(res.data);
         setLoading(false);
         if (location.state?.paymentSuccess) {
-          toast.success(`Order ${location.state.orderId} placed successfully!`);
+        //  toast.success(`Order ${location.state.orderId} placed successfully!`);
         }
       })
       .catch((err) => {
