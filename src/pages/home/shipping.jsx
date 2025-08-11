@@ -125,13 +125,6 @@ export default function ShippingPage() {
       
       {showPayment ? (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="bg-gray-50 rounded-lg shadow-sm p-6">
-            <StripePayment 
-              orderData={orderData} 
-              onSuccess={handlePaymentSuccess} 
-            />
-          </div>
-          
           <div className="space-y-6">
             <div className="bg-gray-50 rounded-lg shadow-sm p-6">
               <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
@@ -164,6 +157,13 @@ export default function ShippingPage() {
                 </div>
               </div>
             </div>
+          </div>
+
+          <div className="bg-gray-50 rounded-lg shadow-sm p-6">
+            <StripePayment 
+              orderData={orderData} 
+              onSuccess={handlePaymentSuccess} 
+            />
           </div>
         </div>
       ) : (
