@@ -24,6 +24,7 @@ export default function MyOrdersPage() {
         },
       })
       .then((res) => {
+        console.log("Fetched orders:", res.data); 
         setOrders(res.data);
         setLoading(false);
         if (location.state?.paymentSuccess) {
@@ -37,32 +38,21 @@ export default function MyOrdersPage() {
       });
   }, [location.state]);
 
-  const calculateAmountToPay = (order) => {
-    if (order.total) {
+  const getAmountPaid = (order) => {
+    if (order.total !== undefined) {
       return order.total;
     }
-    return order.orderedItems.reduce(
-      (sum, item) => sum + item.price * item.quantity,
-      0
-    );
+    return order.orderedItems.reduce((sum, item) => sum + (item.lastPrice || item.price) * item.quantity, 0);
   };
 
   const calculateOriginalTotal = (order) => {
-    if (order.labeledTotal) {
-      return order.labeledTotal;
-    }
-
-    return order.orderedItems.reduce(
-      (sum, item) =>
-        sum + (item.labeledPrice || item.price) * item.quantity,
-      0
-    );
+    return order.orderedItems.reduce((sum, item) => sum + item.price * item.quantity, 0);
   };
 
   const calculateDiscount = (order) => {
     const original = calculateOriginalTotal(order);
-    const final = calculateAmountToPay(order);
-    return Math.max(0, original - final);
+    const paid = getAmountPaid(order) || 0; 
+    return Math.max(0, original - paid);
   };
 
   const handleRowClick = (order) => {
@@ -111,7 +101,7 @@ export default function MyOrdersPage() {
                   </div>
                   <div>
                     <p className="text-sm text-gray-500">Amount Paid</p>
-                    <p className="font-medium text-gray-900">LKR {calculateAmountToPay(order).toFixed(2)}</p>
+                    <p className="font-medium text-gray-900">LKR {(getAmountPaid(order) || 0).toFixed(2)}</p>
                     {calculateDiscount(order) > 0 && (
                       <p className="text-xs text-yellow-500">
                         You saved LKR {calculateDiscount(order).toFixed(2)}
@@ -187,18 +177,18 @@ export default function MyOrdersPage() {
                       <p className="font-medium text-gray-900">{item.name}</p>
                       <div className="grid grid-cols-2 gap-2 text-sm mt-1">
                         <div>
-                          <span className="text-gray-500">Original Price:</span> LKR {(item.labeledPrice || item.price).toFixed(2)}
+                          <span className="text-gray-500">Original Price:</span> LKR {item.price.toFixed(2)}
                         </div>
-                        {item.labeledPrice && item.labeledPrice > item.price && (
+                        {item.lastPrice && item.lastPrice < item.price && (
                           <div>
-                            <span className="text-gray-500">Discounted Price:</span> LKR {item.price.toFixed(2)}
+                            <span className="text-gray-500">Discounted Price:</span> LKR {item.lastPrice.toFixed(2)}
                           </div>
                         )}
                         <div>
                           <span className="text-gray-500">Qty:</span> {item.quantity}
                         </div>
                         <div className="col-span-2">
-                          <span className="text-gray-500">Subtotal:</span> LKR {(item.price * item.quantity).toFixed(2)}
+                          <span className="text-gray-500">Subtotal:</span> LKR {((item.lastPrice || item.price) * item.quantity).toFixed(2)}
                         </div>
                       </div>
                     </div>
@@ -225,7 +215,7 @@ export default function MyOrdersPage() {
                   <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
                     <span className="font-bold text-gray-900">Amount Paid:</span>
                     <span className="font-bold text-gray-900">
-                      LKR {calculateAmountToPay(selectedOrder).toFixed(2)}
+                      LKR {(getAmountPaid(selectedOrder) || 0).toFixed(2)}
                     </span>
                   </div>
                 </div>
