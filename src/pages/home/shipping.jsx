@@ -124,42 +124,8 @@ export default function ShippingPage() {
       </h1>
       
       {showPayment ? (
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-          <div className="space-y-6">
-            <div className="bg-gray-50 rounded-lg shadow-sm p-6">
-              <h2 className="text-xl font-bold text-gray-900 mb-4">Order Summary</h2>
-              <div className="space-y-4">
-                {cart.map((item) => (
-                  <CartCard
-                    key={item.productId}
-                    productId={item.productId}
-                    qty={item.qty}
-                  />
-                ))}
-              </div>
-            </div>
-
-            <div className="bg-gray-50 rounded-lg p-4">
-              <div className="space-y-2 mb-4">
-                <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Original Total:</span>
-                  <span className="font-medium">LKR. {total.toFixed(2)}</span>
-                </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount:</span>
-                    <span className="text-yellow-500">- LKR. {discount.toFixed(2)}</span>
-                  </div>
-                )}
-                <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-                  <span className="font-bold text-gray-900">Amount to Pay:</span>
-                  <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          <div className="bg-gray-50 rounded-lg shadow-sm p-6">
+        <div className="flex justify-center">
+          <div className="w-full max-w-xl bg-white rounded-lg shadow-sm p-6">
             <StripePayment 
               orderData={orderData} 
               onSuccess={handlePaymentSuccess} 
