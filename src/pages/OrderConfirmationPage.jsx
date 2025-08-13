@@ -26,7 +26,6 @@ export default function OrderConfirmationPage() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-3xl bg-white rounded-xl shadow-lg overflow-hidden"
       >
-
         <div className="bg-slate-900 p-8 text-center">
           <motion.div
             animate={{ scale: [1, 1.05, 1] }}
@@ -87,10 +86,10 @@ export default function OrderConfirmationPage() {
             <motion.button
               whileHover={{ scale: 1.03 }}
               whileTap={{ scale: 0.98 }}
-              onClick={() => navigate("/orders")}
+              onClick={() => navigate(`/orders`)}  
               className="px-6 py-2 bg-yellow-500 text-black font-medium rounded-lg hover:bg-yellow-400 transition-all text-sm"
             >
-              View Order Details
+              View My Orders
             </motion.button>
           </div>
         </div>
