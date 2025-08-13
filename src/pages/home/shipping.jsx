@@ -99,11 +99,10 @@ export default function ShippingPage() {
       );
 
       toast.success("Order placed successfully!");
-      navigate("/orders", { 
-        state: { 
-          paymentSuccess: true,
-          orderId: response.data.order.orderId 
-        } 
+     navigate("/order-confirmation", { 
+     state: { 
+    orderId: response.data.order.orderId 
+  } 
       });
     } catch (err) {
       console.error("Order placement error:", err);
