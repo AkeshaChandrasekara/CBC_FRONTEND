@@ -79,7 +79,7 @@ export default function Cart() {
     <div className="container mx-auto px-4 py-8 bg-white">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h1>
       
-      <div className="bg-gray-50 rounded-lg shadow-sm p-6 mb-4">
+      <div className="p-6 mb-4">
         {cart.length === 0 ? (
           <div className="text-center py-12">
             <p className="text-gray-500 text-lg">Your cart is empty</p>
