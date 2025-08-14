@@ -190,12 +190,12 @@ export default function ShippingPage() {
                   <span className="text-gray-600">Price:</span>
                   <span className="font-medium">LKR. {total.toFixed(2)}</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount:</span>
-                    <span className="text-yellow-500">- LKR. {discount.toFixed(2)}</span>
-                  </div>
-                )}
+                <div className="flex justify-between text-sm">
+                  <span className="text-gray-600">Discount:</span>
+                  <span className={`${discount > 0 ? 'text-yellow-500' : 'text-gray-600'}`}>
+                    {discount > 0 ? `- LKR. ${discount.toFixed(2)}` : `LKR. 0.00`}
+                  </span>
+                </div>
                 <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
                   <span className="font-bold text-gray-900">Amount to Pay:</span>
                   <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
