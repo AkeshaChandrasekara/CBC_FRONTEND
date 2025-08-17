@@ -181,6 +181,7 @@ export default function AddProductForm() {
                 </div>
               </div>
 
+
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
                   Original Price
@@ -204,7 +205,7 @@ export default function AddProductForm() {
 
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-1">
-                  Stock Quantity *
+                   Stock Quantity *
                 </label>
                 <input
                   name="stock"
