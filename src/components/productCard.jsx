@@ -73,7 +73,7 @@ export default function ProductCard(props) {
             )}
           </div>
           {isDiscounted && (
-            <p className="text-xs text-green-700 mt-1 font-medium">
+            <p className="text-xs text-green-600 mt-1 font-medium">
               You save LKR {(product.price - product.lastPrice).toFixed(2)}
             </p>
           )}
