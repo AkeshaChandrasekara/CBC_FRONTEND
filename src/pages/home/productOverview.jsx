@@ -169,15 +169,15 @@ export default function ProductOverview() {
                         <span className="text-3xl font-bold text-gray-900 mr-3">
                           LKR {product.lastPrice.toFixed(2)}
                         </span>
-                        <span className="text-base text-gray-500 line-through">
+                        <span className="text-3xl text-red-500 line-through">
                           LKR {product.price.toFixed(2)}
                         </span>
                       </div>
                       <div className="flex items-center">
-                        <span className="px-2 py-1 text-yellow-800 text-xs font-bold rounded mr-2">
+                        <span className="px-0 py-1 text-red-500 text-md font-bold rounded mr-2">
                           {discountPercentage}% OFF
                         </span>
-                        <span className="text-sm text-yellow-700">
+                        <span className="text-md font-semibold text-green-600">
                           Save LKR {(product.price - product.lastPrice).toFixed(2)}
                         </span>
                       </div>
