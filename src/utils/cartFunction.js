@@ -75,3 +75,27 @@ export function deleteItem(productId) {
     saveCart(cart);
   }
 }
+
+export async function getCartWithProductDetails() {
+  const cart = loadCart();
+  const cartWithDetails = [];
+  
+  for (const item of cart) {
+    try {
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + item.productId);
+      if (response.data) {
+        cartWithDetails.push({
+          ...item,
+          productName: response.data.productName,
+          images: response.data.images,
+          price: response.data.price,
+          lastPrice: response.data.lastPrice
+        });
+      }
+    } catch (error) {
+      console.error("Error fetching product details:", error);
+    }
+  }
+  
+  return cartWithDetails;
+}

@@ -7,9 +7,10 @@ import { FiShoppingCart } from "react-icons/fi";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
-  const [total, setTotal] = useState(0);
-  const [subtotal, setSubtotal] = useState(0);
+  const [originalTotal, setOriginalTotal] = useState(0);
+  const [discountedTotal, setDiscountedTotal] = useState(0);
   const [selectedItems, setSelectedItems] = useState([]);
+  const [cartWithDetails, setCartWithDetails] = useState([]);
   const navigate = useNavigate();
 
   const toggleItemSelection = (productId) => {
@@ -20,7 +21,7 @@ export default function Cart() {
     );
   };
 
-  const refreshCart = () => {
+  const refreshCart = async () => {
     const updatedCart = loadCart();
     setCart(updatedCart);
     
@@ -28,15 +29,45 @@ export default function Cart() {
       ? updatedCart.filter(item => selectedItems.includes(item.productId))
       : updatedCart;
     
+    let calculatedOriginalTotal = 0;
+    const cartDetails = [];
+    
+    for (const item of itemsToCalculate) {
+      try {
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + item.productId);
+        if (response.data) {
+          const price = response.data.lastPrice || response.data.price;
+          calculatedOriginalTotal += price * item.qty;
+          cartDetails.push({
+            ...item,
+            productName: response.data.productName,
+            images: response.data.images,
+            price: response.data.price,
+            lastPrice: response.data.lastPrice
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching product price:", error);
+      }
+    }
+    
+    setOriginalTotal(calculatedOriginalTotal);
+    setCartWithDetails(cartDetails);
+
     axios
       .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
         orderedItems: itemsToCalculate,
       })
       .then((res) => {
-        if(res.data.total != null){
-          setTotal(res.data.total);
-          setSubtotal(res.data.labeledTotal || res.data.total);
+        if (res.data.total != null) {
+          setDiscountedTotal(res.data.total);
+        } else {
+          setDiscountedTotal(calculatedOriginalTotal);
         }
+      })
+      .catch((err) => {
+        console.error(err);
+        setDiscountedTotal(calculatedOriginalTotal);
       });
   };
 
@@ -74,7 +105,8 @@ export default function Cart() {
     }, 500);
   }
 
-  const discount = total - subtotal;
+  const discountAmount = originalTotal - discountedTotal;
+  const hasDiscount = discountAmount > 0;
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50">
@@ -84,19 +116,19 @@ export default function Cart() {
         {cart.length === 0 ? (
           <div className="text-center py-12">
             <div className="flex items-center justify-center h-[12vh]">
-               <div className="bg-white w-2/3 rounded-xl shadow-md p-6 text-center border border-pink-100">
-      <FiShoppingCart className="text-3xl text-pink-600 mx-auto mb-2" />
-      <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
-      <p className="text-gray-600 mb-6">Add some products to your cart to continue shopping</p>
-      <button
-        onClick={() => navigate('/products')}
-        className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-2 
-        px-4 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
-      >
-        Browse Products
-      </button>
-    </div>
-    </div>
+              <div className="bg-white w-2/3 rounded-xl shadow-md p-6 text-center border border-pink-100">
+                <FiShoppingCart className="text-3xl text-pink-600 mx-auto mb-2" />
+                <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
+                <p className="text-gray-600 mb-6">Add some products to your cart to continue shopping</p>
+                <button
+                  onClick={() => navigate('/products')}
+                  className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-2 
+                  px-4 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
+                >
+                  Browse Products
+                </button>
+              </div>
+            </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -123,18 +155,14 @@ export default function Cart() {
         
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Price:</span>
-            <span className="font-medium">LKR. {total.toFixed(2)}</span>
+            <span className="text-gray-600">Original Price:</span>
+            <span className="font-medium">LKR {originalTotal.toFixed(2)}</span>
           </div>
-          <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Discount:</span>
-            <span className={`${discount > 0 ? 'text-yellow-500' : 'text-gray-600'}`}>
-              {discount > 0 ? `- LKR. ${discount.toFixed(2)}` : `LKR. 0.00`}
-            </span>
-          </div>
+          
+          
           <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
-            <span className="font-bold text-gray-900">Amount to Pay:</span>
-            <span className="font-bold text-gray-900">LKR. {subtotal.toFixed(2)}</span>
+            <span className="font-bold text-gray-900">Total Amount:</span>
+            <span className="font-bold text-pink-600">LKR {discountedTotal.toFixed(2)}</span>
           </div>
         </div>
         

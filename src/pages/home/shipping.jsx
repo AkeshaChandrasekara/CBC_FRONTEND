@@ -4,19 +4,20 @@ import CartCard from "../../components/cartCard";
 import toast from "react-hot-toast";
 import axios from "axios";
 import StripePayment from "../../components/StripePayment";
-import { FiTruck, FiMapPin, FiPhone, FiUser, FiArrowLeft ,FiFileText} from "react-icons/fi";
+import { FiTruck, FiMapPin, FiPhone, FiUser, FiArrowLeft, FiFileText } from "react-icons/fi";
 
 export default function ShippingPage() {
   const location = useLocation();
   const navigate = useNavigate();
   const cart = location.state?.items;
-  const [total, setTotal] = useState(0);
-  const [subtotal, setSubtotal] = useState(0);
+  const [originalTotal, setOriginalTotal] = useState(0);
+  const [discountedTotal, setDiscountedTotal] = useState(0);
   const [name, setName] = useState("");
   const [address, setAddress] = useState("");
   const [phone, setPhone] = useState("");
   const [orderData, setOrderData] = useState(null);
   const [showPayment, setShowPayment] = useState(false);
+  const [cartWithDetails, setCartWithDetails] = useState([]);
 
   useEffect(() => {
     if (!cart) {
@@ -25,20 +26,51 @@ export default function ShippingPage() {
       return;
     }
 
-    axios
-      .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
-        orderedItems: cart,
-      })
-      .then((res) => {
-        if (res.data.total != null) {
-          setTotal(res.data.total);
-          setSubtotal(res.data.labeledTotal || res.data.total);
+    const calculateOriginalTotal = async () => {
+      let calculatedTotal = 0;
+      const cartDetails = [];
+      
+      for (const item of cart) {
+        try {
+          const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + item.productId);
+          if (response.data) {
+            const price = response.data.lastPrice || response.data.price;
+            calculatedTotal += price * item.qty;
+            cartDetails.push({
+              ...item,
+              productName: response.data.productName,
+              images: response.data.images,
+              price: response.data.price,
+              lastPrice: response.data.lastPrice
+            });
+          }
+        } catch (error) {
+          console.error("Error fetching product price:", error);
         }
-      })
-      .catch((err) => {
-        toast.error("Failed to fetch order quote. Please try again.");
-        console.error(err);
-      });
+      }
+      
+      setOriginalTotal(calculatedTotal);
+      setCartWithDetails(cartDetails);
+
+      axios
+        .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
+          orderedItems: cart,
+        })
+        .then((res) => {
+          if (res.data.total != null) {
+            setDiscountedTotal(res.data.total);
+          } else {
+            setDiscountedTotal(calculatedTotal);
+          }
+        })
+        .catch((err) => {
+          toast.error("Failed to fetch order quote. Please try again.");
+          console.error(err);
+          setDiscountedTotal(calculatedTotal);
+        });
+    };
+    
+    calculateOriginalTotal();
   }, [cart, navigate]);
 
   function validateInputs() {
@@ -61,11 +93,11 @@ export default function ShippingPage() {
     if (!validateInputs()) return;
 
     const order = {
-      orderedItems: cart,
+      orderedItems: cartWithDetails, 
       name,
       address,
       phone,
-      amount: subtotal * 100, 
+      amount: discountedTotal * 100, 
     };
 
     setOrderData(order);
@@ -85,8 +117,8 @@ export default function ShippingPage() {
         paymentIntentId: paymentIntent.id,
         paymentStatus: paymentIntent.status,
         email: paymentIntent.email,
-        total: subtotal,
-        discount: total - subtotal > 0 ? total - subtotal : 0 
+        total: discountedTotal,
+        discount: originalTotal - discountedTotal > 0 ? originalTotal - discountedTotal : 0 
       };
 
       const response = await axios.post(
@@ -100,10 +132,10 @@ export default function ShippingPage() {
       );
 
       toast.success("Order placed successfully!");
-     navigate("/order-confirmation", { 
-     state: { 
-    orderId: response.data.order.orderId 
-  } 
+      navigate("/order-confirmation", { 
+        state: { 
+          orderId: response.data.order.orderId 
+        } 
       });
     } catch (err) {
       console.error("Order placement error:", err);
@@ -115,22 +147,19 @@ export default function ShippingPage() {
     return null;
   }
 
-  const discount = total - subtotal;
+  const discountAmount = originalTotal - discountedTotal;
+  const hasDiscount = discountAmount > 0;
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50 min-h-screen">
-     
-      
       <h1 className="text-3xl font-bold text-gray-900 mb-2">
         {showPayment ? "Secure Payment" : "Shipping Details"}
       </h1>
-     
       
       {showPayment ? (
         <div className="flex justify-center">
           <div className="w-full max-w-xl bg-white rounded-xl shadow-md p-6 border border-pink-100">
             <div className="flex items-center justify-center mb-6">
-             
               <h2 className="text-xl font-bold text-gray-900">Payment Information</h2>
             </div>
             
@@ -142,7 +171,6 @@ export default function ShippingPage() {
         </div>
       ) : (
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-         
           <div className="bg-white rounded-xl shadow-md p-6 border border-pink-100">
             <div className="flex items-center mb-6">
               <div className="w-10 h-10 rounded-full bg-pink-100 flex items-center justify-center mr-3">
@@ -155,7 +183,7 @@ export default function ShippingPage() {
               <div>
                 <label className="block text-sm font-medium text-gray-700 mb-2">Full Name</label>
                 <div className="relative">
-                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FiUser className="text-gray-400" />
                   </div>
                   <input
@@ -176,7 +204,7 @@ export default function ShippingPage() {
                   </div>
                   <textarea
                     className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
-                    rows="1"
+                    rows="3"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Enter your complete delivery address"
@@ -209,39 +237,28 @@ export default function ShippingPage() {
                 Order Summary
               </h2>
               <div className="space-y-4 max-h-80 overflow-y-auto pr-2">
-                {cart.map((item) => (
+                {cartWithDetails.map((item) => (
                   <CartCard
                     key={item.productId}
                     productId={item.productId}
                     qty={item.qty}
+                    product={item} 
                   />
                 ))}
               </div>
             </div>
 
             <div className="bg-white rounded-xl shadow-md p-6 border border-pink-100">
-             
               <div className="space-y-3 mb-6">
                 <div className="flex justify-between text-sm">
                   <span className="text-gray-600">Subtotal:</span>
-                  <span className="font-medium">LKR {total.toFixed(2)}</span>
+                  <span className="font-medium">LKR {originalTotal.toFixed(2)}</span>
                 </div>
-                {discount > 0 && (
-                  <div className="flex justify-between text-sm">
-                    <span className="text-gray-600">Discount:</span>
-                    <span className="text-green-600 font-medium">- LKR {discount.toFixed(2)}</span>
-                  </div>
-                )}
-              <div className="flex justify-between text-sm">
-                  <span className="text-gray-600">Discount:</span>
-                  <span className={`${discount > 0 ? 'text-yellow-500' : 'text-gray-600'}`}>
-                    {discount > 0 ? `- LKR. ${discount.toFixed(2)}` : `LKR. 0.00`}
-                  </span>
-                </div>
-
+                
+             
                 <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-bold">
                   <span className="text-gray-900">Total Amount:</span>
-                  <span className="text-pink-600">LKR {subtotal.toFixed(2)}</span>
+                  <span className="text-pink-600">LKR {discountedTotal.toFixed(2)}</span>
                 </div>
               </div>
 
@@ -250,8 +267,7 @@ export default function ShippingPage() {
                 className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold 
                 py-3 px-3 rounded-xl transition-all duration-300 shadow-md hover:shadow-lg flex items-center justify-center"
               >
-               
-                Pay LKR {subtotal.toFixed(2)}
+                Pay LKR {discountedTotal.toFixed(2)}
               </button>
               
               <p className="text-xs text-center text-gray-500 mt-4">

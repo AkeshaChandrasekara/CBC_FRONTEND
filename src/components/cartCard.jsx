@@ -6,18 +6,20 @@ import { FiTrash2 } from "react-icons/fi";
 export default function CartCard(props) {
   const productId = props.productId;
   const qty = props.qty;
-  const { onRemove, isSelected, onSelect } = props;
+  const { onRemove, isSelected, onSelect, product: propProduct } = props;
 
-  const [product, setProduct] = useState(null);
-  const [loaded, setLoaded] = useState(false);
+  const [product, setProduct] = useState(propProduct || null);
+  const [loaded, setLoaded] = useState(!!propProduct);
+  const [price, setPrice] = useState(0);
 
   useEffect(() => {
-    if (!loaded) {
+    if (!loaded && !propProduct) {
       axios
         .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
         .then((response) => {
           if (response.data != null) {
             setProduct(response.data);
+            setPrice(response.data.lastPrice || response.data.price);
             setLoaded(true);
           } else {
             deleteItem(productId);
@@ -26,8 +28,10 @@ export default function CartCard(props) {
         .catch((error) => {
           console.log(error);
         });
+    } else if (propProduct) {
+      setPrice(propProduct.lastPrice || propProduct.price);
     }
-  }, []);
+  }, [productId, loaded, propProduct]);
 
   const handleRemove = () => {
     deleteItem(productId);
@@ -51,7 +55,7 @@ export default function CartCard(props) {
               className="h-5 w-5 text-pink-600 rounded focus:ring-pink-500"
             />
             <img
-              src={product?.images[0]}
+              src={product?.images?.[0]}
               className="w-20 h-20 object-cover rounded-lg"
               alt={product?.productName}
             />
@@ -59,13 +63,15 @@ export default function CartCard(props) {
               <h3 className="font-bold text-gray-900">{product?.productName}</h3>
               <p className="text-sm text-gray-500">ID: {productId}</p>
               <p className="text-sm text-gray-500">Qty: {qty}</p>
+              <p className="text-sm text-gray-600">
+                LKR {price.toFixed(2)} 
+              </p>
             </div>
           </div>
           <div className="flex items-center">
             <div className="text-right mr-4">
-             
               <p className="font-bold text-black">
-                LKR. {(product?.lastPrice * qty).toFixed(2)}
+                LKR {(price * qty).toFixed(2)}
               </p>
             </div>
             <button 

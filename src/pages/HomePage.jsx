@@ -273,8 +273,7 @@ axios
               ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
               : 0;
             const isInStock = product.stock > 0;
-             const isProductInWishlist = wishlistStatus[product.productId] || false;
-
+            const isProductInWishlist = wishlistStatus[product.productId] || false;
 
             return (
               <motion.div 
@@ -283,7 +282,8 @@ axios
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
                 viewport={{ once: true }}
-                className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-gray-100 hover:border-pink-100"
+                className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl 
+                transition-all duration-300 border border-gray-100 hover:border-pink-100"
               >
                 <div className="relative h-62 overflow-hidden">
                   <img 
@@ -291,16 +291,16 @@ axios
                     alt={product.productName}
                     className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
                   />
-                     <button
-                                  onClick={() => toggleWishlist(product)}
-                                  className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
-                                    isProductInWishlist 
-                                      ? "bg-pink-600 text-white" 
-                                      : "bg-white text-pink-600 hover:bg-pink-50 hover:text-pink-600"
-                                  }`}
-                                >
-                                  <FiHeart className={`w-5 h-5 ${isProductInWishlist ? "fill-current" : ""}`} />
-                                </button>
+                  <button
+                    onClick={() => toggleWishlist(product)}
+                    className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
+                      isProductInWishlist 
+                        ? "bg-pink-600 text-white" 
+                        : "bg-white text-pink-600 hover:bg-pink-50 hover:text-pink-600"
+                    }`}
+                  >
+                    <FiHeart className={`w-5 h-5 ${isProductInWishlist ? "fill-current" : ""}`} />
+                  </button>
                   
                   <div className="absolute top-3 left-3 flex flex-col space-y-2">
                     {isDiscounted && (
@@ -321,7 +321,6 @@ axios
 
                 <div className="p-4">
                   <div className="mb-2">
-                    
                     <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">
                       {product.productName}
                     </h3>
@@ -329,21 +328,21 @@ axios
                   </div>
                   
                   <div className="flex items-baseline justify-between mb-3">
-                    <div className="flex items-baseline gap-2">
+                    <div className="flex items-baseline gap-2 whitespace-nowrap">
                       <span className="text-lg font-bold text-gray-900">
                         LKR {product.lastPrice.toFixed(2)}
                       </span>
                       {isDiscounted && (
-                        <span className="text-sm text-gray-500 line-through">
+                        <span className="text-md text-red-500 font-semibold line-through">
                           LKR {product.price.toFixed(2)}
                         </span>
                       )}
+                      {isDiscounted && (
+                        <span className="text-sm text-green-600 font-medium">
+                          Save LKR {(product.price - product.lastPrice).toFixed(2)}
+                        </span>
+                      )}
                     </div>
-                    {isDiscounted && (
-                      <span className="text-sm text-green-600 font-medium">
-                        Save LKR {(product.price - product.lastPrice).toFixed(2)}
-                      </span>
-                    )}
                   </div>
                   
                   <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
