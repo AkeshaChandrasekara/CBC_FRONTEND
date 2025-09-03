@@ -188,7 +188,8 @@ export default function ShippingPage() {
                   </div>
                   <input
                     type="text"
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
+                    className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2
+                     focus:ring-pink-500 focus:border-pink-500 transition-colors"
                     value={name}
                     onChange={(e) => setName(e.target.value)}
                     placeholder="Enter your full name"
@@ -202,9 +203,10 @@ export default function ShippingPage() {
                   <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
                     <FiMapPin className="text-gray-400" />
                   </div>
-                  <textarea
-                    className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-pink-500 focus:border-pink-500 transition-colors"
-                    rows="3"
+                   <input
+                    type="text"
+                    className="w-full pl-10 p-3 border border-gray-300 rounded-lg focus:ring-2
+                     focus:ring-pink-500 focus:border-pink-500 transition-colors"
                     value={address}
                     onChange={(e) => setAddress(e.target.value)}
                     placeholder="Enter your complete delivery address"
