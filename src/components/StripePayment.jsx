@@ -128,7 +128,7 @@ const CheckoutForm = ({ orderData, onSuccess }) => {
       <button
         type="submit"
         disabled={!stripe || processing}
-        className={`w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm ${
+        className={`w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm ${
           !stripe || processing ? 'opacity-50 cursor-not-allowed' : ''
         }`}
       >

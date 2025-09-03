@@ -2,6 +2,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 import toast from "react-hot-toast";
 import { useLocation } from "react-router-dom";
+import { FiPackage, FiShoppingBag, FiTruck, FiCheckCircle, FiXCircle, FiClock, FiEye } from "react-icons/fi";
 
 export default function MyOrdersPage() {
   const [orders, setOrders] = useState([]);
@@ -28,7 +29,7 @@ export default function MyOrdersPage() {
         setOrders(res.data);
         setLoading(false);
         if (location.state?.paymentSuccess) {
-        //  toast.success(`Order ${location.state.orderId} placed successfully!`);
+          // toast.success(`Order ${location.state.orderId} placed successfully!`);
         }
       })
       .catch((err) => {
@@ -63,51 +64,93 @@ export default function MyOrdersPage() {
     setSelectedOrder(null);
   };
 
+  const getStatusColor = (status) => {
+    switch (status?.toLowerCase()) {
+      case 'delivered':
+        return "bg-green-100 text-green-800";
+      case 'cancelled':
+        return "bg-red-100 text-red-800";
+      case 'processing':
+        return "bg-blue-100 text-blue-800";
+      case 'shipped':
+        return "bg-orange-100 text-orange-800";
+      default:
+        return "bg-gray-100 text-gray-800";
+    }
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 bg-white">
+    <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50 min-h-screen">
+
       <h1 className="text-3xl font-bold text-gray-900 mb-8">My Orders</h1>
 
       {loading ? (
-        <div className="bg-gray-50 rounded-lg shadow-sm p-6 text-center">
-          <p className="text-gray-500">Loading orders...</p>
+        <div className="bg-white rounded-xl shadow-md p-8 text-center border border-pink-100">
+          <div className="animate-pulse">
+            <div className="h-6 bg-gray-200 rounded w-1/4 mx-auto mb-4"></div>
+            <div className="h-4 bg-gray-200 rounded w-1/2 mx-auto"></div>
+          </div>
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-gray-50 rounded-lg shadow-sm p-6 text-center">
-          <p className="text-gray-500">No orders found.</p>
+        <div className="bg-white rounded-xl shadow-md p-12 text-center border border-pink-100">
+          <FiPackage className="text-4xl text-pink-400 mx-auto mb-4" />
+          <h3 className="text-xl font-semibold text-gray-800 mb-2">No orders yet</h3>
+          <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
+          <button
+            onClick={() => window.location.href = '/products'}
+            className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-3 px-6 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
+          >
+            <FiShoppingBag className="inline mr-2" />
+            Start Shopping
+          </button>
         </div>
       ) : (
-        <div className="bg-gray-50 rounded-lg shadow-sm p-6">
-          <div className="space-y-4">
+        <div className="bg-white rounded-xl shadow-md overflow-hidden border border-pink-100">
+  
+          <div className="grid grid-cols-12 gap-4 px-6 py-4 bg-pink-100 font-semibold text-gray-700">
+            <div className="col-span-2">Order ID</div>
+            <div className="col-span-2">Date</div>
+            <div className="col-span-2">Status</div>
+            <div className="col-span-2">Items</div>
+            <div className="col-span-2">Total</div>
+            <div className="col-span-2 text-right">Actions</div>
+          </div>
+          
+      
+          <div className="divide-y divide-gray-100">
             {orders.map((order) => (
-              <div
-                key={order.orderId}
-                className="border border-gray-200 rounded-lg p-4 hover:bg-gray-100 cursor-pointer transition-colors duration-200"
-                onClick={() => handleRowClick(order)}
-              >
-                <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
-                  <div>
-                    <p className="text-sm text-gray-500">Order ID</p>
-                    <p className="font-medium text-gray-900">{order.orderId}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Status</p>
-                    <p className="font-medium text-gray-900">{order.status || "Pending"}</p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Date</p>
-                    <p className="font-medium text-gray-900">
-                      {new Date(order.date).toLocaleDateString()}
+              <div key={order.orderId} className="grid grid-cols-12 gap-4 px-6 py-4 items-center
+               hover:bg-pink-50 transition-colors duration-200">
+                <div className="col-span-2 font-medium text-gray-900">{order.orderId}</div>
+                <div className="col-span-2 text-gray-700">
+                  {new Date(order.date).toLocaleDateString()}
+                </div>
+                <div className="col-span-2">
+                  <span className={`px-3 py-1 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                    {order.status || "Pending"}
+                  </span>
+                </div>
+                <div className="col-span-2 text-gray-700">
+                  {order.orderedItems.length} item{order.orderedItems.length !== 1 ? 's' : ''}
+                </div>
+                <div className="col-span-2">
+                  <p className="font-bold text-black">
+                    LKR {(getAmountPaid(order) || 0).toFixed(2)}
+                  </p>
+                  {calculateDiscount(order) > 0 && (
+                    <p className="text-xs text-green-600">
+                      Saved LKR {calculateDiscount(order).toFixed(2)}
                     </p>
-                  </div>
-                  <div>
-                    <p className="text-sm text-gray-500">Amount Paid</p>
-                    <p className="font-medium text-gray-900">LKR {(getAmountPaid(order) || 0).toFixed(2)}</p>
-                    {calculateDiscount(order) > 0 && (
-                      <p className="text-xs text-yellow-500">
-                        You saved LKR {calculateDiscount(order).toFixed(2)}
-                      </p>
-                    )}
-                  </div>
+                  )}
+                </div>
+                <div className="col-span-2 text-right">
+                  <button 
+                    onClick={() => handleRowClick(order)}
+                    className="bg-pink-500 hover:bg-pink-600 text-white font-medium text-sm py-1 px-3 rounded-lg transition-colors duration-200 inline-flex items-center"
+                  >
+                    <FiEye className="mr-1" />
+                    View 
+                  </button>
                 </div>
               </div>
             ))}
@@ -117,20 +160,20 @@ export default function MyOrdersPage() {
 
       {selectedOrder && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-gray-50 w-full max-w-2xl rounded-lg shadow-sm overflow-hidden">
-            <div className="p-6">
-              <div className="flex justify-between items-start mb-6">
-                <h2 className="text-xl font-bold text-gray-900">Order Details</h2>
+          <div className="bg-white w-full max-w-2xl rounded-lg shadow-sm overflow-hidden border border-pink-100">
+            <div className="bg-gradient-to-r from-pink-600 to-pink-700 p-6 text-white">
+              <div className="flex justify-between items-start">
+                <h2 className="text-xl font-bold">Order Details</h2>
                 <button
-                  className="text-gray-500 hover:text-gray-700"
+                  className="text-white hover:text-pink-200 transition-colors"
                   onClick={closeModal}
                 >
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M6 18L18 6M6 6l12 12" />
-                  </svg>
+                  <FiXCircle className="w-6 h-6" />
                 </button>
               </div>
+            </div>
 
+            <div className="p-6">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                 <div className="space-y-4">
                   <div>
@@ -171,24 +214,31 @@ export default function MyOrdersPage() {
                     <img
                       src={item.image}
                       alt={item.name}
-                      className="w-16 h-16 object-cover rounded-lg mr-4"
+                      className="w-16 h-16 object-cover rounded-lg mr-4 border border-gray-200"
                     />
                     <div className="flex-grow">
                       <p className="font-medium text-gray-900">{item.name}</p>
                       <div className="grid grid-cols-2 gap-2 text-sm mt-1">
                         <div>
-                          <span className="text-gray-500">Original Price:</span> LKR {item.price.toFixed(2)}
+                          <span className="text-gray-500">Price: </span>
+                          {item.lastPrice && item.lastPrice < item.price ? (
+                            <>
+                              <span className="text-pink-600 font-medium">LKR {item.lastPrice.toFixed(2)}</span>
+                              <span className="text-gray-400 line-through ml-1">LKR {item.price.toFixed(2)}</span>
+                            </>
+                          ) : (
+                            <span className="text-gray-900">LKR {item.price.toFixed(2)}</span>
+                          )}
                         </div>
-                        {item.lastPrice && item.lastPrice < item.price && (
-                          <div>
-                            <span className="text-gray-500">Discounted Price:</span> LKR {item.lastPrice.toFixed(2)}
-                          </div>
-                        )}
                         <div>
-                          <span className="text-gray-500">Qty:</span> {item.quantity}
+                          <span className="text-gray-500">Quantity: </span>
+                          <span className="text-gray-900">{item.quantity}</span>
                         </div>
                         <div className="col-span-2">
-                          <span className="text-gray-500">Subtotal:</span> LKR {((item.lastPrice || item.price) * item.quantity).toFixed(2)}
+                          <span className="text-gray-500">Subtotal: </span>
+                          <span className="font-medium text-gray-900">
+                            LKR {((item.lastPrice || item.price) * item.quantity).toFixed(2)}
+                          </span>
                         </div>
                       </div>
                     </div>
@@ -200,21 +250,23 @@ export default function MyOrdersPage() {
                 <div className="space-y-2 mb-4">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Original Total:</span>
-                    <span className="font-medium text-gray-900">
+                    <span className="text-gray-900">
                       LKR {calculateOriginalTotal(selectedOrder).toFixed(2)}
                     </span>
                   </div>
+                  
                   {calculateDiscount(selectedOrder) > 0 && (
                     <div className="flex justify-between text-sm">
                       <span className="text-gray-600">Discount:</span>
-                      <span className="text-yellow-500">
+                      <span className="text-green-600">
                         - LKR {calculateDiscount(selectedOrder).toFixed(2)}
                       </span>
                     </div>
                   )}
+                  
                   <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
                     <span className="font-bold text-gray-900">Amount Paid:</span>
-                    <span className="font-bold text-gray-900">
+                    <span className="font-bold text-pink-600">
                       LKR {(getAmountPaid(selectedOrder) || 0).toFixed(2)}
                     </span>
                   </div>

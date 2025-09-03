@@ -40,13 +40,13 @@ export default function ProductPage() {
   }
 
   return (
-    <div className="min-h-screen bg-white p-6">
+    <div className="min-h-screen bg-gradient-to-b from-white to-pink-50 p-6">
      
       <div className="max-w-4xl mx-auto mb-8">
         <div className="relative">
           <input
             type="text"
-            className="w-full p-3 pl-10 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary focus:border-transparent"
+            className="w-full p-3 pl-10 border border-pink-300 rounded-lg  focus:ring-pink-400 focus:border-pink-400"
             placeholder="Search products..."
             onChange={search}
             value={query}

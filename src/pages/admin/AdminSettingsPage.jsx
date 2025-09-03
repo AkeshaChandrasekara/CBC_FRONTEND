@@ -47,8 +47,15 @@ export default function AdminSettingsPage() {
                 name="notifications"
                 checked={settings.notifications}
                 onChange={handleChange}
-                className="h-5 w-10 md:h-6 md:w-11 rounded-full bg-gray-200 appearance-none checked:bg-yellow-600 transition-colors duration-200"
+                className="sr-only"
               />
+              <div className={`h-5 w-10 md:h-6 md:w-11 rounded-full transition-colors duration-200 ${
+                settings.notifications ? 'bg-pink-500' : 'bg-gray-200'
+              }`}>
+                <div className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 rounded-full bg-white transition-all duration-200 ${
+                  settings.notifications ? 'translate-x-5 md:translate-x-6' : 'translate-x-1'
+                }`}></div>
+              </div>
             </div>
           </div>
 
@@ -66,8 +73,15 @@ export default function AdminSettingsPage() {
                 name="darkMode"
                 checked={settings.darkMode}
                 onChange={handleChange}
-                className="h-5 w-10 md:h-6 md:w-11 rounded-full bg-gray-200 appearance-none checked:bg-yellow-600 transition-colors duration-200"
+                className="sr-only"
               />
+              <div className={`h-5 w-10 md:h-6 md:w-11 rounded-full transition-colors duration-200 ${
+                settings.darkMode ? 'bg-pink-500' : 'bg-gray-200'
+              }`}>
+                <div className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 rounded-full bg-white transition-all duration-200 ${
+                  settings.darkMode ? 'translate-x-5 md:translate-x-6' : 'translate-x-1'
+                }`}></div>
+              </div>
             </div>
           </div>
         </div>
@@ -89,8 +103,15 @@ export default function AdminSettingsPage() {
                 name="twoFactorAuth"
                 checked={settings.twoFactorAuth}
                 onChange={handleChange}
-                className="h-5 w-10 md:h-6 md:w-11 rounded-full bg-gray-200 appearance-none checked:bg-yellow-600 transition-colors duration-200"
+                className="sr-only"
               />
+              <div className={`h-5 w-10 md:h-6 md:w-11 rounded-full transition-colors duration-200 ${
+                settings.twoFactorAuth ? 'bg-pink-500' : 'bg-gray-200'
+              }`}>
+                <div className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 rounded-full bg-white transition-all duration-200 ${
+                  settings.twoFactorAuth ? 'translate-x-5 md:translate-x-6' : 'translate-x-1'
+                }`}></div>
+              </div>
             </div>
           </div>
         </div>
@@ -112,8 +133,15 @@ export default function AdminSettingsPage() {
                 name="emailUpdates"
                 checked={settings.emailUpdates}
                 onChange={handleChange}
-                className="h-5 w-10 md:h-6 md:w-11 rounded-full bg-gray-200 appearance-none checked:bg-yellow-600 transition-colors duration-200"
+                className="sr-only"
               />
+              <div className={`h-5 w-10 md:h-6 md:w-11 rounded-full transition-colors duration-200 ${
+                settings.emailUpdates ? 'bg-pink-500' : 'bg-gray-200'
+              }`}>
+                <div className={`absolute top-1/2 transform -translate-y-1/2 h-4 w-4 md:h-5 md:w-5 rounded-full bg-white transition-all duration-200 ${
+                  settings.emailUpdates ? 'translate-x-5 md:translate-x-6' : 'translate-x-1'
+                }`}></div>
+              </div>
             </div>
           </div>
         </div>
@@ -121,7 +149,7 @@ export default function AdminSettingsPage() {
         <div className="pt-3 md:pt-4">
           <button
             type="submit"
-            className="w-full sm:w-auto px-4 py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm md:text-base"
+            className="w-full sm:w-auto px-4 py-2 bg-pink-500 text-white rounded-lg hover:bg-pink-600 text-sm md:text-base transition-colors duration-200"
           >
               Save Settings
           </button>

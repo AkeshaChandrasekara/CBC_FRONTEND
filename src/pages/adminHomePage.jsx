@@ -13,7 +13,6 @@ import axios from "axios";
 import AdminSettingsPage from "./admin/AdminSettingsPage";
 import AdminAdminsPage from "./admin/AdminAdminsPage";
 
-
 export default function AdminHomePage() {
   const [user, setUser] = useState(null);
   const [activeTab, setActiveTab] = useState("dashboard");
@@ -96,11 +95,11 @@ export default function AdminHomePage() {
 
   return (
     <div className="flex flex-col md:flex-row h-screen bg-gray-50">
-   
-      <div className="md:hidden bg-slate-900 p-4 flex justify-between items-center text-white">
+     
+      <div className="md:hidden bg-[#8B2252] p-4 flex justify-between items-center text-white shadow-md">
         <div className="flex items-center">
-          <img src="/logo.png" alt="Crystal Beauty Clear" className="h-10 rounded-full" />
-          <h1 className="ml-3 text-lg font-bold">Admin Panel</h1>
+          <img src="/cbclgo.png" alt="Crystal Beauty Clear" className="h-10 rounded-full" />
+          <h1 className="ml-3 text-lg font-semibold">Admin Panel</h1>
         </div>
         <button 
           onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
@@ -116,91 +115,92 @@ export default function AdminHomePage() {
         </button>
       </div>
     
-      <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-gradient-to-b from-slate-900 to-slate-800 text-white shadow-xl flex flex-col`}>
-        <div className="p-6 flex items-center justify-center border-b border-slate-700 md:block">
+      <div className={`${mobileMenuOpen ? 'block' : 'hidden'} md:block w-full md:w-64 bg-[#8B2252] text-white shadow-xl flex flex-col`}>
+        <div className="p-6 flex items-center justify-center border-b border-[#A73275] md:block">
           <div className="flex items-center">
-            <img src="/logo.png" alt="Crystal Beauty Clear" className="h-12 rounded-full" />
-            <h1 className="ml-3 text-xl font-bold hidden md:block">Admin Panel</h1>
+            <img src="/cbclgo.png" alt="Crystal Beauty Clear" className="h-12 rounded-full" />
+            <h1 className="ml-3 text-xl font-semibold hidden md:block">Admin Panel</h1>
           </div>
         </div>
         
         <div className="p-4 space-y-1 mt-6 flex-1">
           <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'dashboard' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'dashboard' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
             to="/admin"
             onClick={() => handleNavClick('admin')}
           >
-            <BsGraphUp className="mr-3 text-yellow-400" /> 
-            <span>Dashboard</span>
+            <BsGraphUp className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Dashboard</span>
           </Link>
 
-          <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'products' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
-            to="/admin/products"
-            onClick={() => handleNavClick('products')}
-          >
-            <BsBoxSeam className="mr-3 text-yellow-400" /> 
-            <span>Products</span>
-          </Link>
-
-          <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'orders' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
+           <Link 
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'orders' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
             to="/admin/orders"
             onClick={() => handleNavClick('orders')}
           >
-            <BsCart4 className="mr-3 text-yellow-400" /> 
-            <span>Orders</span>
+            <BsCart4 className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Orders</span>
           </Link>
 
           <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'customers' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'products' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
+            to="/admin/products"
+            onClick={() => handleNavClick('products')}
+          >
+            <BsBoxSeam className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Products</span>
+          </Link>
+
+         
+
+          <Link 
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'customers' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
             to="/admin/customers"
             onClick={() => handleNavClick('customers')}
           >
-            <BsPeopleFill className="mr-3 text-yellow-400" /> 
-            <span>Customers</span>
+            <BsPeopleFill className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Customers</span>
           </Link>
 
           <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'admins' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'admins' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
             to="/admin/admins"
             onClick={() => handleNavClick('admins')}
           >
-            <BsShieldLock className="mr-3 text-yellow-400" /> 
-            <span>Admins</span>
+            <BsShieldLock className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Admins</span>
           </Link>
 
           <Link 
-            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'settings' ? 'bg-slate-700 text-white' : 'text-gray-300 hover:bg-slate-700 hover:text-white'}`}
+            className={`flex items-center p-3 rounded-lg transition-colors duration-200 ${activeTab === 'settings' ? 'bg-[#A73275] text-white' : 'text-gray-100 hover:bg-[#A73275] hover:text-white'}`}
             to="/admin/settings"
             onClick={() => handleNavClick('settings')}
           >
-            <BsGearFill className="mr-3 text-yellow-400" /> 
-            <span>Settings</span>
+            <BsGearFill className="mr-3 text-pink-200" /> 
+            <span className="font-semibold">Settings</span>
           </Link>
         </div>
 
-        <div className="p-4 border-t border-slate-700">
+        <div className="p-4 border-t border-[#A73275]">
           <button 
             onClick={handleLogout}
-            className="flex items-center justify-center w-full p-2 rounded-lg bg-slate-700 hover:bg-slate-600 transition-colors duration-200 text-white"
+            className="flex items-center justify-center w-full p-3 rounded-lg bg-[#A73275] hover:bg-[#C2185B] transition-colors duration-200 text-white font-semibold"
           >
-            <FiLogOut className="mr-2 text-yellow-400" />
+            <FiLogOut className="mr-2 text-pink-200" />
             <span className="truncate">Sign Out</span>
           </button>
         </div>
       </div>
 
-
-     
+      {/* Main Content */}
       <div className="flex-1 flex flex-col overflow-hidden">
-      
+        {/* Top Bar */}
         <div className="bg-white shadow-sm p-4 flex justify-between items-center">
           <h2 className="text-lg md:text-xl font-semibold text-gray-800">
             {user?.name ? `Welcome back, ${user.name.split(' ')[0]}` : 'Admin Dashboard'}
           </h2>
           <div className="flex items-center space-x-4">
-            <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-r from-yellow-500 to-yellow-600 flex items-center justify-center text-white font-bold shadow-md">
+            <div className="h-8 w-8 md:h-10 md:w-10 rounded-full bg-gradient-to-r from-pink-500 to-pink-600 flex items-center justify-center text-white font-bold shadow-md">
               {user?.name?.charAt(0).toUpperCase() || 'A'}
             </div>
           </div>
@@ -223,7 +223,7 @@ export default function AdminHomePage() {
                     </div>
         
                     <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 mb-8">
-                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 md:p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-blue-500 to-blue-600 p-4 md:p-6 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs md:text-sm font-medium">Total Products</p>
@@ -238,7 +238,7 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 md:p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-green-500 to-green-600 p-4 md:p-6 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs md:text-sm font-medium">Total Orders</p>
@@ -253,7 +253,7 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 md:p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-purple-500 to-purple-600 p-4 md:p-6 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs md:text-sm font-medium">Total Customers</p>
@@ -268,7 +268,7 @@ export default function AdminHomePage() {
                         </div>
                       </div>
 
-                      <div className="bg-gradient-to-r from-yellow-500 to-yellow-600 p-4 md:p-6 rounded-lg text-white">
+                      <div className="bg-gradient-to-r from-pink-500 to-pink-600 p-4 md:p-6 rounded-lg text-white shadow-md hover:shadow-lg transition-shadow">
                         <div className="flex items-center justify-between">
                           <div>
                             <p className="text-xs md:text-sm font-medium">Total Revenue</p>
@@ -277,7 +277,7 @@ export default function AdminHomePage() {
                           <BsGraphUp className="text-xl md:text-2xl opacity-80" />
                         </div>
                         <div className="mt-4">
-                          <div className="h-1 bg-yellow-400 rounded-full">
+                          <div className="h-1 bg-pink-400 rounded-full">
                             <div className="h-1 bg-white rounded-full w-4/5"></div>
                           </div>
                         </div>
@@ -287,7 +287,7 @@ export default function AdminHomePage() {
                     <div className="bg-gray-50 rounded-lg p-4 md:p-6">
                       <h4 className="text-base md:text-lg font-semibold text-gray-800 mb-4">Recent Activity</h4>
                       <div className="space-y-4">
-                        <div className="flex items-start">
+                        <div className="flex items-start p-3 rounded-lg hover:bg-white transition-colors">
                           <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-blue-100 flex items-center justify-center text-blue-600">
                             <BsCart4 className="text-sm md:text-base" />
                           </div>
@@ -297,7 +297,7 @@ export default function AdminHomePage() {
                             <p className="text-xs text-gray-400 mt-1">2 hours ago</p>
                           </div>
                         </div>
-                        <div className="flex items-start">
+                        <div className="flex items-start p-3 rounded-lg hover:bg-white transition-colors">
                           <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-green-100 flex items-center justify-center text-green-600">
                             <BsPeopleFill className="text-sm md:text-base" />
                           </div>
@@ -307,7 +307,7 @@ export default function AdminHomePage() {
                             <p className="text-xs text-gray-400 mt-1">5 hours ago</p>
                           </div>
                         </div>
-                        <div className="flex items-start">
+                        <div className="flex items-start p-3 rounded-lg hover:bg-white transition-colors">
                           <div className="flex-shrink-0 h-8 w-8 md:h-10 md:w-10 rounded-full bg-purple-100 flex items-center justify-center text-purple-600">
                             <BsBoxSeam className="text-sm md:text-base" />
                           </div>
@@ -334,7 +334,7 @@ export default function AdminHomePage() {
             </Routes>
           ) : (
             <div className="w-full h-full flex justify-center items-center">
-              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-yellow-500"></div>
+              <div className="animate-spin rounded-full h-32 w-32 border-t-2 border-b-2 border-pink-500"></div>
             </div>
           )}
         </div>

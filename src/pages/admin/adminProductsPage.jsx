@@ -48,7 +48,7 @@ export default function AdminProductsPage() {
           </div>
           <Link 
             to="/admin/products/addProduct"
-            className="flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors text-sm md:text-base"
+            className="flex items-center px-4 py-2 bg-pink-600 text-white rounded-lg hover:bg-pink-700 transition-colors text-sm md:text-base"
           >
             <FaPlus className="mr-2" />
             Add Product
@@ -64,7 +64,8 @@ export default function AdminProductsPage() {
               </div>
               <input
                 type="text"
-                className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:ring-blue-500 focus:border-blue-500 text-sm md:text-base"
+                className="block w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg bg-gray-50
+                 focus:ring-pink-500 focus:border-pink-500 text-sm md:text-base"
                 placeholder="Search products..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
@@ -150,7 +151,7 @@ export default function AdminProductsPage() {
             </div>
           ) : (
             <div className="w-full py-8 md:py-12 flex justify-center items-center">
-              <div className="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 border-t-blue-500 animate-spin rounded-full"></div>
+              <div className="w-8 h-8 md:w-12 md:h-12 border-4 border-gray-200 border-t-pink-500 animate-spin rounded-full"></div>
             </div>
           )}
         </div>

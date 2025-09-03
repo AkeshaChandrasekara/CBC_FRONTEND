@@ -71,7 +71,8 @@ export default function AdminAdminsPage() {
             </div>
             <input
               type="text"
-              className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm md:text-base"
+              className="block w-full pl-10 pr-3 py-2 border border-gray-300 
+              rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base"
               placeholder="Search admins..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -79,7 +80,8 @@ export default function AdminAdminsPage() {
           </div>
           <Link
             to="/admin/admins/add"
-            className="flex items-center justify-center px-3 py-2 md:px-4 md:py-2 bg-yellow-600 text-white rounded-lg hover:bg-yellow-700 text-sm md:text-base"
+            className="flex items-center justify-center px-3 py-2 md:px-4 md:py-2
+             bg-pink-600 text-white rounded-lg hover:bg-pink-700 text-sm md:text-base"
           >
             <FiUserPlus className="mr-1 md:mr-2" />
             <span>Add Admin</span>
@@ -89,7 +91,7 @@ export default function AdminAdminsPage() {
 
       {loading ? (
         <div className="flex justify-center py-12 md:py-20">
-          <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-yellow-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       ) : (
         <div className="overflow-x-auto">
@@ -143,7 +145,7 @@ export default function AdminAdminsPage() {
                     <td className="px-3 py-3 md:px-6 md:py-4 whitespace-nowrap text-xs md:text-sm font-medium">
                       <div className="flex space-x-1 md:space-x-2">
                         <button
-                          className="text-yellow-600 hover:text-yellow-900"
+                          className="text-pink-600 hover:text-pink-900"
                           onClick={() => toast("Edit admin functionality coming soon")}
                         >
                           <FiEdit2 size={16} className="md:size-[18px]" />

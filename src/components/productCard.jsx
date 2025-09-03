@@ -1,7 +1,10 @@
 import { Link } from "react-router-dom";
 import { addToCart, getCurrentUserEmail } from "../utils/cartFunction";
+import { addToWishlist, removeFromWishlist, isInWishlist, getWishlistFromStorage } from "../utils/wishlistFunction";
 import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { FiHeart } from "react-icons/fi";
 
 export default function ProductCard(props) {
   const product = props.product;
@@ -11,6 +14,13 @@ export default function ProductCard(props) {
     : 0;
   const isInStock = product.stock > 0;
   const navigate = useNavigate();
+  const [isInWishlistState, setIsInWishlistState] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+  
+    setIsInWishlistState(isInWishlist(product.productId));
+  }, [product.productId]);
 
   const handleAddToCart = () => {
     const email = getCurrentUserEmail();
@@ -29,16 +39,53 @@ export default function ProductCard(props) {
     }
   };
 
+  const toggleWishlist = async () => {
+    const email = getCurrentUserEmail();
+    if (!email) {
+      toast.error("Please login to add to wishlist");
+      navigate("/login");
+      return;
+    }
+
+    setLoading(true);
+    
+    if (isInWishlistState) {
+      await removeFromWishlist(product.productId);
+      toast.success("Removed from wishlist");
+      setIsInWishlistState(false);
+    } else {
+      await addToWishlist(product.productId);
+      toast.success("Added to wishlist");
+      setIsInWishlistState(true);
+    }
+    
+    setLoading(false);
+  };
+
   return (
-    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-gray-100 hover:border-gray-200">
+    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 
+    overflow-hidden flex flex-col h-full border border-pink-100 hover:border-pink-200">
       <div className="relative aspect-square overflow-hidden m-2 rounded-lg bg-gray-50">
         <img
           src={product.images[0]}
           className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
           alt={product.productName}
         />
+     
+        <button
+          onClick={toggleWishlist}
+          disabled={loading}
+          className={`absolute top-2 right-2 p-2 rounded-full transition-all duration-300 ${
+            isInWishlistState 
+              ? "bg-pink-600 text-white" 
+              : "bg-white text-pink-600 hover:bg-pink-50 hover:text-pink-600"
+          }`}
+        >
+          <FiHeart className={`w-4 h-4 ${isInWishlistState ? "fill-current" : ""}`} />
+        </button>
+
         {isDiscounted && (
-          <div className="absolute top-2 right-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
             {discountPercentage}% OFF
           </div>
         )}
@@ -58,8 +105,6 @@ export default function ProductCard(props) {
           </h2>
           <p className="text-[10px] text-gray-400 mt-0.5">ID: {product.productId}</p>
         </div>
-
-       
 
         <div className="mt-auto">
           <div className="flex items-baseline gap-2">
@@ -110,7 +155,7 @@ export default function ProductCard(props) {
             onClick={handleAddToCart}
             disabled={!isInStock}
             className={`text-center ${
-              isInStock ? "bg-yellow-500 hover:bg-yellow-400" : "bg-gray-300 cursor-not-allowed"
+              isInStock ? "bg-gradient-to-r from-pink-600 to-pink-700 text-white " : "bg-gray-300 cursor-not-allowed"
             } text-gray-900 font-medium py-2 px-2 rounded-lg transition-all duration-300 text-xs hover:shadow-sm active:scale-95 flex items-center justify-center`}
           >
             <svg

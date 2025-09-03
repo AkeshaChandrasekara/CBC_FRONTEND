@@ -41,13 +41,14 @@ export default function CartCard(props) {
       {!loaded ? (
         <div className="animate-pulse bg-gray-200 rounded-lg h-24 w-full"></div>
       ) : (
-        <div className={`flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all duration-300 mb-4 border ${isSelected ? 'border-yellow-500' : 'border-gray-100'}`}>
+        <div className={`flex items-center justify-between p-4 bg-white rounded-lg shadow-sm hover:shadow-md transition-all 
+        duration-300 mb-4 border ${isSelected ? 'border-pink-500' : 'border-pink-100'}`}>
           <div className="flex items-center space-x-4">
             <input
               type="checkbox"
               checked={isSelected}
               onChange={onSelect}
-              className="h-5 w-5 text-yellow-600 rounded focus:ring-yellow-500"
+              className="h-5 w-5 text-pink-600 rounded focus:ring-pink-500"
             />
             <img
               src={product?.images[0]}

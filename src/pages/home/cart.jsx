@@ -3,6 +3,7 @@ import { loadCart, deleteItem, clearCart } from "../../utils/cartFunction";
 import CartCard from "../../components/cartCard";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { FiShoppingCart } from "react-icons/fi";
 
 export default function Cart() {
   const [cart, setCart] = useState([]);
@@ -76,13 +77,26 @@ export default function Cart() {
   const discount = total - subtotal;
 
   return (
-    <div className="container mx-auto px-4 py-8 bg-white">
+    <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50">
       <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h1>
       
       <div className="p-6 mb-4">
         {cart.length === 0 ? (
           <div className="text-center py-12">
-            <p className="text-gray-500 text-lg">Your cart is empty</p>
+            <div className="flex items-center justify-center h-[12vh]">
+               <div className="bg-white w-2/3 rounded-xl shadow-md p-6 text-center border border-pink-100">
+      <FiShoppingCart className="text-3xl text-pink-600 mx-auto mb-2" />
+      <h3 className="text-xl font-semibold text-gray-800 mb-2">Your cart is empty</h3>
+      <p className="text-gray-600 mb-6">Add some products to your cart to continue shopping</p>
+      <button
+        onClick={() => navigate('/products')}
+        className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-2 
+        px-4 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
+      >
+        Browse Products
+      </button>
+    </div>
+    </div>
           </div>
         ) : (
           <div className="space-y-4">
@@ -100,7 +114,7 @@ export default function Cart() {
         )}
       </div>
 
-      <div className="bg-gray-50 rounded-lg p-4 bottom-0 max-w-md ml-auto">
+      <div className="bg-white rounded-lg p-4 bottom-0 max-w-md ml-auto">
         {selectedItems.length > 0 && (
           <div className="mb-2 text-sm text-gray-600">
             {selectedItems.length} item{selectedItems.length !== 1 ? 's' : ''} selected
@@ -126,7 +140,7 @@ export default function Cart() {
         
         <button 
           onClick={onOrderCheckOutClick} 
-          className="w-full bg-yellow-500 hover:bg-yellow-400 text-black font-bold py-2 px-4 rounded-lg transition-colors duration-300 text-sm"
+          className="w-full bg-gradient-to-r from-pink-600 to-pink-700 hover:from-pink-700 hover:to-pink-800 text-white font-bold py-3 px-4 rounded-lg transition-colors duration-300 text-sm"
           disabled={cart.length === 0}
         >
           {selectedItems.length > 0 ? 'Checkout Selected' : 'Proceed to Checkout'}

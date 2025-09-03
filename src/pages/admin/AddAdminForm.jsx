@@ -176,7 +176,8 @@ export default function AddAdminForm() {
             type="submit"
             onClick={handleSubmit}
             disabled={isSubmitting}
-            className={`px-4 py-2 border border-transparent rounded-md text-sm font-medium text-white bg-yellow-600 hover:bg-yellow-700 ${
+            className={`px-4 py-2 border border-transparent rounded-md text-sm 
+              font-medium text-white bg-pink-600 hover:bg-pink-700 ${
               isSubmitting ? "opacity-75 cursor-not-allowed" : ""
             }`}
           >

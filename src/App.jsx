@@ -11,6 +11,7 @@ import SignInPage from './pages/signUpPage'
 import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
+import WishlistPage from './pages/WishlistPage';
 
 
 
@@ -38,6 +39,7 @@ function App() {
         <Route path="/admin/*" element={<AdminHomePage/>}/>
         <Route path="/response" element={<ResponseTest/>}/> 
         <Route path="/order-confirmation" element={<OrderConfirmationPage />} />
+        <Route path="/wishlist" element={<WishlistPage />} />
  
                    
       </Routes>

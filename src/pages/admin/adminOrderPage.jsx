@@ -92,8 +92,8 @@ export default function AdminOrdersPage() {
         <div className="bg-white rounded-xl shadow-sm border border-gray-200 overflow-hidden">
           {loading ? (
             <div className="p-6 md:p-8 text-center">
-              <div className="animate-spin rounded-full h-6 w-6 md:h-8 md:w-8 border-b-2 border-blue-500 mx-auto"></div>
-              <p className="mt-2 text-sm md:text-base text-gray-600">Loading orders...</p>
+              <div className="animate-spin rounded-full h-6 w-6 md:h-8 md:w-8 border-b-2 border-pink-500 mx-auto"></div>
+            
             </div>
           ) : orders.length === 0 ? (
             <div className="p-6 md:p-8 text-center">

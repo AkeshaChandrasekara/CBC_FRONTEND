@@ -103,7 +103,8 @@ export default function AdminCustomersPage() {
           </div>
           <input
             type="text"
-            className="block w-full pl-10 pr-3 py-2 border border-gray-300 rounded-lg bg-gray-50 focus:outline-none focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm md:text-base"
+            className="block w-full pl-10 pr-3 py-2 border border-pink-300 rounded-lg
+             bg-gray-50 focus:outline-none focus:ring-2 focus:ring-pink-500 focus:border-transparent text-sm md:text-base"
             placeholder="Search customers..."
             value={searchTerm}
             onChange={(e) => {
@@ -116,7 +117,7 @@ export default function AdminCustomersPage() {
 
       {loading ? (
         <div className="flex justify-center py-12 md:py-20">
-          <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-yellow-500"></div>
+          <div className="animate-spin rounded-full h-8 w-8 md:h-12 md:w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       ) : (
         <>

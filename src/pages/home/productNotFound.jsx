@@ -6,7 +6,7 @@ export default function ProductNotFound() {
         <p className="text-xl text-gray-600 mb-6">Oops! Product not found.</p>
         <button
           onClick={() => window.history.back()}
-          className="px-6 py-2 bg-accent text-white font-semibold rounded-lg hover:bg-accent-dark transition-all"
+          className="px-6 py-2 bg-pink-600 text-white font-semibold rounded-lg hover:bg-accent-dark transition-all"
         >
           Go Back
         </button>

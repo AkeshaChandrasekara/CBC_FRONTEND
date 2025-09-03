@@ -107,10 +107,10 @@ export default function ProductOverview() {
   };
 
   return (
-    <div className="min-h-screen bg-white py-8 px-2 sm:px-4 lg:px-6">
+    <div className="min-h-screen bg-gradient-to-b from-white to-pink-50 py-8 px-2 sm:px-4 lg:px-6">
       {status == "loading" && (
         <div className="flex justify-center items-center h-[50vh]">
-          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-yellow-500"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-pink-500"></div>
         </div>
       )}
       
@@ -118,35 +118,7 @@ export default function ProductOverview() {
       
       {status == "found" && (
         <div className="max-w-6xl mx-auto">
-          <nav className="flex mb-6" aria-label="Breadcrumb">
-            <ol className="inline-flex items-center space-x-1 md:space-x-2">
-              <li className="inline-flex items-center">
-                <a href="/" className="text-gray-700 hover:text-yellow-500 text-sm font-medium">
-                  Home
-                </a>
-              </li>
-              <li>
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
-                  </svg>
-                  <a href="#" className="ml-1 text-gray-700 hover:text-yellow-500 text-sm font-medium md:ml-2">
-                    Products
-                  </a>
-                </div>
-              </li>
-              <li aria-current="page">
-                <div className="flex items-center">
-                  <svg className="w-4 h-4 text-gray-400" fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M7.293 14.707a1 1 0 010-1.414L10.586 10 7.293 6.707a1 1 0 011.414-1.414l4 4a1 1 0 010 1.414l-4 4a1 1 0 01-1.414 0z" clipRule="evenodd"></path>
-                  </svg>
-                  <span className="ml-1 text-gray-500 text-sm font-medium md:ml-2">
-                    {product.productName}
-                  </span>
-                </div>
-              </li>
-            </ol>
-          </nav>
+      
 
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
             <div className="flex flex-col lg:flex-row">
@@ -167,7 +139,7 @@ export default function ProductOverview() {
                     {product.altNames.slice(0, 3).map((name, index) => (
                       <span 
                         key={index}
-                        className="px-2 py-1 bg-gray-50 text-yellow-500 text-xs rounded-full font-medium"
+                        className="px-2 py-1 bg-pink-50 text-pink-500 text-xs rounded-full font-medium"
                       >
                         {name}
                       </span>
@@ -217,7 +189,7 @@ export default function ProductOverview() {
                   )}
                 </div>
 
-                <div className="mb-8">
+                <div className="mb-6">
                   <h3 className="text-lg font-semibold text-gray-900 mb-3 border-b pb-2">
                     About This Product
                   </h3>
@@ -241,7 +213,7 @@ export default function ProductOverview() {
                   <button
                     onClick={onAddtoCartClick}
                     disabled={!isInStock}
-                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-gray-900 hover:bg-gray-800' : 'bg-gray-400 cursor-not-allowed'} text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-gradient-to-r from-pink-600 to-pink-700' : 'bg-gray-400 cursor-not-allowed'} text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path>
@@ -251,7 +223,7 @@ export default function ProductOverview() {
                   <button
                     onClick={onBuyNowClick}
                     disabled={!isInStock}
-                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-yellow-500 hover:bg-yellow-400' : 'bg-yellow-300 cursor-not-allowed'} text-gray-900 font-medium py-3 px-6 rounded-lg transition-all text-sm`}
+                    className={`flex-1 flex items-center justify-center gap-2 ${isInStock ? 'bg-gradient-to-r from-gray-700 to-gray-800' : 'bg-pink-300 cursor-not-allowed'} text-white font-medium py-3 px-6 rounded-lg transition-all text-sm`}
                   >
                     <svg className="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 11V7a4 4 0 00-8 0v4M5 9h14l1 12H4L5 9z"></path>
@@ -269,7 +241,7 @@ export default function ProductOverview() {
               {getCurrentUserEmail() && (
                 <button 
                   onClick={() => setShowReviewForm(!showReviewForm)}
-                  className="bg-yellow-500 hover:bg-yellow-400 text-gray-900 font-medium py-2 px-4 rounded-lg transition-all text-sm"
+                  className="bg-pink-500 hover:bg-pink-400 text-white font-medium py-2 px-4 rounded-lg transition-all text-sm"
                 >
                   {showReviewForm ? 'Cancel' : 'Write a Review'}
                 </button>
