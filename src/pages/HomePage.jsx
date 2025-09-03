@@ -383,14 +383,14 @@ axios
           <motion.button 
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
-            className="relative overflow-hidden bg-white border-2 border-pink-600 text-pink-600 font-bold py-4 px-10 rounded-full transition-all duration-300 group hover:bg-pink-600 hover:text-white hover:shadow-xl"
+            className="relative overflow-hidden bg-white border-2 border-pink-600
+             text-pink-600 font-bold py-4 px-10 rounded-full transition-all duration-300 group
+              hover:bg-pink-600 hover:text-white hover:shadow-xl"
             onClick={() => navigate('/products')}
           >
             <span className="relative z-10 flex items-center justify-center">
               Explore Full Collection
-              <svg className="w-5 h-5 ml-3 transform group-hover:translate-x-1 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M17 8l4 4m0 0l-4 4m4-4H3" />
-              </svg>
+            
             </span>
          
             <div className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
@@ -470,7 +470,7 @@ axios
         <motion.div
           key={index}
           initial={{ opacity: 0, y: 30 }}
-         whileInView={{ opacity: 1, y: 0 }}
+          whileInView={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6, delay: index * 0.1 }}
           viewport={{ once: true }}
           className="group relative"
@@ -490,15 +490,14 @@ axios
             
             <h3 className="text-xl font-bold text-gray-900 mb-3 relative">
               {benefit.title}
-              <span className="absolute left-1/2 -bottom-2 w-0 h-0.5 bg-pink-600 group-hover:w-10 group-hover:-translate-x-5 transition-all duration-300"></span>
+         
+              <span className="absolute left-1/2 -bottom-2 w-10 h-0.5 bg-pink-600 -translate-x-1/2"></span>
             </h3>
-            
             
             <p className="text-gray-600 leading-relaxed h-14 overflow-hidden">
               {benefit.description}
             </p>
             
-       
             <div className="mt-6 w-12 h-0.5 bg-pink-100 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
           </div>
         </motion.div>
@@ -506,7 +505,6 @@ axios
     </div>
   </div>
 </section>
-
   
 <section className="py-16 bg-gradient-to-b from-white to-pink-50">
   <div className="container mx-auto px-6">
