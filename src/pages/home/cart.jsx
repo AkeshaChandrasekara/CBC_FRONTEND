@@ -155,7 +155,7 @@ export default function Cart() {
         
         <div className="space-y-2 mb-4">
           <div className="flex justify-between text-sm">
-            <span className="text-gray-600">Original Price:</span>
+            <span className="text-gray-600">Price:</span>
             <span className="font-medium">LKR {originalTotal.toFixed(2)}</span>
           </div>
           

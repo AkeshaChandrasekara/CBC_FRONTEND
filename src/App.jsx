@@ -12,6 +12,7 @@ import ForgotPasswordPage from './pages/ForgotPasswordPage'
 import ResetPasswordPage from './pages/ResetPasswordPage'
 import OrderConfirmationPage from './pages/OrderConfirmationPage';
 import WishlistPage from './pages/WishlistPage';
+import { CustomToaster } from './components/CustomToast';
 
 
 
@@ -28,7 +29,7 @@ function App() {
   return (
     <div className='bg-primary'>
      <BrowserRouter>
-      <Toaster position='top-right'/>
+       <CustomToaster  position='top-right'/>
       <GoogleOAuthProvider clientId='132368913063-6mu0onmiop5f8jf38a86dtlvc5rb61eu.apps.googleusercontent.com'>
       <Routes path="/*">          
         <Route path="/*" element={<HomePage/>}/>   
