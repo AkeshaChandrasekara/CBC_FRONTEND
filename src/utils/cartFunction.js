@@ -37,6 +37,7 @@ export function clearCart() {
   const email = getCurrentUserEmail();
   if (!email) return;
   localStorage.removeItem(`cart_${email}`);
+  window.dispatchEvent(new CustomEvent('cartUpdated'));
 }
 export function addToCart(productId, qty) {
   const email = getCurrentUserEmail();
@@ -64,6 +65,7 @@ export function addToCart(productId, qty) {
   
   console.log("Cart after update:", cart);
   saveCart(cart);
+  window.dispatchEvent(new CustomEvent('cartUpdated'));
   return true;
 }
 
@@ -73,6 +75,7 @@ export function deleteItem(productId) {
   if (index !== -1) {
     cart.splice(index, 1);
     saveCart(cart);
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
   }
 }
 
