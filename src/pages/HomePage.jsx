@@ -233,7 +233,6 @@ axios
               </section>
 
           
-         
 <section className="py-16 bg-gradient-to-b from-white to-pink-50">
   <div className="container mx-auto px-6">
     <motion.div
@@ -357,7 +356,11 @@ axios
                       Details
                     </button>
                     <button 
-                      className="w-full bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-2 px-2 rounded-md transition-all duration-300 flex items-center justify-center gap-1 disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-md hover:from-pink-700 hover:to-pink-800 text-sm"
+                      className={`w-full font-medium py-2 px-2 rounded-md transition-all duration-300 flex items-center justify-center gap-1 disabled:cursor-not-allowed hover:shadow-md text-sm ${
+                        isInStock 
+                          ? "bg-gradient-to-r from-pink-600 to-pink-700 text-white hover:from-pink-700 hover:to-pink-800" 
+                          : "bg-gray-300 text-gray-600"
+                      }`}
                       onClick={() => handleAddToCart(product)}
                       disabled={!isInStock}
                     >
