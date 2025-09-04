@@ -44,7 +44,7 @@ export default function Header() {
       {isSliderOpen && <NavSlider closeSlider={() => setIsSliderOpen(false)} />}
       
       <div className="bg-gradient-to-r from-pink-600 to-pink-700 text-white text-sm py-2 text-center">
-        <p>✨ Free shipping on orders over Rs 5000 | Use code: CRYSTAL20 for 20% off ✨</p>
+        <p>🎉 Free shipping on orders over Rs 5000 | Use code: CRYSTAL20 for 20% off 🎉</p>
       </div>
 
       <header className="bg-white w-full shadow-sm border-b border-gray-100">
