@@ -387,7 +387,7 @@ axios
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
             className="relative overflow-hidden bg-white border-2 border-pink-600
-             text-pink-600 font-bold py-4 px-10 rounded-full transition-all duration-300 group
+             text-pink-600 font-bold py-3.5 px-8 rounded-full transition-all duration-300 group
               hover:bg-pink-600 hover:text-white hover:shadow-xl"
             onClick={() => navigate('/products')}
           >
