@@ -232,197 +232,206 @@ axios
                 </div>
               </section>
 
-          
-<section className="py-16 bg-gradient-to-b from-white to-pink-50">
-  <div className="container mx-auto px-6">
-    <motion.div
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.6 }}
-      viewport={{ once: true }}
-      className="text-center mb-12"
-    >
-      <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Collection</h2>
-      <div className="w-20 h-1 bg-pink-600 mx-auto mb-4"></div>
-      <p className="text-gray-600 max-w-2xl mx-auto">
-        Discover our exquisite range of crystal-infused skincare products
-      </p>
-    </motion.div>
-    
-    {loading ? (
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-        {[...Array(4)].map((_, index) => (
-          <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
-            <div className="h-60 bg-gradient-to-br from-gray-100 to-gray-200"></div>
-            <div className="p-4">
-              <div className="h-6 bg-gray-200 rounded-full mb-3"></div>
-              <div className="h-4 bg-gray-200 rounded-full mb-4"></div>
-              <div className="h-6 bg-gray-200 rounded-full mb-4"></div>
-              <div className="h-10 bg-gray-200 rounded-xl"></div>
-            </div>
-          </div>
-        ))}
-      </div>
-    ) : (
-      <>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-          {bestSellers.map((product, index) => {
-            const isDiscounted = product.lastPrice < product.price;
-            const discountPercentage = isDiscounted
-              ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
-              : 0;
-            const isInStock = product.stock > 0;
-            const isProductInWishlist = wishlistStatus[product.productId] || false;
-
-            return (
-              <motion.div 
-                key={product.productId}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.5, delay: index * 0.1 }}
-                viewport={{ once: true }}
-                className="group bg-white rounded-xl overflow-hidden shadow-lg hover:shadow-xl 
-                transition-all duration-300 border border-gray-100 hover:border-pink-100"
-              >
-                <div className="relative h-62 overflow-hidden">
-                  <img 
-                    src={product.images[0]} 
-                    alt={product.productName}
-                    className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                  />
-                  <button
-                    onClick={() => toggleWishlist(product)}
-                    className={`absolute top-3 right-3 p-2 rounded-full transition-all duration-300 ${
-                      isProductInWishlist 
-                        ? "bg-pink-600 text-white" 
-                        : "bg-white text-pink-600 hover:bg-pink-50 hover:text-pink-600"
-                    }`}
-                  >
-                    <FiHeart className={`w-5 h-5 ${isProductInWishlist ? "fill-current" : ""}`} />
-                  </button>
-                  
-                  <div className="absolute top-3 left-3 flex flex-col space-y-2">
-                    {isDiscounted && (
-                      <div className="bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-md">
-                        {discountPercentage}% OFF
-                      </div>
-                    )}
-                  </div>
-                  
-                  <div
-                    className={`absolute bottom-3 left-3 text-xs font-bold px-3 py-1 rounded-xl shadow-md ${
-                      isInStock ? "bg-green-500 text-white" : "bg-red-500 text-white"
-                    }`}
-                  >
-                    {isInStock ? "In Stock" : "Out of Stock"}
-                  </div>
-                </div>
-
-                <div className="p-4">
-                  <div className="mb-2">
-                    <h3 className="text-lg font-bold text-gray-900 line-clamp-2 leading-tight">
-                      {product.productName}
-                    </h3>
-                    <p className="text-xs text-gray-500 mt-1">ID: {product.productId}</p>
-                  </div>
-                  
-                  <div className="flex items-baseline justify-between mb-3">
-                    <div className="flex items-baseline gap-2 whitespace-nowrap">
-                      <span className="text-lg font-bold text-gray-900">
-                        LKR {product.lastPrice.toFixed(2)}
-                      </span>
-                      {isDiscounted && (
-                        <span className="text-md text-red-500 font-semibold line-through">
-                          LKR {product.price.toFixed(2)}
-                        </span>
-                      )}
-                      {isDiscounted && (
-                        <span className="text-sm text-green-600 font-medium">
-                          Save LKR {(product.price - product.lastPrice).toFixed(2)}
-                        </span>
-                      )}
-                    </div>
-                  </div>
-                  
-                  <div className="mt-3 pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
-                    <button 
-                      className="w-full bg-white border border-gray-300 text-gray-800 font-medium py-2 px-2 rounded-md transition-all duration-300 flex items-center justify-center gap-1 hover:bg-gray-50 hover:shadow-sm text-sm"
-                      onClick={() => navigate(`/productInfo/${product.productId}`)}
-                    >
-                      <svg className="w-3 h-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z" />
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z" />
-                      </svg>
-                      Details
-                    </button>
-                    <button 
-                      className={`w-full font-medium py-2 px-2 rounded-md transition-all duration-300 flex items-center justify-center gap-1 disabled:cursor-not-allowed hover:shadow-md text-sm ${
-                        isInStock 
-                          ? "bg-gradient-to-r from-pink-600 to-pink-700 text-white hover:from-pink-700 hover:to-pink-800" 
-                          : "bg-gray-300 text-gray-600"
-                      }`}
-                      onClick={() => handleAddToCart(product)}
-                      disabled={!isInStock}
-                    >
-                      <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z" />
-                      </svg>
-                      {isInStock ? "Add to Cart" : "Out of Stock"}
-                    </button>
-                  </div>
-                </div>
-              </motion.div>
-            );
-          })}
-        </div>
-        
+  <section className="py-16 bg-gradient-to-b from-white to-pink-50">
+      <div className="container mx-auto px-6">
         <motion.div
-          initial={{ opacity: 0, y: 20 }}
+          initial={{ opacity: 0, y: 30 }}
           whileInView={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.6, delay: 0.3 }}
+          transition={{ duration: 0.6 }}
           viewport={{ once: true }}
-          className="text-center mt-12"
+          className="text-center mb-12"
         >
-          <motion.button 
-            whileHover={{ scale: 1.05 }}
-            whileTap={{ scale: 0.95 }}
-            className="relative overflow-hidden bg-white border-2 border-pink-600
-             text-pink-600 font-bold py-3.5 px-8 rounded-full transition-all duration-300 group
-              hover:bg-pink-600 hover:text-white hover:shadow-xl"
-            onClick={() => navigate('/products')}
-          >
-            <span className="relative z-10 flex items-center justify-center">
-              Explore Full Collection
-            
-            </span>
-         
-            <div className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
-            <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
-          
-            <div className="absolute inset-0 flex justify-center items-center">
-              {[...Array(3)].map((_, i) => (
-                <motion.div
-                  key={i}
-                  className="absolute w-1 h-1 bg-white rounded-full opacity-0"
-                  initial={{ opacity: 0 }}
-                  whileHover={{
-                    opacity: [0, 1, 0],
-                    scale: [0, 2, 0],
-                    transition: { duration: 0.8, delay: i * 0.2 }
-                  }}
-                  style={{
-                    top: `${20 + i * 20}%`,
-                    left: `${30 + i * 20}%`,
-                  }}
-                />
-              ))}
-            </div>
-          </motion.button>
+          <h2 className="text-3xl font-bold text-gray-900 mb-4">Our Collection</h2>
+          <div className="w-20 h-1 bg-pink-600 mx-auto mb-4"></div>
+          <p className="text-gray-600 max-w-2xl mx-auto">
+            Discover our exquisite range of crystal-infused skincare products
+          </p>
         </motion.div>
-      </>
-    )}
-  </div>
-</section>
+
+        {loading ? (
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {[...Array(4)].map((_, index) => (
+              <div key={index} className="bg-white rounded-2xl overflow-hidden shadow-lg animate-pulse">
+                <div className="h-60 bg-gradient-to-br from-gray-100 to-gray-200"></div>
+                <div className="p-4">
+                  <div className="h-6 bg-gray-200 rounded-full mb-3"></div>
+                  <div className="h-4 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-6 bg-gray-200 rounded-full mb-4"></div>
+                  <div className="h-10 bg-gray-200 rounded-xl"></div>
+                </div>
+              </div>
+            ))}
+          </div>
+        ) : (
+          <>
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+              {bestSellers.map((product, index) => {
+                const isDiscounted = product.lastPrice < product.price;
+                const discountPercentage = isDiscounted
+                  ? Math.round(((product.price - product.lastPrice) / product.price) * 100)
+                  : 0;
+                const isInStock = product.stock > 0;
+                const isProductInWishlist = wishlistStatus[product.productId] || false;
+
+                return (
+                  <motion.div
+                    key={product.productId}
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    transition={{ duration: 0.5, delay: index * 0.1 }}
+                    viewport={{ once: true }}
+                    className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 overflow-hidden flex flex-col h-full border border-pink-100 hover:border-pink-200"
+                  >
+                    <div className="relative aspect-square overflow-hidden m-2 rounded-lg bg-gray-50">
+                      <img
+                        src={product.images[0]}
+                        alt={product.productName}
+                        className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                      />
+                      <button
+                        onClick={() => toggleWishlist(product)}
+                        disabled={loading}
+                        className={`absolute top-2 right-2 p-2 rounded-full transition-all duration-300 ${
+                          isProductInWishlist
+                            ? "bg-pink-600 text-white"
+                            : "bg-white text-pink-600 hover:bg-pink-50 hover:text-pink-600"
+                        }`}
+                      >
+                        <FiHeart className={`w-4 h-4 ${isProductInWishlist ? "fill-current" : ""}`} />
+                      </button>
+
+                      {isDiscounted && (
+                        <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+                          {discountPercentage}% OFF
+                        </div>
+                      )}
+                      <div
+                        className={`absolute bottom-2 left-2 text-xs font-bold px-2 py-1 rounded-full shadow-sm ${
+                          isInStock ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                        }`}
+                      >
+                        {isInStock ? "In Stock" : "Out of Stock"}
+                      </div>
+                    </div>
+
+                    <div className="p-3 pt-1 flex flex-col flex-grow">
+                      <div className="mb-2">
+                        <h3 className="text-md font-bold text-gray-800 line-clamp-2 leading-tight mb-1">
+                          {product.productName}
+                        </h3>
+                        <p className="text-[10px] text-gray-400">ID: {product.productId}</p>
+                      </div>
+
+                      <div className="mt-auto mb-3">
+                        <div className="flex items-baseline gap-2 mb-1">
+                          <span className="text-lg font-bold text-slate-950">
+                            LKR {product.lastPrice.toFixed(2)}
+                          </span>
+                          {isDiscounted && (
+                            <span className="text-lg font-bold text-red-500 line-through">
+                              LKR {product.price.toFixed(2)}
+                            </span>
+                          )}
+                        </div>
+                        {isDiscounted ? (
+                          <p className="text-sm text-green-600 font-medium">
+                            Save LKR {(product.price - product.lastPrice).toFixed(2)}
+                          </p>
+                        ) : (
+                          <div className="h-4"></div>
+                        )}
+                      </div>
+
+                      <div className="mt-auto pt-3 border-t border-gray-100 grid grid-cols-2 gap-2">
+                        <button
+                          className="text-center bg-white border border-gray-300 hover:bg-gray-50 text-gray-800
+                           font-medium py-2 px-2 rounded-lg transition-all duration-300 text-sm hover:shadow-sm active:scale-95 flex items-center justify-center"
+                          onClick={() => navigate(`/productInfo/${product.productId}`)}
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                            />
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"
+                            />
+                          </svg>
+                          Details
+                        </button>
+                        <button
+                          className={`text-center ${
+                            isInStock
+                              ? "bg-gradient-to-r from-pink-600 to-pink-700 text-white hover:from-pink-700 hover:to-pink-800"
+                              : "bg-gray-300 cursor-not-allowed text-gray-500"
+                          } font-medium py-2 px-2 rounded-lg transition-all duration-300 text-sm hover:shadow-sm active:scale-95 flex items-center justify-center`}
+                          onClick={() => handleAddToCart(product)}
+                          disabled={!isInStock}
+                        >
+                          <svg className="w-3 h-3 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path
+                              strokeLinecap="round"
+                              strokeLinejoin="round"
+                              strokeWidth="2"
+                              d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
+                            />
+                          </svg>
+                          {isInStock ? "Add to Cart" : "Out of Stock"}
+                        </button>
+                      </div>
+                    </div>
+                  </motion.div>
+                );
+              })}
+            </div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.6, delay: 0.3 }}
+              viewport={{ once: true }}
+              className="text-center mt-12"
+            >
+              <motion.button
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+                className="relative overflow-hidden bg-white border-2 border-pink-600 text-pink-600 font-bold py-3.5 px-8 rounded-full transition-all duration-300 group hover:bg-pink-600 hover:text-white hover:shadow-xl"
+                onClick={() => navigate('/products')}
+              >
+                <span className="relative z-10 flex items-center justify-center">
+                  Explore Full Collection
+                </span>
+                <div className="absolute -top-1 -left-1 w-3 h-3 rounded-full bg-pink-300 opacity-0 group-hover:opacity-100 transition-opacity duration-500"></div>
+                <div className="absolute -bottom-1 -right-1 w-4 h-4 rounded-full bg-pink-400 opacity-0 group-hover:opacity-100 transition-opacity duration-500 delay-100"></div>
+                <div className="absolute inset-0 flex justify-center items-center">
+                  {[...Array(3)].map((_, i) => (
+                    <motion.div
+                      key={i}
+                      className="absolute w-1 h-1 bg-white rounded-full opacity-0"
+                      initial={{ opacity: 0 }}
+                      whileHover={{
+                        opacity: [0, 1, 0],
+                        scale: [0, 2, 0],
+                        transition: { duration: 0.8, delay: i * 0.2 },
+                      }}
+                      style={{
+                        top: `${20 + i * 20}%`,
+                        left: `${30 + i * 20}%`,
+                      }}
+                    />
+                  ))}
+                </div>
+              </motion.button>
+            </motion.div>
+          </>
+        )}
+      </div>
+    </section>
 
 <section className="py-16 bg-gradient-to-b from-white to-pink-50">
   <div className="container mx-auto px-6">
