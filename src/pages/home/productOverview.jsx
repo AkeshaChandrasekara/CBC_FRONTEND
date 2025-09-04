@@ -169,7 +169,7 @@ export default function ProductOverview() {
                         <span className="text-3xl font-bold text-gray-900 mr-3">
                           LKR {product.lastPrice.toFixed(2)}
                         </span>
-                        <span className="text-3xl text-red-500 line-through">
+                        <span className="text-3xl font-bold text-red-500 line-through">
                           LKR {product.price.toFixed(2)}
                         </span>
                       </div>

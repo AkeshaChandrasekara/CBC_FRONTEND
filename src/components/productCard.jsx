@@ -112,7 +112,7 @@ export default function ProductCard(props) {
               LKR {product.lastPrice.toFixed(2)}
             </span>
             {isDiscounted && (
-              <span className="text-md font-semibold text-red-500 line-through">
+              <span className="text-lg font-bold text-red-500 line-through">
                 LKR {product.price.toFixed(2)}
               </span>
             )}
