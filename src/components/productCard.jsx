@@ -84,7 +84,9 @@ export default function ProductCard(props) {
         </button>
 
         {isDiscounted && (
-          <div className="absolute top-2 left-2 bg-red-500 text-white text-xs font-bold px-2 py-1 rounded-full shadow-sm">
+          <div className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-red-600 text-white w-10 h-10
+          flex items-center justify-center text-xs font-bold px-2 py-1 rounded-full shadow-lg 
+           z-10 border border-white/20">
             {discountPercentage}% OFF
           </div>
         )}
