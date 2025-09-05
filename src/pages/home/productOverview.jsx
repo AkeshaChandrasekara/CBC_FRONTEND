@@ -118,8 +118,6 @@ export default function ProductOverview() {
       
       {status == "found" && (
         <div className="max-w-6xl mx-auto">
-      
-
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
@@ -162,31 +160,36 @@ export default function ProductOverview() {
                   </div>
                 </div>
                
-                <div className="mb-6 bg-white">
-                  {isDiscounted ? (
-                    <div>
-                      <div className="flex items-baseline mb-1">
-                        <span className="text-3xl font-bold text-gray-900 mr-3">
-                          LKR {product.lastPrice.toFixed(2)}
-                        </span>
-                        <span className="text-3xl font-bold text-red-500 line-through">
-                          LKR {product.price.toFixed(2)}
-                        </span>
-                      </div>
-                      <div className="flex items-center">
-                        <span className="px-0 py-1 text-red-500 text-md font-bold rounded mr-2">
-                          {discountPercentage}% OFF
-                        </span>
-                        <span className="text-md font-semibold text-green-600">
-                          Save LKR {(product.price - product.lastPrice).toFixed(2)}
-                        </span>
-                      </div>
-                    </div>
-                  ) : (
+                <div className="mb-6">
+                  <div className="flex items-baseline gap-3 mb-2">
                     <span className="text-3xl font-bold text-gray-900">
                       LKR {product.lastPrice.toFixed(2)}
                     </span>
+                    {isDiscounted && (
+                      <span className="text-3xl font-bold text-red-500 line-through">
+                        LKR {product.price.toFixed(2)}
+                      </span>
+                    )}
+                  </div>
+                  
+                  {isDiscounted && (
+                    <div className="flex items-center gap-4">
+                      <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">
+                        {discountPercentage}% OFF
+                      </div>
+                      <div className="text-green-600 text-md font-bold">
+                        Save LKR {(product.price - product.lastPrice).toFixed(2)}
+                      </div>
+                    </div>
                   )}
+                </div>
+
+                <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
+                  <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
+                    <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
+                  </svg>
+                  <span className="font-medium">Product ID:</span>
+                  <span className="font-bold">{product.productId}</span>
                 </div>
 
                 <div className="mb-6">
@@ -196,17 +199,6 @@ export default function ProductOverview() {
                   <p className="text-gray-700 leading-relaxed">
                     {product.description}
                   </p>
-                </div>
-
-                <div className="mb-8">
-                  <div className="inline-flex items-center px-3 py-2 bg-gray-100 rounded-lg">
-                    <svg className="w-4 h-4 text-gray-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                    </svg>
-                    <span className="text-sm font-medium text-gray-600">
-                      Product ID: {product.productId}
-                    </span>
-                  </div>
                 </div>
 
                 <div className="flex flex-col sm:flex-row gap-4">
