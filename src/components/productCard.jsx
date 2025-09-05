@@ -120,7 +120,7 @@ export default function ProductCard(props) {
           
           
           {isDiscounted ? (
-            <p className="text-sm text-green-600 font-medium">
+            <p className="text-sm text-green-600 font-bold">
               Save LKR {(product.price - product.lastPrice).toFixed(2)}
             </p>
           ) : (
