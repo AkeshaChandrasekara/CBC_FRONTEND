@@ -58,7 +58,7 @@ export default function ReviewForm({ onSubmit, onCancel }) {
             id="comment"
             rows="4"
             className="w-full px-3 py-2 border border-gray-300 rounded-md 
-            shadow-sm focus:outline-none focus:ring-yellow-500 focus:border-yellow-500"
+            shadow-sm focus:outline-none focus:ring-pink-500 focus:border-pink-500"
             value={comment}
             onChange={(e) => setComment(e.target.value)}
           ></textarea>
