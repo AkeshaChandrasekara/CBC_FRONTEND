@@ -48,8 +48,7 @@ export default function ProductPage() {
           <div className="relative">
             <input
               type="text"
-              className="w-full p-4 pl-12 border border-gray-300 rounded-xl focus:ring-2 focus:ring-pink-400 
-              focus:border-pink-400 transition-all duration-300"
+              className="w-full p-4 pl-12 border border-gray-300 rounded-xl  transition-all duration-300"
               placeholder="Search Products ..."
               onChange={search}
               value={query}
@@ -86,7 +85,10 @@ export default function ProductPage() {
                 ))}
               </div>
             ) : (
-              <div className="text-center py-16 bg-white rounded-xl shadow-sm border border-pink-100">
+                  <div className="text-center py-12">
+            <div className="flex items-center justify-center h-[12vh]">
+              <div className="bg-white w-2/3 rounded-xl shadow-md p-6 text-center border border-pink-100">
+               
                 <div className="w-16 h-16 bg-pink-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <svg className="w-8 h-8 text-pink-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
@@ -98,6 +100,8 @@ export default function ProductPage() {
                 <p className="text-gray-500">
                   Try a different search term or browse our full collection
                 </p>
+              </div>
+              </div>
               </div>
             )}
           </>
