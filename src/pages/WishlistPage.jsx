@@ -67,7 +67,7 @@ export default function WishlistPage() {
         <main className="flex-grow">
           <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50 min-h-screen">
             <div className="text-center py-12">
-              <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-pink-600 mx-auto"></div>
+           
             </div>
           </div>
         </main>
