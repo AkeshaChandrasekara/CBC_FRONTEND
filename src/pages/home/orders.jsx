@@ -92,17 +92,22 @@ export default function MyOrdersPage() {
           </div>
         </div>
       ) : orders.length === 0 ? (
-        <div className="bg-white rounded-xl shadow-md p-12 text-center border border-pink-100">
-          <FiPackage className="text-4xl text-pink-400 mx-auto mb-4" />
+          <div className="text-center py-12">
+            <div className="flex items-center justify-center h-[12vh]">
+              <div className="bg-white w-2/3 rounded-xl shadow-md p-6 text-center border border-pink-100">
+          <FiShoppingBag className="text-3xl text-pink-600 mx-auto mb-2" />
           <h3 className="text-xl font-semibold text-gray-800 mb-2">No orders yet</h3>
           <p className="text-gray-600 mb-6">Start shopping to see your orders here</p>
           <button
             onClick={() => window.location.href = '/products'}
-            className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-3 px-6 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
+            className="bg-gradient-to-r from-pink-600 to-pink-700 text-white font-medium py-2 
+                  px-4 rounded-lg hover:from-pink-700 hover:to-pink-800 transition-all duration-300"
           >
-            <FiShoppingBag className="inline mr-2" />
+           
             Start Shopping
           </button>
+        </div>
+        </div>
         </div>
       ) : (
         <div className="bg-white rounded-xl shadow-md overflow-hidden border border-pink-100">

@@ -1,20 +1,50 @@
 import { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FiUser, FiShoppingCart, FiHeart } from "react-icons/fi";
+import { FiUser, FiShoppingCart, FiHeart, FiTruck,FiFile,FiShoppingBag} from "react-icons/fi"; 
 import { Link } from "react-router-dom";
 import NavSlider from "./navSlider";
 import { loadCart, getCurrentUserEmail } from "../utils/cartFunction"; 
 import { getWishlistCount } from "../utils/wishlistFunction";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 export default function Header() {
   const [isSliderOpen, setIsSliderOpen] = useState(false);
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
+  const [ordersCount, setOrdersCount] = useState(0);
 
   const updateCartCount = () => {
     const cart = loadCart();
     const count = cart.reduce((total, item) => total + item.qty, 0);
     setCartCount(count);
+  };
+
+  const updateWishlistCount = () => {
+    setWishlistCount(getWishlistCount());
+  };
+
+  const fetchOrdersCount = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setOrdersCount(0);
+        return;
+      }
+
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/orders", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      const orders = response.data;
+      setOrdersCount(Array.isArray(orders) ? orders.length : 0);
+    } catch (error) {
+      console.error("Error fetching orders count:", error);
+      setOrdersCount(0);
+      toast.error("Failed to fetch orders count");
+    }
   };
 
   useEffect(() => {
@@ -25,16 +55,26 @@ export default function Header() {
       window.removeEventListener('cartUpdated', updateCartCount);
     };
   }, []);
+
   useEffect(() => {
-    const updateWishlistCount = () => {
-      setWishlistCount(getWishlistCount());
-    };
-  
     updateWishlistCount();
     window.addEventListener('wishlistUpdated', updateWishlistCount);
-  
+
     return () => {
       window.removeEventListener('wishlistUpdated', updateWishlistCount);
+    };
+  }, []);
+
+  useEffect(() => {
+    fetchOrdersCount();
+
+    const handleOrderUpdate = () => {
+      fetchOrdersCount();
+    };
+    window.addEventListener('ordersUpdated', handleOrderUpdate);
+
+    return () => {
+      window.removeEventListener('ordersUpdated', handleOrderUpdate);
     };
   }, []);
 
@@ -92,6 +132,16 @@ export default function Header() {
               </nav>
 
               <div className="flex items-center space-x-6 border-l border-gray-200 pl-8">
+                <Link
+                  to="/orders"
+                  className="p-2 text-gray-600 hover:text-pink-600 transition-colors duration-300 relative group"
+                >
+                  <FiShoppingBag className="text-xl" /> 
+                  <span className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                    {ordersCount}
+                  </span>
+                </Link>
+
                 <Link
                   to="/wishlist"
                   className="p-2 text-gray-600 hover:text-pink-600 transition-colors duration-300 relative group"
