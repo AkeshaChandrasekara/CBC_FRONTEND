@@ -121,10 +121,22 @@ export default function ProductOverview() {
           <div className="bg-white rounded-xl shadow-sm overflow-hidden border border-gray-200">
             <div className="flex flex-col lg:flex-row">
               <div className="lg:w-1/2 p-4 bg-white flex items-center justify-center">
-                <div className="w-full max-w-md">
-                  <div className={`mt-2 text-center text-sm font-bold px-3 py-1 rounded-full inline-block ${isInStock ? 'bg-green-500 text-white' : 'bg-red-500 text-white'}`}>
+                <div className="w-full max-w-md relative">
+                 
+                {isDiscounted && (
+          <div className="absolute top-2 left-2 bg-gradient-to-r from-red-500 to-red-600 text-white w-12 h-12
+          flex items-center justify-center text-xs font-bold px-4 py-1 rounded-full shadow-lg 
+           z-10 border border-white/20">
+            {discountPercentage}% OFF
+          </div>
+        )}
+               
+                  <div className={`absolute top-8 mt-11 left-2 text-xs font-bold px-2 py-1 rounded-full shadow-sm z-10 ${
+                    isInStock ? "bg-green-500 text-white" : "bg-red-500 text-white"
+                  }`}>
                     {isInStock ? 'In Stock' : 'Out of Stock'}
                   </div>
+                  
                   <ImageSlider images={product.images} />
                 </div>
               </div>
@@ -160,7 +172,7 @@ export default function ProductOverview() {
                   </div>
                 </div>
                
-                <div className="mb-6">
+                <div className="mb-4">
                   <div className="flex items-baseline gap-3 mb-2">
                     <span className="text-3xl font-bold text-gray-900">
                       LKR {product.lastPrice.toFixed(2)}
@@ -173,10 +185,8 @@ export default function ProductOverview() {
                   </div>
                   
                   {isDiscounted && (
-                    <div className="flex items-center gap-4">
-                      <div className="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">
-                        {discountPercentage}% OFF
-                      </div>
+                    <div className="flex items-center gap-4 mt-2">
+                     
                       <div className="text-green-600 text-md font-bold">
                         Save LKR {(product.price - product.lastPrice).toFixed(2)}
                       </div>
@@ -184,7 +194,14 @@ export default function ProductOverview() {
                   )}
                 </div>
 
-                <div className="mb-6 flex items-center gap-2 text-sm text-gray-600">
+               
+
+                <div className="mb-6">
+                  <h3 className="text-lg font-semibold text-gray-900 mb-3 border-b pb-2">
+                    About This Product
+                  </h3>
+                  
+                <div className="mb-2 flex items-center gap-2 text-sm text-gray-600">
                   <svg className="w-4 h-4" fill="currentColor" viewBox="0 0 20 20">
                     <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z" clipRule="evenodd" />
                   </svg>
@@ -192,11 +209,7 @@ export default function ProductOverview() {
                   <span className="font-bold">{product.productId}</span>
                 </div>
 
-                <div className="mb-6">
-                  <h3 className="text-lg font-semibold text-gray-900 mb-3 border-b pb-2">
-                    About This Product
-                  </h3>
-                  <p className="text-gray-700 leading-relaxed">
+                  <p className="text-gray-700  leading-relaxed">
                     {product.description}
                   </p>
                 </div>
