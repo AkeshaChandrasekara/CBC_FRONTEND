@@ -97,10 +97,10 @@ export default function CartCard(props) {
             <div className="flex items-center justify-center mr-6">
               <button 
                 onClick={decrementQuantity}
-                className="w-7 h-7 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
+                className="w-6 h-6 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
                 disabled={quantity <= 1}
               >
-                <FiMinus size={14} />
+                <FiMinus size={12} />
               </button>
               
               <span className="px-3 py-1 mx-2 bg-white text-center min-w-[2rem] text-sm font-medium">
@@ -109,9 +109,9 @@ export default function CartCard(props) {
               
               <button 
                 onClick={incrementQuantity}
-                className="w-7 h-7 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
+                className="w-6 h-6 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
               >
-                <FiPlus size={14} />
+                <FiPlus size={12} />
               </button>
             </div>
             
