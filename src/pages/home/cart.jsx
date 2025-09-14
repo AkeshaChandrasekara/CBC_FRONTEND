@@ -73,12 +73,25 @@ export default function Cart() {
 
   useEffect(() => {
     refreshCart();
+    
+    const handleCartUpdate = () => {
+      refreshCart();
+    };
+    
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
   }, [selectedItems]);
 
   const handleRemoveItem = (productId) => {
     deleteItem(productId);
     setSelectedItems(prev => prev.filter(id => id !== productId));
     refreshCart();
+  };
+
+  const handleQuantityChange = (productId, newQty) => {
+
   };
 
   function onOrderCheckOutClick() {
@@ -140,6 +153,7 @@ export default function Cart() {
                 onRemove={handleRemoveItem}
                 isSelected={selectedItems.includes(item.productId)}
                 onSelect={() => toggleItemSelection(item.productId)}
+                onQuantityChange={handleQuantityChange}
               />
             ))}
           </div>
@@ -158,7 +172,7 @@ export default function Cart() {
             <span className="text-gray-600">Price:</span>
             <span className="font-medium">LKR {originalTotal.toFixed(2)}</span>
           </div>
-          
+      
           
           <div className="border-t border-gray-200 pt-2 flex justify-between text-base">
             <span className="font-bold text-gray-900">Total Amount:</span>

@@ -1,16 +1,21 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { deleteItem } from "../utils/cartFunction";
-import { FiTrash2 } from "react-icons/fi"; 
+import { deleteItem, updateItemQuantity } from "../utils/cartFunction";
+import { FiTrash2, FiPlus, FiMinus } from "react-icons/fi"; 
 
 export default function CartCard(props) {
   const productId = props.productId;
-  const qty = props.qty;
-  const { onRemove, isSelected, onSelect, product: propProduct } = props;
+  const initialQty = props.qty;
+  const { onRemove, isSelected, onSelect, product: propProduct, onQuantityChange } = props;
 
   const [product, setProduct] = useState(propProduct || null);
   const [loaded, setLoaded] = useState(!!propProduct);
   const [price, setPrice] = useState(0);
+  const [quantity, setQuantity] = useState(initialQty);
+
+  useEffect(() => {
+    setQuantity(initialQty); 
+  }, [initialQty]);
 
   useEffect(() => {
     if (!loaded && !propProduct) {
@@ -40,6 +45,25 @@ export default function CartCard(props) {
     }
   };
 
+  const handleQuantityChange = (newQty) => {
+    if (newQty < 1) return;
+    
+    setQuantity(newQty);
+    updateItemQuantity(productId, newQty);
+    
+    if (onQuantityChange) {
+      onQuantityChange(productId, newQty);
+    }
+  };
+
+  const incrementQuantity = () => {
+    handleQuantityChange(quantity + 1);
+  };
+
+  const decrementQuantity = () => {
+    handleQuantityChange(quantity - 1);
+  };
+
   return (
     <>
       {!loaded ? (
@@ -62,18 +86,41 @@ export default function CartCard(props) {
             <div>
               <h3 className="font-bold text-gray-900">{product?.productName}</h3>
               <p className="text-sm text-gray-500">ID: {productId}</p>
-              <p className="text-sm text-gray-500">Qty: {qty}</p>
               <p className="text-sm text-gray-600">
                 LKR {price.toFixed(2)} 
               </p>
             </div>
           </div>
+          
           <div className="flex items-center">
+         
+            <div className="flex items-center justify-center mr-6">
+              <button 
+                onClick={decrementQuantity}
+                className="w-7 h-7 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
+                disabled={quantity <= 1}
+              >
+                <FiMinus size={14} />
+              </button>
+              
+              <span className="px-3 py-1 mx-2 bg-white text-center min-w-[2rem] text-sm font-medium">
+                {quantity}
+              </span>
+              
+              <button 
+                onClick={incrementQuantity}
+                className="w-7 h-7 rounded-full bg-pink-100 hover:bg-pink-200 text-pink-700 flex items-center justify-center transition-colors"
+              >
+                <FiPlus size={14} />
+              </button>
+            </div>
+            
             <div className="text-right mr-4">
               <p className="font-bold text-black">
-                LKR {(price * qty).toFixed(2)}
+                LKR {(price * quantity).toFixed(2)}
               </p>
             </div>
+            
             <button 
               onClick={handleRemove}
               className="text-red-500 hover:text-red-700 transition-colors p-2"

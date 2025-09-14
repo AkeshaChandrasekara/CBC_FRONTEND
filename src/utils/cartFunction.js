@@ -102,3 +102,19 @@ export async function getCartWithProductDetails() {
   
   return cartWithDetails;
 }
+
+export function updateItemQuantity(productId, newQty) {
+  const cart = loadCart();
+  const index = cart.findIndex((item) => item.productId == productId);
+  
+  if (index !== -1) {
+    if (newQty <= 0) {
+      cart.splice(index, 1);
+    } else {
+      cart[index].qty = newQty;
+    }
+    
+    saveCart(cart);
+    window.dispatchEvent(new CustomEvent('cartUpdated'));
+  }
+}

@@ -5,11 +5,13 @@ import toast from "react-hot-toast";
 import axios from "axios";
 import StripePayment from "../../components/StripePayment";
 import { FiTruck, FiMapPin, FiPhone, FiUser, FiArrowLeft, FiFileText } from "react-icons/fi";
+import { loadCart, updateItemQuantity } from "../../utils/cartFunction";
 
 export default function ShippingPage() {
   const location = useLocation();
   const navigate = useNavigate();
-  const cart = location.state?.items;
+  const initialCart = location.state?.items;
+  const [cart, setCart] = useState(initialCart || []);
   const [originalTotal, setOriginalTotal] = useState(0);
   const [discountedTotal, setDiscountedTotal] = useState(0);
   const [name, setName] = useState("");
@@ -20,58 +22,76 @@ export default function ShippingPage() {
   const [cartWithDetails, setCartWithDetails] = useState([]);
 
   useEffect(() => {
-    if (!cart) {
+    if (!initialCart) {
       toast.error("No items received");
       navigate("/cart");
       return;
     }
-
-    const calculateOriginalTotal = async () => {
-      let calculatedTotal = 0;
-      const cartDetails = [];
-      
-      for (const item of cart) {
-        try {
-          const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + item.productId);
-          if (response.data) {
-            const price = response.data.lastPrice || response.data.price;
-            calculatedTotal += price * item.qty;
-            cartDetails.push({
-              ...item,
-              productName: response.data.productName,
-              images: response.data.images,
-              price: response.data.price,
-              lastPrice: response.data.lastPrice
-            });
-          }
-        } catch (error) {
-          console.error("Error fetching product price:", error);
-        }
-      }
-      
-      setOriginalTotal(calculatedTotal);
-      setCartWithDetails(cartDetails);
-
-      axios
-        .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
-          orderedItems: cart,
-        })
-        .then((res) => {
-          if (res.data.total != null) {
-            setDiscountedTotal(res.data.total);
-          } else {
-            setDiscountedTotal(calculatedTotal);
-          }
-        })
-        .catch((err) => {
-          toast.error("Failed to fetch order quote. Please try again.");
-          console.error(err);
-          setDiscountedTotal(calculatedTotal);
-        });
-    };
     
-    calculateOriginalTotal();
-  }, [cart, navigate]);
+    const latestCart = loadCart();
+    const updatedCart = initialCart.map(item => {
+      const latestItem = latestCart.find(ci => ci.productId === item.productId);
+      return latestItem ? { ...item, qty: latestItem.qty } : item;
+    });
+    
+    setCart(updatedCart);
+    calculateTotals(updatedCart);
+  }, [initialCart, navigate]);
+
+  const calculateTotals = async (cartItems) => {
+    let calculatedTotal = 0;
+    const cartDetails = [];
+    
+    for (const item of cartItems) {
+      try {
+        const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + item.productId);
+        if (response.data) {
+          const price = response.data.lastPrice || response.data.price;
+          calculatedTotal += price * item.qty;
+          cartDetails.push({
+            ...item,
+            productName: response.data.productName,
+            images: response.data.images,
+            price: response.data.price,
+            lastPrice: response.data.lastPrice
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching product price:", error);
+      }
+    }
+    
+    setOriginalTotal(calculatedTotal);
+    setCartWithDetails(cartDetails);
+
+    axios
+      .post(import.meta.env.VITE_BACKEND_URL + "/api/orders/quote", {
+        orderedItems: cartItems,
+      })
+      .then((res) => {
+        if (res.data.total != null) {
+          setDiscountedTotal(res.data.total);
+        } else {
+          setDiscountedTotal(calculatedTotal);
+        }
+      })
+      .catch((err) => {
+        toast.error("Failed to fetch order quote. Please try again.");
+        console.error(err);
+        setDiscountedTotal(calculatedTotal);
+      });
+  };
+
+  const handleQuantityChange = (productId, newQty) => {
+   
+    const updatedCart = cart.map(item => 
+      item.productId === productId ? { ...item, qty: newQty } : item
+    );
+    
+    setCart(updatedCart);
+    updateItemQuantity(productId, newQty);
+    calculateTotals(updatedCart);
+  };
 
   function validateInputs() {
     if (!name.trim()) {
@@ -143,7 +163,7 @@ export default function ShippingPage() {
     }
   };
 
-  if (!cart) {
+  if (!initialCart) {
     return null;
   }
 
@@ -244,7 +264,8 @@ export default function ShippingPage() {
                     key={item.productId}
                     productId={item.productId}
                     qty={item.qty}
-                    product={item} 
+                    product={item}
+                    onQuantityChange={handleQuantityChange}
                   />
                 ))}
               </div>
@@ -257,10 +278,10 @@ export default function ShippingPage() {
                   <span className="font-medium">LKR {originalTotal.toFixed(2)}</span>
                 </div>
                 
-             
+                
                 <div className="border-t border-gray-200 pt-3 flex justify-between text-lg font-bold">
-                  <span className="text-gray-900">Total Amount:</span>
-                  <span className="text-pink-600">LKR {discountedTotal.toFixed(2)}</span>
+                  <span className="font-bold text-gray-900">Total Amount:</span>
+                  <span className="font-bold text-pink-600">LKR {discountedTotal.toFixed(2)}</span>
                 </div>
               </div>
 
