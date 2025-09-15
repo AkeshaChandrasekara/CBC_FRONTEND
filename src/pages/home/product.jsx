@@ -73,7 +73,7 @@ export default function ProductPage() {
               <input
                 type="text"
                 className="w-full p-3 border-0 focus:ring-0 text-gray-700 placeholder-gray-400"
-                placeholder="Discover something beautiful..."
+                placeholder="Discover Our Collection..."
                 onChange={search}
                 value={query}
               />
