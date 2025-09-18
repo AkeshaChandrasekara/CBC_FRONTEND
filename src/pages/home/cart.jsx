@@ -123,7 +123,7 @@ export default function Cart() {
 
   return (
     <div className="container mx-auto px-4 py-8 bg-gradient-to-b from-white to-pink-50">
-      <h1 className="text-3xl font-bold text-gray-900 mb-8">Your Shopping Cart</h1>
+      <h1 className="text-3xl font-bold text-gray-900 mb-8">Shopping Cart</h1>
       
       <div className="p-6 mb-4">
         {cart.length === 0 ? (
