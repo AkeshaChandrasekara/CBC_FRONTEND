@@ -102,7 +102,7 @@ export default function ProductCard(props) {
       <div className="p-3 pt-1 flex flex-col flex-grow">
        
         <div className="mb-2">
-          <h2 className="text-sm font-bold text-gray-800 line-clamp-2 leading-tight mb-1">
+          <h2 className="text-md font-bold text-gray-800 line-clamp-2 leading-tight mb-1">
             {product.productName}
           </h2>
           <p className="text-[10px] text-gray-400">ID: {product.productId}</p>
