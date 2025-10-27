@@ -126,7 +126,7 @@ export default function Header() {
                   to="/contact"
                   className="text-gray-700 font-medium hover:text-pink-600 transition-colors duration-300 relative group py-2"
                 >
-                  Contact
+                  Contact Us
                   <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-pink-600 transition-all duration-300 group-hover:w-full"></span>
                 </Link>
               </nav>

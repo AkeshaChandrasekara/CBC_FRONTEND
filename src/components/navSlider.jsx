@@ -74,10 +74,19 @@ export default function NavSlider({ closeSlider }) {
             onClick={closeSlider}
             className="text-gray-700 font-medium text-lg hover:text-pink-600 transition-colors duration-300 py-2 border-b border-gray-100"
           >
-            Contact
+            Contact Us
           </Link>
           
           <div className="pt-4 border-t border-gray-200 mt-4">
+             <Link
+                              to="/orders"
+                              className="p-2 text-gray-600 hover:text-pink-600 transition-colors duration-300 relative group"
+                            >
+                              <FiShoppingBag className="text-xl" /> 
+                              <span className="absolute -top-1 -right-1 w-4 h-4 bg-pink-500 text-white text-xs rounded-full flex items-center justify-center">
+                                {ordersCount}
+                              </span>
+                            </Link>
             <Link
               to="/wishlist"
               onClick={closeSlider}
