@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FiUser, FiShoppingCart, FiHeart, FiTruck,FiFile,FiShoppingBag} from "react-icons/fi"; 
+import { FiUser, FiShoppingCart, FiHeart, FiTruck, FiFile, FiShoppingBag, FiLogOut } from "react-icons/fi"; 
 import { Link } from "react-router-dom";
 import NavSlider from "./navSlider";
 import { loadCart, getCurrentUserEmail } from "../utils/cartFunction"; 
@@ -13,6 +13,7 @@ export default function Header() {
   const [cartCount, setCartCount] = useState(0);
   const [wishlistCount, setWishlistCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
+  const [user, setUser] = useState(null);
 
   const updateCartCount = () => {
     const cart = loadCart();
@@ -47,6 +48,33 @@ export default function Header() {
     }
   };
 
+  const fetchUserData = async () => {
+    try {
+      const token = localStorage.getItem("token");
+      if (!token) {
+        setUser(null);
+        return;
+      }
+
+      const response = await axios.get(import.meta.env.VITE_BACKEND_URL + "/api/users", {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+
+      setUser(response.data);
+    } catch (error) {
+      console.error("Error fetching user data:", error);
+      setUser(null);
+    }
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setUser(null);
+    window.location.href = "/";
+  };
+
   useEffect(() => {
     updateCartCount(); 
     window.addEventListener('cartUpdated', updateCartCount);
@@ -67,6 +95,7 @@ export default function Header() {
 
   useEffect(() => {
     fetchOrdersCount();
+    fetchUserData();
 
     const handleOrderUpdate = () => {
       fetchOrdersCount();
@@ -162,16 +191,34 @@ export default function Header() {
                   </span>
                 </Link>
 
-                <Link
-                  to="/login"
-                  className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
-                >
-                  <FiUser className="text-sm" />
-                  <span className="text-sm font-medium">Login</span>
-                  <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs bg-gray-800 text-white px-2 py-1 rounded whitespace-nowrap">
-                    Account
-                  </span>
-                </Link>
+                {user ? (
+                  <div className="flex items-center space-x-3">
+                    <div className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-full group relative">
+                      <FiUser className="text-sm" />
+                      <span className="text-sm font-medium">Hi, {user.firstName}</span>
+                      <div className="absolute top-full right-0 mt-2 w-48 bg-white rounded-lg shadow-lg border border-gray-200 opacity-0 invisible group-hover:opacity-100 group-hover:visible transition-all duration-300 z-50">
+                        <button
+                          onClick={handleLogout}
+                          className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-pink-50 hover:text-pink-600 flex items-center space-x-2 rounded-lg"
+                        >
+                          <FiLogOut className="text-sm" />
+                          <span>Logout</span>
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ) : (
+                  <Link
+                    to="/login"
+                    className="flex items-center space-x-2 bg-gradient-to-r from-pink-500 to-pink-600 text-white px-4 py-2 rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg hover:shadow-xl group"
+                  >
+                    <FiUser className="text-sm" />
+                    <span className="text-sm font-medium">Login</span>
+                    <span className="absolute -bottom-8 left-1/2 transform -translate-x-1/2 opacity-0 group-hover:opacity-100 transition-opacity duration-300 text-xs bg-gray-800 text-white px-2 py-1 rounded whitespace-nowrap">
+                      Account
+                    </span>
+                  </Link>
+                )}
               </div>
             </div>
 
