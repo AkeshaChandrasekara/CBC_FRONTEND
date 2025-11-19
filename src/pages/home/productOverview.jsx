@@ -16,6 +16,8 @@ export default function ProductOverview() {
   const [averageRating, setAverageRating] = useState(0);
   const [reviewCount, setReviewCount] = useState(0);
   const [showReviewForm, setShowReviewForm] = useState(false);
+  const [canReview, setCanReview] = useState(false);
+  const [checkingReviewEligibility, setCheckingReviewEligibility] = useState(false);
   const navigate = useNavigate();
   const isInStock = product?.stock > 0;
   const isDiscounted = product?.lastPrice < product?.price;
@@ -24,7 +26,6 @@ export default function ProductOverview() {
     : 0;
 
   useEffect(() => {
-    
     axios
       .get(import.meta.env.VITE_BACKEND_URL + "/api/products/" + productId)
       .then((res) => {
@@ -35,7 +36,6 @@ export default function ProductOverview() {
           setStatus("found");
         }
       });
-
 
     axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/reviews/${productId}`)
       .then(res => setReviews(res.data))
@@ -48,6 +48,78 @@ export default function ProductOverview() {
       })
       .catch(err => console.error(err));
   }, [productId]);
+
+  const checkReviewEligibility = async () => {
+    const email = getCurrentUserEmail();
+    if (!email) {
+      toast.error("Please login to write a review");
+      navigate('/login');
+      return false;
+    }
+
+    setCheckingReviewEligibility(true);
+    try {
+   
+      const ordersResponse = await axios.get(
+        `${import.meta.env.VITE_BACKEND_URL}/api/orders`,
+        {
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem('token')}`
+          }
+        }
+      );
+
+      const userOrders = ordersResponse.data;
+      
+      const hasPurchased = userOrders.some(order => 
+        order.orderedItems?.some(item => 
+          item.productId === productId || item.name === product?.productName
+        )
+      );
+
+      if (!hasPurchased) {
+        toast.error("You can only review products you've purchased");
+        setCanReview(false);
+        setShowReviewForm(false);
+        return false;
+      }
+
+      const userReviews = reviews.filter(review => review.email === email);
+      if (userReviews.length > 0) {
+        toast.error("You've already reviewed this product");
+        setCanReview(false);
+        setShowReviewForm(false);
+        return false;
+      }
+
+      setCanReview(true);
+      setShowReviewForm(true);
+      return true;
+    } catch (error) {
+      console.error("Error checking review eligibility:", error);
+      if (error.response?.status === 404) {
+        toast.error("No orders found. You need to purchase this product first.");
+      } else if (error.response?.status === 401) {
+        toast.error("Please login to write a review");
+        navigate('/login');
+      } else {
+        toast.error("Failed to check review eligibility");
+      }
+      setCanReview(false);
+      setShowReviewForm(false);
+      return false;
+    } finally {
+      setCheckingReviewEligibility(false);
+    }
+  };
+
+  const handleWriteReviewClick = () => {
+    if (showReviewForm) {
+      setShowReviewForm(false);
+    } else {
+      checkReviewEligibility();
+    }
+  };
 
   function onAddtoCartClick() {
     if (!isInStock) {
@@ -99,6 +171,7 @@ export default function ProductOverview() {
       setAverageRating(((averageRating * reviewCount) + rating) / (reviewCount + 1));
       setReviewCount(reviewCount + 1);
       setShowReviewForm(false);
+      setCanReview(false); 
       toast.success("Review submitted successfully!");
     })
     .catch(err => {
@@ -245,15 +318,23 @@ export default function ProductOverview() {
               <h2 className="text-2xl font-bold text-gray-900">Customer Reviews</h2>
               {getCurrentUserEmail() && (
                 <button 
-                  onClick={() => setShowReviewForm(!showReviewForm)}
-                  className="bg-pink-500 hover:bg-pink-400 text-white font-medium py-2 px-4 rounded-lg transition-all text-sm"
+                  onClick={handleWriteReviewClick}
+                  disabled={checkingReviewEligibility}
+                  className="bg-pink-500 hover:bg-pink-400 text-white font-medium py-2 px-4 rounded-lg transition-all text-sm disabled:opacity-50 disabled:cursor-not-allowed"
                 >
-                  {showReviewForm ? 'Cancel' : 'Write a Review'}
+                  {checkingReviewEligibility ? (
+                    <div className="flex items-center">
+                      <div className="animate-spin rounded-full h-4 w-4 border-t-2 border-b-2 border-white mr-2"></div>
+                      Checking...
+                    </div>
+                  ) : (
+                    showReviewForm ? 'Cancel' : 'Write a Review'
+                  )}
                 </button>
               )}
             </div>
 
-            {showReviewForm && (
+            {showReviewForm && canReview && (
               <ReviewForm 
                 onSubmit={handleReviewSubmit}
                 onCancel={() => setShowReviewForm(false)}
