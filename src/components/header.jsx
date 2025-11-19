@@ -14,6 +14,8 @@ export default function Header() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
   const [user, setUser] = useState(null);
+  const [currency, setCurrency] = useState("LKR");
+  const [language, setLanguage] = useState("EN");
 
   const updateCartCount = () => {
     const cart = loadCart();
@@ -118,15 +120,65 @@ export default function Header() {
       <header className="bg-white w-full shadow-sm border-b border-gray-100">
         <div className="max-w-full mx-auto px-6">
           <div className="flex items-center justify-between h-20">
-            <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
-              <div className="relative w-18 h-12 flex items-center justify-center">
-                <img 
-                  src="/cbclgo.png"
-                  className="object-contain w-full h-full"
-                  alt="Crystal Beauty Clear Logo"
-                />
+            <div className="flex items-center space-x-6">
+              <Link to="/" className="flex items-center space-x-3 flex-shrink-0">
+                <div className="relative w-18 h-12 flex items-center justify-center">
+                  <img 
+                    src="/cbclgo.png"
+                    className="object-contain w-full h-full"
+                    alt="Crystal Beauty Clear Logo"
+                  />
+                </div>
+              </Link>
+
+              <div className="flex items-center space-x-5">
+              
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm text-gray-700 font-medium">Currency:</span>
+                  <div className="relative">
+                    <select 
+                      value={currency}
+                      onChange={(e) => setCurrency(e.target.value)}
+                      className="appearance-none bg-white border border-gray-100 
+                      rounded-md pl-8 pr-4 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 w-21 h-6"
+                    >
+                      <option value="LKR">LKR</option>
+                 
+                    </select>
+                    <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+                      <img 
+                        src="https://flagcdn.com/w40/lk.png"
+                        alt="Sri Lanka Flag"
+                        className="w-4 h-2 object-cover rounded-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
+
+                <div className="flex items-center space-x-2">
+                  <span className="text-sm  text-gray-700 font-medium">Language:</span>
+                  <div className="relative">
+                    <select 
+                      value={language}
+                      onChange={(e) => setLanguage(e.target.value)}
+                      className="appearance-none bg-white border border-gray-300 rounded-md 
+                      pl-8 pr-4 py-0.5 text-xs text-gray-800 focus:outline-none 
+                      focus:ring-1 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 w-21 h-6"
+                    >
+                      <option value="EN">ENG</option>
+                     
+                    </select>
+                    <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
+                      <img 
+                        src="https://flagcdn.com/w40/gb.png"
+                        alt="English Flag"
+                        className="w-4 h-2 object-cover rounded-sm"
+                      />
+                    </div>
+                  </div>
+                </div>
               </div>
-            </Link>
+            </div>
 
             <div className="hidden lg:flex items-center space-x-8">
               <nav className="flex items-center space-x-8 mr-8">
