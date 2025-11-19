@@ -44,7 +44,8 @@ export default function OrderConfirmationPage() {
           </motion.div>
           
           <h1 className="text-3xl font-bold text-white mb-2">Order Confirmed!</h1>
-          <p className="text-pink-100">Your order <span className="font-semibold">#{orderId}</span> has been successfully placed</p>
+          <p className="text-pink-100">Your order <span className="font-semibold">#{orderId}
+            </span> has been successfully placed</p>
         </div>
 
         <div className="p-8 space-y-8">
@@ -66,6 +67,7 @@ export default function OrderConfirmationPage() {
                     <span className="text-white text-xs">1</span>
                   </div>
                 </div>
+
                 <h3 className="font-medium text-gray-900 mb-1">Processing</h3>
                 <p className="text-sm text-gray-500">We're carefully preparing your beauty items</p>
               </div>
