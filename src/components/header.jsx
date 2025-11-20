@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
 import { RxHamburgerMenu } from "react-icons/rx";
-import { FiUser, FiShoppingCart, FiHeart, FiTruck, FiFile, FiShoppingBag, FiLogOut } from "react-icons/fi"; 
+import { FiUser, FiShoppingCart, FiHeart, FiTruck, FiFile, FiShoppingBag, FiLogOut, FiMail, FiPhone } from "react-icons/fi"; 
 import { Link } from "react-router-dom";
 import NavSlider from "./navSlider";
 import { loadCart, getCurrentUserEmail } from "../utils/cartFunction"; 
@@ -14,8 +14,6 @@ export default function Header() {
   const [wishlistCount, setWishlistCount] = useState(0);
   const [ordersCount, setOrdersCount] = useState(0);
   const [user, setUser] = useState(null);
-  const [currency, setCurrency] = useState("LKR");
-  const [language, setLanguage] = useState("EN");
 
   const updateCartCount = () => {
     const cart = loadCart();
@@ -132,51 +130,19 @@ export default function Header() {
               </Link>
 
               <div className="flex items-center space-x-5">
-              
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm text-gray-700 font-medium">Currency:</span>
-                  <div className="relative">
-                    <select 
-                      value={currency}
-                      onChange={(e) => setCurrency(e.target.value)}
-                      className="appearance-none bg-white border border-gray-100 
-                      rounded-md pl-8 pr-4 py-0.5 text-xs text-gray-800 focus:outline-none focus:ring-1 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 w-21 h-6"
-                    >
-                      <option value="LKR">LKR</option>
+
                  
-                    </select>
-                    <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-                      <img 
-                        src="https://flagcdn.com/w40/lk.png"
-                        alt="Sri Lanka Flag"
-                        className="w-4 h-2 object-cover rounded-sm"
-                      />
-                    </div>
-                  </div>
+               
+                <div className="flex items-center space-x-2">
+                  <FiMail className="text-pink-600 text-sm mt-1" />
+                  <span className="text-sm text-gray-700 font-medium">info@crystalbeauty.com</span>
                 </div>
 
-                <div className="flex items-center space-x-2">
-                  <span className="text-sm  text-gray-700 font-medium">Language:</span>
-                  <div className="relative">
-                    <select 
-                      value={language}
-                      onChange={(e) => setLanguage(e.target.value)}
-                      className="appearance-none bg-white border border-gray-300 rounded-md 
-                      pl-8 pr-4 py-0.5 text-xs text-gray-800 focus:outline-none 
-                      focus:ring-1 focus:ring-pink-500 focus:border-pink-500 transition-all duration-200 w-21 h-6"
-                    >
-                      <option value="EN">ENG</option>
-                     
-                    </select>
-                    <div className="absolute left-1.5 top-1/2 transform -translate-y-1/2">
-                      <img 
-                        src="https://flagcdn.com/w40/gb.png"
-                        alt="English Flag"
-                        className="w-4 h-2 object-cover rounded-sm"
-                      />
-                    </div>
-                  </div>
+              <div className="flex items-center space-x-2">
+                  <FiPhone className="text-pink-600 text-sm mt-1" />
+                  <span className="text-sm text-gray-700 font-medium">011 222 3333</span>
                 </div>
+              
               </div>
             </div>
 
