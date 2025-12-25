@@ -130,18 +130,19 @@ export default function Header() {
               </Link>
 
               <div className="flex items-center space-x-5">
-
+  <div className="flex items-center space-x-2">
+                  <FiPhone className="text-pink-600 text-sm mt-1" />
+                  <span className="text-sm text-gray-700 font-medium">011 222 3333 </span>
+                </div>
                  
+                 <span className="text-sm text-gray-500 font-medium">|</span>
                
                 <div className="flex items-center space-x-2">
                   <FiMail className="text-pink-600 text-sm mt-1" />
                   <span className="text-sm text-gray-700 font-medium">info@crystalbeauty.com</span>
                 </div>
 
-              <div className="flex items-center space-x-2">
-                  <FiPhone className="text-pink-600 text-sm mt-1" />
-                  <span className="text-sm text-gray-700 font-medium">011 222 3333</span>
-                </div>
+           
               
               </div>
             </div>
