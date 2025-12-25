@@ -109,7 +109,7 @@ export default function ProductPage() {
 
   return (
     <div className="min-h-screen bg-gradient-to-b from-white to-pink-50 p-6">
-      <div className="max-w-8xl mx-auto">
+      <div className="max-w-9xl mx-auto">
        
         <div className="relative mb-8 mt-0">
           <div className="relative z-10 max-w-2xl mx-auto">
@@ -143,11 +143,11 @@ export default function ProductPage() {
             
               <div className="flex items-center justify-between mb-6">
                 <h3 className="text-lg font-bold text-gray-900 bg-gradient-to-r from-pink-600 to-pink-700 bg-clip-text text-transparent">
-               ADVANCED SEARCH
+              FILTER PRODUCTS
                 </h3>
                 <button
                   onClick={clearFilters}
-                  className="px-3 py-1 text-xs font-semibold bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-sm"
+                  className="px-2 py-1 text-xs font-semibold bg-gradient-to-r from-pink-500 to-pink-600 text-white rounded-full hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-sm"
                 >
                  CLEAR
                 </button>

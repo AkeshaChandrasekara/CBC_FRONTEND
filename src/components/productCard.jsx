@@ -62,7 +62,7 @@ export default function ProductCard(props) {
   };
 
   return (
-    <div className="group relative bg-white rounded-xl shadow-sm hover:shadow-md transition-all duration-300 
+    <div className="group relative bg-white rounded-md shadow-sm hover:shadow-md transition-all duration-300 
     overflow-hidden flex flex-col h-full border border-pink-100 hover:border-pink-200">
       <div className="relative aspect-square overflow-hidden m-2 rounded-lg bg-gray-50">
         <img
