@@ -89,7 +89,7 @@ export default function SignupPage() {
     <div className="flex h-screen w-full bg-white">
     
       <motion.div 
-        className="hidden lg:flex w-3/5 relative"
+        className="hidden lg:flex w-2/3 relative"
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
@@ -114,7 +114,7 @@ export default function SignupPage() {
         </div>
       </motion.div>
 
-      <div className="w-full lg:w-2/5 flex items-center justify-center p-6 overflow-auto">
+      <div className="w-full lg:w-1/3 flex items-center justify-center p-12 overflow-auto">
         <motion.div 
           className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20 my-auto"
           initial={{ opacity: 0, scale: 0.95 }}

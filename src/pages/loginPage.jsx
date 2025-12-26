@@ -64,7 +64,7 @@ export default function LoginPage() {
     <div className="flex min-h-screen w-full bg-white fixed overflow-hidden">
 
       <motion.div 
-        className="hidden lg:flex w-3/4 relative overflow-hidden"
+        className="hidden lg:flex w-2/3 relative overflow-hidden"
         initial={{ opacity: 0, x: -50 }}
         animate={{ opacity: 1, x: 0 }}
         transition={{ duration: 0.8 }}
@@ -90,7 +90,7 @@ export default function LoginPage() {
         </div>
       </motion.div>
 
-      <div className="w-full lg:w-1/2 flex items-center justify-center p-6">
+      <div className="w-full lg:w-1/3 flex items-center justify-center p-6">
         <motion.div 
           className="w-full max-w-md bg-white/80 backdrop-blur-sm rounded-2xl shadow-lg border border-white/20"
           initial={{ opacity: 0, scale: 0.95 }}
