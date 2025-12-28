@@ -5,17 +5,18 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export default function ForgotPasswordPage() {
-  const [email, setEmail] = useState('');
+    const [email, setEmail] = useState('');
   const [loading, setLoading] = useState(false);
   const [emailSent, setEmailSent] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!email) return;
+    
     setLoading(true);
     
     try {
       await axios.post(`${import.meta.env.VITE_BACKEND_URL}/api/users/forgot-password`, { email });
-      toast.success('Password reset link sent to your email');
       setEmailSent(true);
     } catch (error) {
       toast.error(error.response?.data?.message || 'Error sending reset link');
@@ -23,6 +24,7 @@ export default function ForgotPasswordPage() {
       setLoading(false);
     }
   };
+
 
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-white p-4 sm:p-6">

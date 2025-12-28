@@ -5,7 +5,7 @@ import axios from 'axios';
 import toast from 'react-hot-toast';
 
 export default function ResetPasswordPage() {
-  const { token } = useParams();
+   const { token } = useParams();
   const navigate = useNavigate();
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
@@ -15,15 +15,22 @@ export default function ResetPasswordPage() {
   useEffect(() => {
     const verifyToken = async () => {
       try {
-        await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/verify-reset-token/${token}`);
-        setValidToken(true);
+        const response = await axios.get(`${import.meta.env.VITE_BACKEND_URL}/api/users/verify-reset-token/${token}`);
+        if (response.data.valid) {
+          setValidToken(true);
+        } else {
+          toast.error('Invalid or expired reset token');
+          navigate('/forgot-password');
+        }
       } catch (error) {
         toast.error('Invalid or expired reset token');
         navigate('/forgot-password');
       }
     };
 
-    verifyToken();
+    if (token) {
+      verifyToken();
+    }
   }, [token, navigate]);
 
   const handleSubmit = async (e) => {
@@ -31,6 +38,11 @@ export default function ResetPasswordPage() {
     
     if (password !== confirmPassword) {
       toast.error('Passwords do not match');
+      return;
+    }
+
+    if (password.length < 6) {
+      toast.error('Password must be at least 6 characters');
       return;
     }
 
@@ -48,9 +60,8 @@ export default function ResetPasswordPage() {
   };
 
   if (!validToken) {
-    return null;
+    return <div className="flex min-h-screen items-center justify-center">Loading...</div>;
   }
-
   return (
     <div className="flex min-h-screen w-full items-center justify-center bg-white p-4 sm:p-6">
       <motion.div 
